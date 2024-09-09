@@ -9,6 +9,7 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Footer from "@/components/Footer/Footer";
 import { Navbar } from "@/components/navbar";
+import Cart from "@/components/Cart/Cart";
 
 export const metadata: Metadata = {
   title: {
@@ -61,6 +62,7 @@ export default function RootLayout({
           <div className="relative flex flex-col h-screen">
             <Navbar />
             <main className="w-full flex-grow">
+              <Cart />
               {children}
             </main>
            <Footer />

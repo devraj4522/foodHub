@@ -33,10 +33,10 @@ import {
 } from "@/components/icons";
 import { useGeolocation } from "@/hooks/location/useGeolocation";
 import { userAtom } from "@/recoil/atoms/userAtom";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import { FaUserCircle } from "react-icons/fa";
-import { useRecoilState } from "recoil";
 import LoginCard from "./LoginCard/LoginCard";
+import { showCartAtom } from "@/recoil/atoms/cartAtom";
 
 interface Address {
   display_name: string;
@@ -48,6 +48,7 @@ export const Navbar = () => {
   const [user, setUser] = useRecoilState(userAtom);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
+  const [showCart, setShowCart] = useRecoilState(showCartAtom);
 
   useEffect(() => {
     // Check login status from your API
@@ -128,6 +129,10 @@ export const Navbar = () => {
     }
   }, [coordinates]);
 
+  const handleCartClick = () => {
+    setShowCart(!showCart);
+  };
+
   return (
     <NextUINavbar className="lg:py-4 py-2 bg-lime-200" maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full bg-transparent" justify="start">
@@ -164,7 +169,7 @@ export const Navbar = () => {
             Call Us at <br/> <p className="font-bold">{siteConfig.links.phone}</p>
             </div>
           </Link>
-          <Link aria-label="Cart" href="/cart">
+          <Link aria-label="Cart" href="#" onClick={handleCartClick}>
             <PiShoppingCartSimpleFill className="text-green-600" size={24} />
           </Link>
           <Link aria-label="Profile" href="/profile">
