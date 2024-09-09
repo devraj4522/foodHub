@@ -16,37 +16,24 @@ import YouCanTrySection from "@/components/TrySection/TrySection";
 import RestaurantList from "@/components/RestaurantCard/RestaurantCard";
 import LoginCard from "@/components/LoginCard/LoginCard";
 
-interface HomePageProps {
-  user: UserDetails
-}
-
-
-export default function Home(props: HomePageProps) {
-
-  
-  // const res = fetch(`https://api.github.com/users/`)
-  // const data = res.json()
-  
+export default function Home() {
   const data = {
-      name: "Dev Raj Singh",
-      email: "dev@tst.com",
-      phone: "+91 9122604411",
-      address: "Salt Lake Sector V, Kolkata",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700101",
+    name: "Dev Raj Singh",
+    email: "dev@tst.com",
+    phone: "+91 9122604411",
+    address: "Salt Lake Sector V, Kolkata",
+    city: "Kolkata",
+    state: "West Bengal",
+    pincode: "700101",
   }
-  
-  // const setUser = useSetRecoilState(userAtom);
-  // setUser(data);
 
   return (
     <>
-    <HeroSection />
-    <ExploreSection />
-    <YouCanTrySection />
-    <RestaurantList />
-    <LoginCard />
+      <HeroSection />
+      <ExploreSection />
+      <YouCanTrySection />
+      <RestaurantList />
+      <LoginCard />
     </>
   );
 }
