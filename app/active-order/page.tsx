@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from 'react';
 import { FaShoppingBag, FaMotorcycle, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
@@ -68,9 +69,9 @@ const ActiveOrderPage: React.FC = () => {
         <CardBody>
           <div className="mb-4">
             <Progress 
-              value={orderProgress} 
-              color="success"
               className="mb-2"
+              color="success"
+              value={orderProgress} 
             />
             <div className="flex justify-between text-sm text-gray-600">
               <span>Order Placed</span>
@@ -121,8 +122,8 @@ const ActiveOrderPage: React.FC = () => {
 
       {!mockActiveOrder.isPaid && (
         <Button 
-          size="lg" 
           className="w-full text-white bg-lime-600 hover:bg-lime-700"
+          size="lg" 
           startContent={<FaPhone />}
         >
           Call Delivery 

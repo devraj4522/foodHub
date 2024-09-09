@@ -63,9 +63,9 @@ const OrderHistoryPage: React.FC = () => {
 
   const renderOrderCard = (order: typeof mockOrders[0]) => (
     <Card 
-      key={order.id} 
       className="mb-4 cursor-pointer w-full hover:bg-gray-100"
       isPressable
+      key={order.id} 
       onPress={() => handleOrderClick(order)}
     >
       <CardHeader className="flex mb-0 pb-0 justify-between items-center">
@@ -131,7 +131,7 @@ const OrderHistoryPage: React.FC = () => {
             {mockOrders.map(renderOrderCard)}
           </div>
         </Tab>
-        <Tab key="today" title={<div className="flex items-center"><FaCalendarAlt className="mr-2" />Today's Orders</div>}>
+        <Tab key="today" title={<div className="flex items-center"><FaCalendarAlt className="mr-2" />Today&apos;s Orders</div>}>
           <div className="mt-4">
             {todayOrders.length > 0 ? todayOrders.map(renderOrderCard) : <p>No orders for today.</p>}
           </div>

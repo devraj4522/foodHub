@@ -102,11 +102,11 @@ export default function FoodItemPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
             <img
-              src={foodItem.image}
               alt={foodItem.name}
-              width={500}
-              height={300}
               className="rounded-lg shadow-2xl w-full lg:w-1/2 object-cover"
+              height={300}
+              src={foodItem.image}
+              width={500}
             />
             <div className="lg:w-1/2">
               <h1 className="text-4xl sm:text-5xl font-bold mb-4">{foodItem.name}</h1>
@@ -126,9 +126,9 @@ export default function FoodItemPage() {
               <div className="flex justify-between items-center">
                 <span className="text-3xl font-bold">₹{foodItem.price.toFixed(2)}</span>
                 <Button
-                  variant="shadow"
-                  endContent={<FaShoppingCart className="w-6 h-6" />}
                   className="font-semibold bg-lime-600 px-8 py-6 text-white"
+                  endContent={<FaShoppingCart className="w-6 h-6" />}
+                  variant="shadow"
                 >
                   Add to Cart
                 </Button>
@@ -142,8 +142,8 @@ export default function FoodItemPage() {
         <h2 className="text-3xl font-bold mb-8">Explore More from {foodItem.restaurant}</h2>
         <Link href={`/restaurant/${foodItem.restaurant.toLowerCase().replace(/\s+/g, '-')}`} className="inline-block">
           <Button
-            variant="shadow"
             className="font-semibold bg-lime-600 text-white"
+            variant="shadow"
           >
             View Full Menu
           </Button>
@@ -154,7 +154,7 @@ export default function FoodItemPage() {
         <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold mb-8 text-center">
           <span className="text-black">
-            Top Picks You Can't Resist
+            Top Picks You Can&apos;t Resist
           </span>
         </h2>
         <p className="text-center text-gray-600 mb-8">Discover our most-loved dishes that keep customers coming back for more!</p>
@@ -163,9 +163,9 @@ export default function FoodItemPage() {
           {topItems.slice(0, 3).map((item: any) => (
             <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
               <img
-                src={item.image}
                 alt={item.name}
                 className="w-full h-48 object-cover"
+                src={item.image}
               />
               <div className="p-4">
                 <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
@@ -173,9 +173,9 @@ export default function FoodItemPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-2xl font-bold text-lime-600">₹{item.price?.toFixed(2)}</span>
                   <Button
-                    variant="shadow"
-                    endContent={<FaShoppingCart className="w-4 h-4" />}
                     className="font-semibold bg-lime-600 text-white hover:bg-lime-700 transition duration-300"
+                    endContent={<FaShoppingCart className="w-4 h-4" />}
+                    variant="shadow"
                   >
                     Quick Add
                   </Button>
@@ -188,9 +188,9 @@ export default function FoodItemPage() {
         <div className="text-center mt-12">
           <Link href="/bestsellers">
             <Button
-              variant="shadow"
-              size="lg"
               className="font-semibold bg-lime-600 text-white hover:bg-lime-700 transition duration-300 cursor-pointer"
+              size="lg"
+              variant="shadow"
             >
               Explore All Bestsellers
             </Button>

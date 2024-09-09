@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import {
   Navbar as NextUINavbar,
@@ -40,7 +41,6 @@ import LoginCard from "./LoginCard/LoginCard";
 interface Address {
   display_name: string;
 }
-
 
 export const Navbar = () => {
   const [address, setAddress] = useState("Fetching address...");
@@ -129,7 +129,7 @@ export const Navbar = () => {
   }, [coordinates]);
 
   return (
-    <NextUINavbar maxWidth="xl" position="sticky" className="lg:py-4 py-2 bg-lime-200">
+    <NextUINavbar className="lg:py-4 py-2 bg-lime-200" maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full bg-transparent" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -145,7 +145,7 @@ export const Navbar = () => {
                   "data-[active=true]:text-primary data-[active=true]:font-medium max-w-40 text-wrap",
                 )}
                 color="foreground"
-                href=""
+                href="#"
               >
               <FaLocationDot size={24} className="mr-2 text-lime-500" />  {address} <FaAngleDown className="" />
               </NextLink>
@@ -158,7 +158,7 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-6">
-          <Link isExternal aria-label="Phone" className="" href={"tel:"+ siteConfig.links.phone}>
+          <Link aria-label="Phone" className="" href={`tel:${siteConfig.links.phone}`} isExternal>
             <HiPhoneArrowDownLeft className="mr-2 text-green-600 " size={20} />
             <div className="text-[#0b0b0b] text-small ">
             Call Us at <br/> <p className="font-bold">{siteConfig.links.phone}</p>
@@ -188,7 +188,7 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Github" href={""}>
+        <Link aria-label="Github" href="https://github.com" isExternal>
           <GithubIcon className="text-default-500" />
         </Link>
         <ThemeSwitch />

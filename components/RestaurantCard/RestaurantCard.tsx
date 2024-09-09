@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Card, CardBody, CardFooter } from '@nextui-org/card';
-import { Avatar } from '@nextui-org/avatar';
+import { Card } from '@nextui-org/card';
 import { Button } from '@nextui-org/button';
-// import { Rating } from '@nextui-org/rating';
 import { FiClock } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa6';
 import Link from 'next/link';
+
 import { FilterIcon } from '../icons';
 
 interface Restaurant {
@@ -21,7 +20,6 @@ interface Restaurant {
 
 const RestaurantList = () => {
   const [restaurants, setRestaurants] = useState([] as Restaurant[]);
-  const [hasMore, setHasMore] = useState(true);
   const [filters, setFilters] = useState({
     veg: false,
     newlyAdded: false,
@@ -134,9 +132,10 @@ const RestaurantList = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Filter Section */}
       <div className="flex space-x-2 mb-4">
-        <Button  startContent={<FilterIcon width={20} height={20} className='text-white'/>}
+        <Button
           className={`bg-lime-600 text-white ${filters.veg ? "bg-lime-700" : ''}`}
           onClick={() => toggleFilter('veg')}
+          startContent={<FilterIcon className='text-white' height={20} width={20} />}
         >
           Filter
         </Button>
@@ -158,7 +157,7 @@ const RestaurantList = () => {
       <h2 className="text-3xl font-bold text-gray-800 text-left py-2 mb-4">Explore Restaurants Near You</h2>
       <div className="grid grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-4">
       {restaurants.map((restaurant:Restaurant) => (
-        <Link href="" className=''>
+        <Link href="" className='' key={restaurant.id}>
            <Card style={{width: "100%"}} className="flex md:flex-col flex-row items-center p-0 h-full sm:w-1/3 md:w-1/4 mx-auto shadow-lg hover:shadow-xl">
          {/* Image Section */}
          <div className="md:w-full h-full w-1/3 mb-0">

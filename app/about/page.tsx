@@ -3,7 +3,6 @@ import React from 'react';
 import { FaUtensils, FaMoneyBillWave, FaMotorcycle, FaHandshake, FaApple, FaGooglePlay } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
-import Image from 'next/image';
 
 const AboutPage: React.FC = () => {
   return (
@@ -12,19 +11,19 @@ const AboutPage: React.FC = () => {
         <div className="md:w-1/2 mb-8 md:mb-0">
           <h1 className="text-5xl font-bold mb-4 text-lime-600">Your Local Food Heroes</h1>
           <p className="text-xl mb-6">
-            We're not just another food delivery service. We're bringing the best flavors of your city right to your doorstep, supporting local restaurants, and creating a thriving food ecosystem.
+            We&apos;re not just another food delivery service. We&apos;re bringing the best flavors of your city right to your doorstep, supporting local restaurants, and creating a thriving food ecosystem.
           </p>
           <div className="flex space-x-4">
             <Button 
-              size="lg" 
               className="bg-lime-600 text-white hover:bg-lime-700"
+              size="lg" 
               startContent={<FaApple />}
             >
               Get Started
             </Button>
             <Button 
-              size="lg" 
               className="bg-lime-600 text-white hover:bg-lime-700"
+              size="lg" 
               startContent={<FaGooglePlay />}
             >
               Add Restaurant
@@ -33,9 +32,9 @@ const AboutPage: React.FC = () => {
         </div>
         <div className="md:w-1/2">
           <img 
-            src="https://b.zmtcdn.com/data/pictures/chains/0/21060/18df05cee503aafc336f9a809fad79a3.jpg?output-format=webp" 
             alt="Food Delivery Hero" 
             className="rounded-lg"
+            src="https://b.zmtcdn.com/data/pictures/chains/0/21060/18df05cee503aafc336f9a809fad79a3.jpg?output-format=webp" 
           />
         </div>
       </section>
@@ -91,7 +90,7 @@ const AboutPage: React.FC = () => {
               </div>
             </CardHeader>
             <CardBody>
-              <p>We're committed to supporting local restaurants and delivery partners, fostering a thriving food ecosystem in our community.</p>
+              <p>We&apos;re committed to supporting local restaurants and delivery partners, fostering a thriving food ecosystem in our community.</p>
             </CardBody>
           </Card>
         </div>
@@ -104,8 +103,8 @@ const AboutPage: React.FC = () => {
           No hidden fees, no compromises - just great food at great prices.
         </p>
         <Button 
-          size="lg" 
           className="bg-lime-600 text-white hover:bg-lime-700"
+          size="lg" 
         >
           Order Now
         </Button>
