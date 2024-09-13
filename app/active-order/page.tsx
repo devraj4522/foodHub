@@ -16,7 +16,7 @@ const mockActiveOrder = {
   ],
   total: 350,
   isPaid: false,
-  estimatedDeliveryTime: 10, // in minutes
+  estimatedDeliveryTime: 50, // in minutes
   orderPlacedTime: new Date(Date.now() - 10 * 60000), // 10 minutes ago
 };
 

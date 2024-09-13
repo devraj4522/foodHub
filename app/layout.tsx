@@ -38,15 +38,6 @@ export default function RootLayout({
     // const res = fetch(`https://api.github.com/users/`)
   // const data = res.json()
   
-  const data = {
-    name: "Dev Raj Singh",
-    email: "dev@tst.com",
-    phone: "+91 9122604411",
-    address: "Salt Lake Sector V, Kolkata",
-    city: "Kolkata",
-    state: "West Bengal",
-    pincode: "700101",
-}
 
   return (
     <html suppressHydrationWarning lang="en">
@@ -59,14 +50,14 @@ export default function RootLayout({
       >
         <Toaster />
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="w-full flex-grow">
-              <Cart />
-              {children}
-            </main>
-           <Footer />
-          </div>
+            <div className="relative flex flex-col h-screen">
+              <Navbar />
+              <main className="w-full flex-grow">
+                <Cart />
+                {children}
+              </main>
+            <Footer />
+            </div>
         </Providers>
       </body>
     </html>

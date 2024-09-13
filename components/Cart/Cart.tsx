@@ -4,15 +4,17 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
-import { FaShoppingCart, FaMapMarkerAlt, FaWallet, FaArrowLeft, FaTimes } from 'react-icons/fa';
+import { FaShoppingCart, FaMapMarkerAlt, FaWallet, FaArrowLeft } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
 import { useGeolocation } from "@/hooks/location/useGeolocation";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRecoilState } from 'recoil';
 import { showCartAtom } from '@/recoil/atoms/cartAtom';
+import { useGetCartItems } from '@/hooks/cart/useGetCart';
+import { useAddToCart } from '@/hooks/cart/useAddToCart';
 
 interface CartItem {
-  id: number;
+  id: string;
   name: string;
   price: number;
   quantity: number;
@@ -25,23 +27,17 @@ interface Address {
 }
 
 const Cart: React.FC = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
-  const { coordinates, error } = useGeolocation();
+  const { coordinates } = useGeolocation();
   const [currentAddress, setCurrentAddress] = useState<string>('');
   const [step, setStep] = useState<'cart' | 'address' | 'payment'>('cart');
   const [isCartVisible, setIsCartVisible] = useRecoilState(showCartAtom);
+  const cartItems = useGetCartItems();
+  const { addItemToCart } = useAddToCart();
 
   useEffect(() => {
-    // Fetch cart items from API or local storage
-    const fetchedItems: CartItem[] = [
-      { id: 1, name: "Pizza", price: 12.99, quantity: 2 },
-      { id: 2, name: "Burger", price: 8.99, quantity: 1 },
-    ];
-    setCartItems(fetchedItems);
-
     // Fetch saved addresses
     const fetchedAddresses: Address[] = [
       { id: 1, label: "Home", fullAddress: "123 Main St, City, Country" },
@@ -56,7 +52,7 @@ const Cart: React.FC = () => {
     }
   }, [coordinates]);
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = cartItems.reduce((sum, item) => sum + item?.price * item?.quantity, 0);
 
   const handleAddressChange = (addressId: string) => {
     setSelectedAddress(addressId);
@@ -71,12 +67,18 @@ const Cart: React.FC = () => {
     console.log("Proceeding to checkout");
   };
 
-  const handleQuantityChange = (id: number, change: number) => {
-    setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.id === id ? { ...item, quantity: Math.max(0, item.quantity + change) } : item
-      ).filter(item => item.quantity > 0)
-    );
+  const handleQuantityChange = (id: string, change: number) => {
+    const item = cartItems.find(item => item.id === id);
+    if (item) {
+      const newQuantity = Math.max(0, item.quantity + change);
+      if (newQuantity === 0) {
+        // Remove item from cart if quantity becomes 0
+        addItemToCart({ ...item, quantity: 0 });
+      } else {
+        // Update item quantity
+        addItemToCart({ ...item, quantity: newQuantity });
+      }
+    }
   };
 
   const renderCartItems = () => (
@@ -86,14 +88,14 @@ const Cart: React.FC = () => {
         <h2 className="text-lg font-semibold">Your Cart</h2>
       </CardHeader>
       <CardBody>
-        {cartItems.map((item) => (
-          <div key={item.id} className="flex justify-between items-center mb-3 py-2 border-b">
-            <span className="font-medium">{item.name}</span>
+        {cartItems.map((item: CartItem) => (
+          <div key={item?.id} className="flex justify-between items-center mb-3 py-2 border-b">
+            <span className="font-medium">{item?.name}</span>
             <div className="flex items-center">
-              <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onClick={() => handleQuantityChange(item.id, -1)}>-</Button>
-              <span className="mx-3 font-semibold">{item.quantity}</span>
-              <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onClick={() => handleQuantityChange(item.id, 1)}>+</Button>
-              <span className="ml-4 font-semibold">${(item.price * item.quantity).toFixed(2)}</span>
+              <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onClick={() => handleQuantityChange(item?.id, -1)}>-</Button>
+              <span className="mx-3 font-semibold">{item?.quantity}</span>
+              <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onClick={() => handleQuantityChange(item?.id, 1)}>+</Button>
+              <span className="ml-4 font-semibold">${(item?.price * item?.quantity).toFixed(2)}</span>
             </div>
           </div>
         ))}
@@ -117,11 +119,12 @@ const Cart: React.FC = () => {
           <SelectItem key="current" value="current">
             Current Location: {currentAddress}
           </SelectItem>
-          {/* {savedAddresses.map((address) => (
+          {/* {[savedAddresses].map((address: Address) => (
             <SelectItem key={address.id} value={address.id.toString()}>
               {address.label}: {address.fullAddress}
             </SelectItem>
-          ))} */}
+          ))} 
+           */}
         </Select>
       </CardBody>
     </Card>

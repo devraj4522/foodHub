@@ -1,65 +1,60 @@
+'use client';
 import React from 'react';
 import { FaClock, FaTrain, FaStar } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
 import Link from 'next/link';
 import { FaShoppingCart } from 'react-icons/fa';
+import { useParams } from 'next/navigation';
+import { useGetProduct } from '@/hooks/products/useGetProduct';
+import { useFetchTopItems } from '@/hooks/products/useFetchTopItems';
+import { Spinner } from '@nextui-org/spinner';
 
-
-const foodItem = {
-  id: 2,
-  name: 'Whopper',
-  restaurant: 'Burger King',
-  deliveryTime: '20 mins',
-  rating: '4.0',
-  reviews: '12k',
-  category: 'Burger',
-  description: 'A flame-grilled beef patty topped with juicy tomatoes, fresh lettuce, creamy mayonnaise, ketchup, crunchy pickles, and sliced white onions on a soft sesame seed bun.',
-  price: 5.99,
-  image: 'https://b.zmtcdn.com/data/pictures/chains/9/20092959/ee9345b9c8c03822d37fff447ab3f0ad.jpg',
-};
+interface FoodItem {
+  id: number;
+  name: string;
+  restaurant: string;
+  deliveryTime: string;
+  rating: string;
+  reviews: string;
+  category: string;
+  price: number;
+  image: string;
+  description: string;
+}
 
 // list of top items
-const topItems = [
-  {
-    id: 1,
-    name: 'Italian Bistro',
-    deliveryTime: '39 mins',
-    rating: '3.5',
-    reviews: '42k',
-    description: 'A cozy Italian restaurant known for its authentic pizzas and pastas.',
-    price: 10.99,
-    category: 'Pizza',
-    averageCost: '₹300 for two',
-    topItems: ['Pizza', 'Pasta'],
-    image: 'https://b.zmtcdn.com/data/pictures/chains/2/19418342/fd8aff752d2ee84cbebc859d6fd501d5.jpg',
-  },
-  {
-    id: 2,
-    name: 'Whopper',
-    restaurant: 'Burger King',
-    deliveryTime: '20 mins',
-    rating: '4.0',
-    reviews: '12k',
-    category: 'Burger',
-    description: 'A flame-grilled beef patty topped with juicy tomatoes, fresh lettuce, creamy mayonnaise, ketchup, crunchy pickles, and sliced white onions on a soft sesame seed bun.',
-    price: 5.99,
-    image: 'https://b.zmtcdn.com/data/pictures/chains/9/20092959/ee9345b9c8c03822d37fff447ab3f0ad.jpg',
-  },
-  {
-    id: 3,
-    name: 'Margherita Pizza',
-    restaurant: 'Pizza Hut',
-    deliveryTime: '45 mins',
-    rating: '4.5',
-    reviews: '25k',
-    category: 'Pizza',
-    description: 'A classic pizza with a thin crust, topped with fresh mozzarella cheese, tomatoes, and basil.',
-    price: 8.99,
-    image: 'https://b.zmtcdn.com/data/pictures/chains/2/19418342/fd8aff752d2ee84cbebc859d6fd501d5.jpg',
-  },
-];
+interface TopItem {
+  id: number;
+  name: string;
+  deliveryTime: string;
+  rating: string;
+  reviews: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string;
+  restaurant?: string;
+  averageCost?: string;
+  topItems?: string[];
+}
+
+
 
 export default function FoodItemPage() {
+  const { id } = useParams();
+  const { data, isLoading, error } = useGetProduct(id as string);
+  const {data: topItemsData, isLoading: topItemsIsLoading, error: topItemsError} = useFetchTopItems();
+
+  if (isLoading || topItemsIsLoading) return(
+    <div className='flex justify-center items-center h-[100vh]'>
+      <Spinner />
+    </div>
+  )
+  if (error || topItemsError) return <div>Error: {error as string || topItemsError as string}</div>
+
+  const foodItem: FoodItem | undefined = data?.product;
+  const topItems: TopItem[] = topItemsData?.topItems || [];
+
   return (
     <>
       <section className="bg-yellow-50 py-4 m-0">
@@ -88,11 +83,11 @@ export default function FoodItemPage() {
             </li>
             <li>
               <span className="mx-2">/</span>
-              <Link href={`/restaurant/${foodItem.restaurant.toLowerCase().replace(/\s+/g, '-')}`} className="hover:underline">{foodItem.restaurant}</Link>
+              <Link href={`/restaurant/${foodItem?.restaurant.toLowerCase().replace(/\s+/g, '-')}`} className="hover:underline">{foodItem?.restaurant}</Link>
             </li>
             <li>
               <span className="mx-2">/</span>
-              <span aria-current="page">{foodItem.name}</span>
+              <span aria-current="page">{foodItem?.name}</span>
             </li>
           </ol>
         </nav>
@@ -102,29 +97,29 @@ export default function FoodItemPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
             <img
-              alt={foodItem.name}
+              alt={foodItem?.name}
               className="rounded-lg shadow-2xl w-full lg:w-1/2 object-cover"
               height={300}
-              src={foodItem.image}
+              src={foodItem?.image}
               width={500}
             />
             <div className="lg:w-1/2">
-              <h1 className="text-4xl sm:text-5xl font-bold mb-4">{foodItem.name}</h1>
-              <p className="text-2xl font-semibold mb-2">{foodItem.restaurant}</p>
-              <p className="mb-6">{foodItem.description}</p>
+              <h1 className="text-4xl sm:text-5xl font-bold mb-4">{foodItem?.name}</h1>
+              <p className="text-2xl font-semibold mb-2">{foodItem?.restaurant}</p>
+              <p className="mb-6">{foodItem?.description}</p>
               <div className="flex flex-wrap gap-4 mb-6">
-                <span className="badge badge-outline">{foodItem.category}</span>
+                <span className="badge badge-outline">{foodItem?.category}</span>
                 <span className="flex items-center bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
                   <FaStar className="w-4 h-4 mr-1 text-yellow-500" />
-                  <span className="font-semibold">{foodItem.rating}</span>
+                  <span className="font-semibold">{foodItem?.rating}</span>
                 </span>
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                   <FaClock className="w-4 h-4 mr-1" />
-                  {foodItem.deliveryTime}
+                  {foodItem?.deliveryTime}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-3xl font-bold">₹{foodItem.price.toFixed(2)}</span>
+                <span className="text-3xl font-bold">₹{foodItem?.price.toFixed(2)}</span>
                 <Button
                   className="font-semibold bg-lime-600 px-8 py-6 text-white"
                   endContent={<FaShoppingCart className="w-6 h-6" />}
@@ -139,8 +134,8 @@ export default function FoodItemPage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-3xl font-bold mb-8">Explore More from {foodItem.restaurant}</h2>
-        <Link href={`/restaurant/${foodItem.restaurant.toLowerCase().replace(/\s+/g, '-')}`} className="inline-block">
+        <h2 className="text-3xl font-bold mb-8">Explore More from {foodItem?.restaurant}</h2>
+        <Link href={`/restaurant/${foodItem?.restaurant.toLowerCase().replace(/\s+/g, '-')}`} className="inline-block">
           <Button
             className="font-semibold bg-lime-600 text-white"
             variant="shadow"

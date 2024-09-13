@@ -51,3 +51,54 @@ After modifying the `.npmrc` file, you need to run `pnpm install` again to ensur
 ## License
 
 Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+Performance cease to be a major limiting factor - true
+
+
+
+Unmaintainable codebase is the biggest bottleneck for a growing product. 
+
+Complex code is hard to take over, changes are slow, expensive and risky.
+
+
+
+9/10 cases maintainability will be much bigger problem than performance.
+
+
+
+The feature you write today will be used tomorrow and will live with you forever.
+
+
+
+Long-term cost of maintenance typically outweighs the initial investment in performance.
+
+
+
+#softw
+
+
+
+Performance cease to be a major limiting factor - true
+
+
+
+Unmaintainable code-base is the biggest bottleneck for a growing product. 
+
+
+
+Complex code is hard to interpret, changes are slow, expensive and risky.
+
+
+
+9/10 cases maintainability will be much bigger problem than performance.
+
+
+
+The feature you write today will be used tomorrow and will live with you forever.
+
+
+
+Long-term cost of maintenance sometimes outweighs the initial investment in performance.
+
+
+
+#software

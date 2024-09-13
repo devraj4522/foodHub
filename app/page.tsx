@@ -5,28 +5,21 @@ import { useSetRecoilState } from "recoil";
 
 import HeroSection from "@/components/Hero/Hero";
 import ExploreSection from "@/components/Deals/Deals";
-import YouCanTrySection from "@/components/TrySection/TrySection";
+import TopItems from "@/components/TrySection/TrySection";
 import RestaurantList from "@/components/RestaurantCard/RestaurantCard";
 import LoginCard from "@/components/LoginCard/LoginCard";
+import { QueryClient, QueryClientProvider } from "react-query";
+
 
 export default function Home() {
-  const data = {
-    name: "Dev Raj Singh",
-    email: "dev@tst.com",
-    phone: "+91 9122604411",
-    address: "Salt Lake Sector V, Kolkata",
-    city: "Kolkata",
-    state: "West Bengal",
-    pincode: "700101",
-  }
-
+  const queryClient = new QueryClient();
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <HeroSection />
       <ExploreSection />
-      <YouCanTrySection />
+      <TopItems />
       <RestaurantList />
       <LoginCard />
-    </>
+    </QueryClientProvider>
   );
 }

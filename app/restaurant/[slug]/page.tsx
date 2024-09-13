@@ -1,119 +1,49 @@
+'use client';
 import React from 'react';
-
 import { FaCartShopping } from 'react-icons/fa6';
 import {Breadcrumbs, BreadcrumbItem} from "@nextui-org/breadcrumbs";
 import { FaClock, FaTrain, FaInfoCircle } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
 import { FaShoppingCart } from 'react-icons/fa';
+import { useFetchProducts } from '@/hooks/restaurants/useFetchProducts';
+import { useParams } from 'next/navigation';
+import { useQuery } from 'react-query';
+import { Link } from '@nextui-org/link';
+import { Spinner } from '@nextui-org/spinner';
+import { useAddToCart } from '@/hooks/cart/useAddToCart';
+import { toast } from 'sonner';
 
-const menu = [
-  {
-    id: 1,
-    name: 'Italian Bistro',
-    deliveryTime: '39 mins',
-    rating: '3.5',
-    reviews: '42k',
-    description: 'A cozy Italian restaurant known for its authentic pizzas and pastas.',
-    price: 10.99,
-    category: 'Pizza',
-    averageCost: '₹300 for two',
-    topItems: ['Pizza', 'Pasta'],
-    image: 'https://b.zmtcdn.com/data/pictures/chains/2/19418342/fd8aff752d2ee84cbebc859d6fd501d5.jpg',
-  },
-  {
-    id: 2,
-    name: 'Burger King',
-    deliveryTime: '20 mins',
-    rating: '4.0',
-    reviews: '12k',
-    category: 'Burger',
-    description: 'A fast food restaurant known for its burgers, fries, and other fast food items.',
-    price: 5.99,
-    averageCost: '₹200 for two',
-    topItems: ['Whopper', 'Fries'],
-    image: 'https://b.zmtcdn.com/data/pictures/chains/9/20092959/ee9345b9c8c03822d37fff447ab3f0ad.jpg',
-  },
-  {
-    id: 3,
-    name: 'The Chinese Box',
-    deliveryTime: '30 mins',
-    rating: '3.8',
-    reviews: '8k',
-    description: 'A Chinese restaurant known for its Chinese food, including noodles, rice, and other Chinese dishes.',
-    price: 8.99,
-    averageCost: '₹250 for two',
-    category: 'Chinese',
-    topItems: ['Manchurian', 'Fried Rice'],
-    image: 'https://www.allrecipes.com/thmb/SoBuPU73KcbYHl3Kp3j8Xx4A3fc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8805-CrispyFriedChicken-mfs-3x2-072-d55b8406d4ae45709fcdeb58a04143c2.jpg',
-  },
-  {
-    id: 4,
-    name: 'Sagar Ratna',
-    deliveryTime: '45 mins',
-    rating: '4.5',
-    reviews: '22k',
-    description: 'A South Indian restaurant known for its South Indian food, including dosa, idli, and other South Indian dishes.',
-    price: 12.99,
-    category: 'South Indian',
-    averageCost: '₹400 for two',
-    topItems: ['Dosa', 'Idli'],
-    image: 'https://recipes.net/wp-content/uploads/2024/01/how-to-eat-for-more-than-one-dosha-1706085501.jpg',
-  },
-  {
-    id: 5,
-    name: 'Biryani House',
-    deliveryTime: '35 mins',
-    rating: '4.2',
-    description: 'A restaurant known for its Biryani, including chicken biryani, mutton biryani, and other Biryani dishes.',
-    price: 15.99,
-    reviews: '18k',
-    category: 'Biryani',
-    averageCost: '₹350 for two',
-    topItems: ['Chicken Biryani', 'Mutton Biryani'],
-    image: 'https://bonmasala.com/wp-content/uploads/2022/10/mutton-biriyani-recipe.jpeg',
-  },
-  {
-    id: 6,
-    name: 'The Pizza Place',
-    deliveryTime: '25 mins',
-    rating: '4.3',
-    reviews: '15k',
-    category: 'Pizza',
-    description: 'A pizza restaurant known for its pizza, including margherita pizza, farmhouse pizza, and other pizza dishes.',
-    price: 11.99,
-    averageCost: '₹250 for two',
-    topItems: ['Margherita', 'Farmhouse'],
-    image: 'https://b.zmtcdn.com/data/reviews_photos/ead/2a1826787ec13c007c17e76502bb8ead_1639634307.jpg',
-  },
-  {
-    id: 7,
-    name: 'The Dhaba',
-    deliveryTime: '40 mins',
-    rating: '4.1',
-    reviews: '10k',
-    category: 'North Indian',
-    description: 'A restaurant known for its North Indian food, including butter chicken, naan, and other North Indian dishes.',
-    price: 15.99,
-    averageCost: '₹300 for two',
-    topItems: ['Butter Chicken', 'Naan'],
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ8vpqzG1hDGjt-tOmgnMaHXs7TdQBfyRL_w&s',
-  },
-  {
-    id: 8,
-    name: 'The Pastry Shop',
-    deliveryTime: '30 mins',
-    rating: '4.4',
-    reviews: '25k',
-    category: 'Desserts',
-    description: 'A dessert restaurant known for its desserts, including chocolate pastry, black forest, and other desserts.',
-    price: 10.99,
-    averageCost: '₹150 for two',
-    topItems: ['Chocolate Pastry', 'Black Forest'],
-    image: 'https://img.onmanorama.com/content/dam/mm/en/food/recipe/images/2023/5/9/chocolate-pastry.jpg',
-  },
-];
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
 
 export default function RestaurantPage() {
+  const { slug } = useParams();
+  const { data: menu, isLoading } = useFetchProducts(slug as string);
+  const { addItemToCart, isLoading: addItemToCartLoading, isSuccess: addItemToCartSuccess} = useAddToCart();
+  
+  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>, item: CartItem) => {
+    event.preventDefault();
+    addItemToCart(item);
+  };
+
+  // Show loading toast while adding item to cart, then show success or error toast
+  React.useEffect(() => {
+    if (addItemToCartLoading) {
+      toast.loading('Adding to cart...', { id: 'addToCart' });
+    } else {
+      if (addItemToCartSuccess) {
+        toast.success('Item added to cart', { id: 'addToCart' });
+      } else if (!addItemToCartLoading && !addItemToCartSuccess) {
+        toast.error('Failed to add item to cart', { id: 'addToCart' });
+      }
+    }
+  }, [addItemToCartLoading, addItemToCartSuccess]);
+  
+
   return (
     <>
        <section className="bg-yellow-50 py-4 m-0">
@@ -171,9 +101,13 @@ export default function RestaurantPage() {
                   <span className="font-semibold">4.5</span>
                 </span>
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-800">
-                  <svg className="w-4 h-4 text-blue-500 animate-pulse mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" />
-                    <circle cx="12" cy="12" r="3" />
+                  <svg className="w-4 h-4 text-blue-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10">
+                      <animate attributeName="r" values="8;10;8" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="12" cy="12" r="3">
+                      <animate attributeName="r" values="2;3;2" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
                   </svg>
                   <p>Available</p>
                 </span>
@@ -224,8 +158,9 @@ export default function RestaurantPage() {
           <div className="md:w-3/4">
             <h3 className="text-xl font-semibold mb-4">Order Online</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {menu.map((item) => (
-                <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              {menu?.products.map((item) => (
+                <Link href={`/food/${item.id}`} key={item.id}>
+                  <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                   <img
                     src={item.image}
                     alt={item.name}
@@ -237,7 +172,7 @@ export default function RestaurantPage() {
                     <div className="flex justify-between items-center">
                       <span className="text-xl font-bold">₹{item.price?.toFixed(2)}</span>
                       <Button
-
+                        onClick={(event) => handleAddToCart(event, {id: item.id.toString(), name: item.name, price: item.price, quantity: 1})}
                         variant="shadow"
                         endContent={<FaCartShopping className="w-4 h-4" />}
                         className="font-semibold bg-lime-600 text-white"
@@ -247,6 +182,7 @@ export default function RestaurantPage() {
                     </div>
                   </div>
                 </div>
+                </Link>
               ))}
             </div>
           </div>

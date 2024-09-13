@@ -37,6 +37,7 @@ import { useRecoilValue, useRecoilState } from "recoil";
 import { FaUserCircle } from "react-icons/fa";
 import LoginCard from "./LoginCard/LoginCard";
 import { showCartAtom } from "@/recoil/atoms/cartAtom";
+import { useGetCartItems } from "@/hooks/cart/useGetCart";
 
 interface Address {
   display_name: string;
@@ -49,6 +50,7 @@ export const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showCart, setShowCart] = useRecoilState(showCartAtom);
+  const cartItems = useGetCartItems();
 
   useEffect(() => {
     // Check login status from your API
@@ -170,7 +172,14 @@ export const Navbar = () => {
             </div>
           </Link>
           <Link aria-label="Cart" href="#" onClick={handleCartClick}>
-            <PiShoppingCartSimpleFill className="text-green-600" size={24} />
+            <div className="relative">
+              <PiShoppingCartSimpleFill className="text-green-600" size={24} />
+              {cartItems.length > 0 && (
+                <div className="absolute -top-2 -right-2 bg-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                  {cartItems.length}
+                </div>
+              )}
+            </div>
           </Link>
           <Link aria-label="Profile" href="/profile">
             <FaUserCircle className="text-green-600" size={24} />
