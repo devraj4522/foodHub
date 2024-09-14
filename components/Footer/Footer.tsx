@@ -7,9 +7,9 @@ export default function Footer() {
     <footer className={`${style.footer} py-12`}>
       <div className="container max-w-7xl pt-16 px-6 flex-grow mx-auto">
         {/* Top Section */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Section */}
-          <div>
+          <div className="mb-8 sm:mb-0">
             <h3 className="text-lg font-semibold mb-4">Company</h3>
             <ul>
               <li className="mb-2">
@@ -31,7 +31,7 @@ export default function Footer() {
           </div>
 
           {/* Support Section */}
-          <div>
+          <div className="mb-8 sm:mb-0">
             <h3 className="text-lg font-semibold mb-4">Support</h3>
             <ul>
               <li className="mb-2">
@@ -58,7 +58,7 @@ export default function Footer() {
           </div>
 
           {/* Legal Section */}
-          <div>
+          <div className="mb-8 sm:mb-0">
             <h3 className="text-lg font-semibold mb-4">Legal</h3>
             <ul>
               <li className="mb-2">
@@ -82,9 +82,9 @@ export default function Footer() {
           {/* Available Cities Section */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Available in:</h3>
-            <ul>
+            <ul className="grid grid-cols-2 sm:grid-cols-1 gap-2">
               {['Bengaluru', 'Bihar', 'Kolkata', 'Add Your Restaurant'].map((city, index) => (
-                <li key={index} className="mb-2">
+                <li key={index}>
                   <Link href="#" className="hover:text-gray-400">
                     {city}
                   </Link>
@@ -99,13 +99,16 @@ export default function Footer() {
         <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col lg:flex-row justify-between items-center">
           <div className="text-center lg:text-left mb-4 lg:mb-0">
             <p>© 2024 FoodKloud</p>
-            <p>Life at FoodKloud | Explore with FoodKloud | Call Us: {siteConfig.links.phone} | {siteConfig.links.email}</p>
+            <p className="text-sm md:text-base">
+              <span className="block md:inline md:ml-2">Call Us: {siteConfig.links.phone} {" |"}</span>
+              <span className="block md:inline md:ml-2">{siteConfig.links.email}</span>
+            </p>
           </div>
 
           {/* Social Links */}
-          <div className="flex space-x-6">
+          <div className="flex flex-wrap justify-center lg:justify-end space-x-4 md:space-x-6">
             {['Linkedin', 'Instagram', 'Facebook', 'Pinterest', 'Twitter'].map((social, index) => (
-              <Link key={index} href="#" className="hover:text-gray-400">
+              <Link key={index} href="#" className="hover:text-gray-400 mb-2 md:mb-0">
                 {social}
               </Link>
             ))}

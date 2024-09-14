@@ -8,20 +8,24 @@ interface CartItem {
   quantity: number;
 }
 
-export const addToCart = async (item: CartItem) => {
-  // const response = await axios.post(`${API_URL}/cart`, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   data: item,
-  // });
-  const response = [
-    {
-      id: '1',
-      name: 'Pizza',
-    price: 10,
-    quantity: 1,
-  }];
-  return response;
+export const updateCart = async (items: CartItem[]) => {
+  try {
+    // const response = await axios.put(`${API_URL}/cart/${item.id}`, item, {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // });
+    const response = [
+      {
+        id: '1',
+        name: 'Pizza',
+        price: 10,
+        quantity: 1,
+      }];
+    return response;
+  } catch (error) {
+    console.error('Error updating cart item:', error);
+    throw error;
+  }
 };
+

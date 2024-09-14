@@ -26,6 +26,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'img.onmanorama.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'pngimg.com',
+      },
     ],
   },
 };

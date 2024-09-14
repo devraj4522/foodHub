@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
@@ -8,10 +8,13 @@ import { FaShoppingCart, FaMapMarkerAlt, FaWallet, FaArrowLeft } from 'react-ico
 import { IoMdClose } from 'react-icons/io';
 import { useGeolocation } from "@/hooks/location/useGeolocation";
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { showCartAtom } from '@/recoil/atoms/cartAtom';
 import { useGetCartItems } from '@/hooks/cart/useGetCart';
-import { useAddToCart } from '@/hooks/cart/useAddToCart';
+import { useUpdateCart } from '@/hooks/cart/useUpdateCart';
+import { userAtom } from '@/recoil/atoms/userAtom';
+import { cartItemsAtom } from '@/recoil/atoms/cartAtom';
+import Image from 'next/image';
 
 interface CartItem {
   id: string;
@@ -20,93 +23,101 @@ interface CartItem {
   quantity: number;
 }
 
-interface Address {
-  id: number;
-  label: string;
-  fullAddress: string;
-}
-
 const Cart: React.FC = () => {
-  const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
-  const [selectedAddress, setSelectedAddress] = useState<string>('');
-  const [paymentMethod, setPaymentMethod] = useState<string>('');
-  const { coordinates } = useGeolocation();
-  const [currentAddress, setCurrentAddress] = useState<string>('');
+  const [paymentMethod, setPaymentMethod] = useState<string>('upi');
   const [step, setStep] = useState<'cart' | 'address' | 'payment'>('cart');
   const [isCartVisible, setIsCartVisible] = useRecoilState(showCartAtom);
-  const cartItems = useGetCartItems();
-  const { addItemToCart } = useAddToCart();
+  const [cartItems, setCartItems] = useRecoilState(cartItemsAtom);
+  const { updateCartItem, isSuccess, isLoading, error } = useUpdateCart();
+  const { address } = useGeolocation();
+  const user = useRecoilValue(userAtom);
+  const [allAddresses, setAllAddresses] = useState<string[]>([]);
+  const [isQRVisible, setIsQRVisible] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState<string>('');
 
   useEffect(() => {
-    // Fetch saved addresses
-    const fetchedAddresses: Address[] = [
-      { id: 1, label: "Home", fullAddress: "123 Main St, City, Country" },
-      { id: 2, label: "Work", fullAddress: "456 Office Rd, City, Country" },
-    ];
-    setSavedAddresses(fetchedAddresses);
+    const addresses = address ? [address, ...user.address] : user.address;
+    setAllAddresses(addresses);
+    setSelectedAddress(addresses[0] || '');
+  }, [user, address, step]);
 
-    // Fetch current address based on coordinates
-    if (coordinates) {
-      // This should be replaced with a real geocoding service
-      setCurrentAddress(`Lat: ${coordinates.latitude}, Lng: ${coordinates.longitude}`);
-    }
-  }, [coordinates]);
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + item?.price * item?.quantity, 0);
+  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const handleAddressChange = (addressId: string) => {
-    setSelectedAddress(addressId);
-  };
+  const handleAddressChange = useCallback((address: string) => {
+    setSelectedAddress(address);
+  }, []);
 
-  const handlePaymentMethodChange = (method: string) => {
+  const handlePaymentMethodChange = useCallback((method: string) => {
     setPaymentMethod(method);
-  };
+    setIsQRVisible(false);
+  }, []);
 
-  const handleCheckout = () => {
-    // Implement checkout logic
+  const handleCheckout = useCallback(() => {
     console.log("Proceeding to checkout");
-  };
+    console.log("Order details:", {
+      items: cartItems,
+      totalPrice,
+      address: selectedAddress,
+      paymentMethod
+    });
+  }, [cartItems, totalPrice, selectedAddress, paymentMethod]);
 
-  const handleQuantityChange = (id: string, change: number) => {
-    const item = cartItems.find(item => item.id === id);
-    if (item) {
-      const newQuantity = Math.max(0, item.quantity + change);
-      if (newQuantity === 0) {
-        // Remove item from cart if quantity becomes 0
-        addItemToCart({ ...item, quantity: 0 });
-      } else {
-        // Update item quantity
-        addItemToCart({ ...item, quantity: newQuantity });
-      }
+  const handleQuantityChange = useCallback((id: string, change: number) => {
+    setCartItems(prevItems => {
+      const updatedItems = prevItems.map(item => {
+        if (item.id === id) {
+          const newQuantity = Math.max(0, item.quantity + change);
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      });
+      updateCartItem(updatedItems);
+      return updatedItems;
+    });
+
+    
+  }, [setCartItems, updateCartItem]);
+
+  useEffect(() => {
+    if (error) {
+      console.error("Error updating cart:", error);
+      // Implement error handling, e.g., show an error message to the user
     }
-  };
+  }, [error]);
 
-  const renderCartItems = () => (
+  const renderCartItems = useCallback(() => (
     <Card className="mb-4 shadow-md">
-      <CardHeader className="flex gap-3 bg-lime-600 text-white">
+      <CardHeader className="flex gap-3 bg-black text-white">
         <FaShoppingCart size={20} />
         <h2 className="text-lg font-semibold">Your Cart</h2>
       </CardHeader>
       <CardBody>
-        {cartItems.map((item: CartItem) => (
-          <div key={item?.id} className="flex justify-between items-center mb-3 py-2 border-b">
-            <span className="font-medium">{item?.name}</span>
-            <div className="flex items-center">
-              <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onClick={() => handleQuantityChange(item?.id, -1)}>-</Button>
-              <span className="mx-3 font-semibold">{item?.quantity}</span>
-              <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onClick={() => handleQuantityChange(item?.id, 1)}>+</Button>
-              <span className="ml-4 font-semibold">${(item?.price * item?.quantity).toFixed(2)}</span>
+        {isLoading ? (
+          <div className="text-center">Updating cart...</div>
+        ) : cartItems.filter(item => item.quantity > 0).length > 0 ? (
+          cartItems.filter(item => item.quantity > 0).map((item: CartItem) => (
+            <div key={item.id} className="flex justify-between items-center mb-3 py-2 border-b">
+              <span className="font-medium">{item.name}</span>
+              <div className="flex items-center">
+                <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onPress={() => handleQuantityChange(item.id, -1)} disabled={isLoading}>-</Button>
+                <span className="mx-3 font-semibold">{item.quantity}</span>
+                <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onPress={() => handleQuantityChange(item.id, 1)} disabled={isLoading}>+</Button>
+                <span className="ml-4 font-semibold">₹{(item.price * item.quantity).toFixed(2)}</span>
+              </div>
             </div>
-          </div>
-        ))}
-        <div className="font-bold mt-4 text-right text-lg">Total: ${totalPrice.toFixed(2)}</div>
+          ))
+        ) : (
+          <div className="text-center">Your cart is empty</div>
+        )}
+        <div className="font-bold mt-4 text-right text-lg">Total: ₹{totalPrice.toFixed(2)}</div>
       </CardBody>
     </Card>
-  );
+  ), [cartItems, handleQuantityChange, totalPrice, isLoading]);
 
-  const renderAddressSelection = () => (
+  const renderAddressSelection = useCallback(() => (
     <Card className="mb-4 shadow-md">
-      <CardHeader className="flex gap-3 bg-lime-600 text-white">
+      <CardHeader className="flex gap-3 bg-black text-white">
         <FaMapMarkerAlt size={20} />
         <h2 className="text-lg font-semibold">Delivery Address</h2>
       </CardHeader>
@@ -114,25 +125,28 @@ const Cart: React.FC = () => {
         <Select 
           label="Select Address" 
           placeholder="Choose an address"
+          defaultSelectedKeys={[selectedAddress]}
           onChange={(e) => handleAddressChange(e.target.value)}
         >
-          <SelectItem key="current" value="current">
-            Current Location: {currentAddress}
-          </SelectItem>
-          {/* {[savedAddresses].map((address: Address) => (
-            <SelectItem key={address.id} value={address.id.toString()}>
-              {address.label}: {address.fullAddress}
+          {allAddresses.length > 0 ? (
+            allAddresses.map((item, index) => (
+              <SelectItem key={index} value={item}>
+                {item}
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem key="no-addresses" value="">
+              No saved addresses
             </SelectItem>
-          ))} 
-           */}
+          )}
         </Select>
       </CardBody>
     </Card>
-  );
+  ), [allAddresses, handleAddressChange, selectedAddress]);
 
-  const renderPaymentSelection = () => (
+  const renderPaymentSelection = useCallback(() => (
     <Card className="mb-4 shadow-md">
-      <CardHeader className="flex gap-3 bg-lime-600 text-white">
+      <CardHeader className="flex gap-3 bg-black text-white">
         <FaWallet size={20} />
         <h2 className="text-lg font-semibold">Payment Method</h2>
       </CardHeader>
@@ -141,22 +155,37 @@ const Cart: React.FC = () => {
           label="Select Payment Method" 
           placeholder="Choose a payment method"
           onChange={(e) => handlePaymentMethodChange(e.target.value)}
+          defaultSelectedKeys={["upi"]}
         >
-          <SelectItem key="gpay" value="gpay">Google Pay</SelectItem>
-          <SelectItem key="paytm" value="paytm">Paytm</SelectItem>
-          <SelectItem key="phonepe" value="phonepe">PhonePe</SelectItem>
+          <SelectItem key="upi" value="upi">UPI</SelectItem>
+          <SelectItem key="cod" value="cod">Cash on Delivery</SelectItem>
         </Select>
-        {paymentMethod && (
-          <Input
-            className="mt-4"
-            type="text"
-            label="Enter UPI ID"
-            placeholder="yourname@upi"
-          />
+        {paymentMethod === 'upi' && (
+          <div className="mt-4">
+            <p className="mb-2">Pay using UPI</p>
+            <div className="relative">
+              <Image
+                src="https://pngimg.com/uploads/qr_code/qr_code_PNG14.png"
+                alt="UPI QR Code"
+                width={200}
+                height={200}
+                className={`w-full h-full object-contain ${isQRVisible ? "" : "blur-[10px] bg-white"}`}
+                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              />
+              {!isQRVisible && (
+                <Button
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black text-white"
+                  onClick={() => setIsQRVisible(true)}
+                >
+                  Scan to Pay
+                </Button>
+              )}
+            </div>
+          </div>
         )}
       </CardBody>
     </Card>
-  );
+  ), [paymentMethod, handlePaymentMethodChange, isQRVisible]);
 
   return (
     <AnimatePresence>
@@ -166,7 +195,7 @@ const Cart: React.FC = () => {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="w-full md:w-96 p-4 bg-gray-100 min-h-screen fixed top-0 right-0 overflow-y-auto z-40"
+          className="w-full md:w-96 p-4 bg-white min-h-screen fixed top-0 right-0 overflow-y-auto z-40"
           style={{
             boxShadow: '-4px 0 15px rgba(0, 0, 0, 0.1)',
             borderTopLeftRadius: '20px',
@@ -175,18 +204,18 @@ const Cart: React.FC = () => {
         >
           <div className="max-w-md mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold text-lime-600">Your Order</h1>
+              <h1 className="text-2xl font-bold text-black">Your Order</h1>
               <Button
                 isIconOnly
                 className="bg-transparent p-0"
                 onClick={() => setIsCartVisible(false)}
               >
-                <IoMdClose className="text-lime-600" size={28} />
+                <IoMdClose className="text-black" size={28} />
               </Button>
             </div>
             {step !== 'cart' && (
               <Button
-                className="mb-4 bg-lime-600 text-white"
+                className="mb-4 bg-black text-white"
                 onClick={() => setStep(step === 'payment' ? 'address' : 'cart')}
               >
                 <FaArrowLeft className="mr-2" /> Back
@@ -196,8 +225,13 @@ const Cart: React.FC = () => {
               <>
                 {renderCartItems()}
                 <Button 
-                  className="w-full bg-lime-600 text-white mb-4"
-                  onClick={() => setStep('address')}
+                  className="w-full bg-black text-white mb-4"
+                  onClick={() => {
+                    if (cartItems.some(item => item.quantity > 0)) {
+                      setStep('address');
+                    }
+                  }}
+                  disabled={!cartItems.some(item => item.quantity > 0)}
                 >
                   Proceed to Address
                 </Button>
@@ -207,8 +241,12 @@ const Cart: React.FC = () => {
               <>
                 {renderAddressSelection()}
                 <Button 
-                  className="w-full bg-lime-600 text-white mb-4"
-                  onClick={() => setStep('payment')}
+                  className="w-full bg-black text-white mb-4"
+                  onClick={() => {
+                    if (selectedAddress) {
+                      setStep('payment');
+                    }
+                  }}
                   disabled={!selectedAddress}
                 >
                   Proceed to Payment
@@ -219,9 +257,9 @@ const Cart: React.FC = () => {
               <>
                 {renderPaymentSelection()}
                 <Button 
-                  className="w-full bg-lime-600 text-white"
+                  className="w-full bg-black text-white"
                   onClick={handleCheckout}
-                  disabled={!paymentMethod}
+                  disabled={!paymentMethod || (paymentMethod === 'upi' && !isQRVisible)}
                 >
                   Place Order
                 </Button>

@@ -26,7 +26,17 @@ export const verifyOtpSignup = async (phone: string, otp: string) => {
   }
 }
 
-
+export const getUser = async () => {
+  try {
+    // const response = await axios.get(`${API}/api/user/get-user`, { token })
+    // dummy response
+    const response = { success: true, message: "User fetched successfully", user: { name: "John Doe", email: "john.doe@example.com", address: ["Salt Lake Sector V, Kolkata"] } }
+    return response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 
 
 export const login = async (email: string, password: string) => {

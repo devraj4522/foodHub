@@ -7,17 +7,7 @@ import Link from 'next/link';
 import { useFetchRestaurants } from '@/hooks/restaurants/useFetchRestaurants';
 import { FilterIcon } from '../icons';
 import { Spinner } from '@nextui-org/spinner';
-
-interface Restaurant {
-  id: number;
-  name: string;
-  deliveryTime: string;
-  averageCost: string;
-  rating: string;
-  reviews: string;
-  topItems: string[];
-  image: string;
-}
+import { Restaurant } from '@/types';
 
 const RestaurantList = () => {
   const [filters, setFilters] = useState({
@@ -44,25 +34,25 @@ const RestaurantList = () => {
     </div>
   );
   return (
-    <section className="py-8">
+    <section className="py-8 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Filter Section */}
       <div className="flex space-x-2 mb-4">
         <Button
-          className={`bg-lime-600 text-white ${filters.veg ? "bg-lime-700" : ''}`}
+          className={`bg-black text-white ${filters.veg ? "bg-gray-800" : ''}`}
           onClick={() => toggleFilter('veg')}
           startContent={<FilterIcon className='text-white' height={20} width={20} />}
         >
           Filter
         </Button>
         <Button
-          className={` bg-lime-600 text-white ${filters.newlyAdded ? 'bg-lime-700' : ''}`}
+          className={`bg-black text-white ${filters.newlyAdded ? 'bg-gray-800' : ''}`}
           onClick={() => toggleFilter('newlyAdded')}
         >
           Newly Added
         </Button>
         <Button
-          className={`bg-lime-600 text-white ${filters.bestSeller ? 'bg-lime-700' : ''}`}
+          className={`bg-black text-white ${filters.bestSeller ? 'bg-gray-800' : ''}`}
           onClick={() => toggleFilter('bestSeller')}
         >
           Best Seller
@@ -70,11 +60,11 @@ const RestaurantList = () => {
       </div>
 
       {/* Restaurant List */}
-      <h2 className="text-3xl font-bold text-gray-800 text-left py-2 mb-4">Explore Restaurants Near You</h2>
-      <div className="grid grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <h2 className="text-3xl font-bold text-gray-900 text-left py-2 mb-4">Explore Restaurants Near You</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {restaurants.map((restaurant:Restaurant) => (
         <Link href={`/restaurant/${restaurant.id}`} className='' key={restaurant.id}>
-           <Card style={{width: "100%"}} className="flex md:flex-col flex-row items-center p-0 h-full sm:w-1/3 md:w-1/4 mx-auto shadow-lg hover:shadow-xl">
+           <Card style={{width: "100%"}} className="flex md:flex-col flex-row items-center p-0 h-full sm:w-1/3 md:w-1/4 mx-auto shadow-md hover:shadow-lg transition-shadow duration-300">
          {/* Image Section */}
          <div className="md:w-full h-full w-1/3 mb-0">
            <img
@@ -88,28 +78,27 @@ const RestaurantList = () => {
          <div className="md:w-full md:p-4 w-2/3 flex flex-col justify-between px-4">
            {/* Name and Rating */}
            <div className="flex justify-between items-center">
-             <h3 className="text-lg font-semibold">{restaurant.name}</h3>
+             <h3 className="text-lg font-semibold text-gray-900">{restaurant.name}</h3>
            </div>
    
            {/* Cuisine and Price */}
-           <div className="flex mt-1 justify-between  items-start text-gray-600">
+           <div className="flex mt-1 justify-between items-start text-gray-600">
               <div className="text-sm">
-                {restaurant.topItems.join(' . ')}
+                {restaurant.topItems.join(' • ')}
               </div>
-                <div className="flex items-center space-x-1 p-1 px-2 rounded-full bg-green-600">
-                  <span className="text-white">{restaurant.rating}</span>
-                  <FaStar className="text-white w-4" />
+                <div className="flex items-center space-x-1 p-1 px-2 rounded-full bg-green-500">
+                  <span className="text-white font-medium">{restaurant.rating}</span>
+                  <FaStar className="text-white w-3 h-3" />
                 </div>
            </div>
    
            {/* Delivery Time */}
-           <div className="flex justify-between items-center text-gray-500">
+           <div className="flex justify-between items-center text-gray-500 mt-2">
              <div className="flex items-center space-x-1">
-               <FiClock />
-               <span> {restaurant.deliveryTime} </span>
+               <FiClock className="text-gray-400" />
+               <span className="text-sm"> {restaurant.deliveryTime} </span>
              </div>
-            <br />
-             <div>{restaurant.averageCost}</div>
+             <div className="text-sm">{restaurant.averageCost}</div>
            </div>
 
          </div>

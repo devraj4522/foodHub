@@ -1,8 +1,4 @@
 "use client";
-
-import { UserDetails } from "@/recoil/atoms/userAtom";
-import { useSetRecoilState } from "recoil";
-
 import HeroSection from "@/components/Hero/Hero";
 import ExploreSection from "@/components/Deals/Deals";
 import TopItems from "@/components/TrySection/TrySection";
@@ -16,9 +12,9 @@ export default function Home() {
   return (
     <QueryClientProvider client={queryClient}>
       <HeroSection />
-      <ExploreSection />
       <TopItems />
       <RestaurantList />
+      <ExploreSection />
       <LoginCard />
     </QueryClientProvider>
   );

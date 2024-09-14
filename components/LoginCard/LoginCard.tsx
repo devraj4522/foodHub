@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { useState } from 'react';
 import { FiClock, FiArrowLeft } from 'react-icons/fi';
 import clsx from 'clsx';
+import { FaUtensils, FaPhoneAlt, FaPaperPlane, FaLock, FaRedo } from 'react-icons/fa';
 
 const LoginCard = () => {
   const [user, setUser] = useRecoilState(userAtom);
@@ -21,6 +22,7 @@ const LoginCard = () => {
   const [canResendOTP, setCanResendOTP] = useState(true);
   const [countdown, setCountdown] = useState(30);
   const [showOTPScreen, setShowOTPScreen] = useState(false);
+
 
   // countdown for resend OTP
   useEffect(() => {
@@ -118,10 +120,10 @@ const LoginCard = () => {
       onClose={() => {setIsOpen(false)}}
       closeButton
       isDismissable={false}
-      className="max-w-sm mx-auto relative rounded-lg p-4 md:pb-6"
+      className="max-w-sm mx-auto relative rounded-lg p-4 md:p-6"
     >
       <ModalContent>
-        <ModalHeader className="">
+        <ModalHeader className="flex flex-col items-center">
         {
           showOTPScreen && (
             <Button
@@ -134,15 +136,19 @@ const LoginCard = () => {
             </Button>
           )
         }
-
-          <div className="text-lg mt-2 text-default-500 text-center"> Login or Signup to continue </div>
+          <div className="text-2xl font-bold text-black mb-2">
+            <FaUtensils className="inline-block mr-2" /> FoodKloud
+          </div>
+          <div className="text-lg text-default-500 text-center">
+            {showOTPScreen ? 'Enter OTP' : 'Login or Signup to continue'}
+          </div>
         </ModalHeader>
         <ModalBody>
           {!showOTPScreen ? (
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="relative mb-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <span className="text-gray-500">+91</span>
+                  <FaPhoneAlt className="text-gray-500" />
                 </div>
                 <Input
                   {...register("phone", {
@@ -154,7 +160,7 @@ const LoginCard = () => {
                   })}
                   type="text" 
                   placeholder="Phone Number"
-                  className="pl-12 focus:border-lime-300 outline-1 focus:border-2 focus:ring-lime-300  outline-none"
+                  className="pl-10 focus:border-green-500 outline-1 focus:border-2 focus:ring-green-500 outline-none"
                   classNames={{
                     input: "bg-transparent",
                     inputWrapper: "bg-default-100 hover:bg-default-200",
@@ -167,15 +173,14 @@ const LoginCard = () => {
                   }}
                 />
               </div>
-              {errors.phone && <p className="text-red-500 text-sm mb-4">{errors.phone.message as string}</p>}
-              <Button type="submit" color="primary" className="w-full bg-lime-500 hover:bg-lime-600">
-                Send OTP
+              {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message as string}</p>}
+              <Button type="submit" color="primary" className="w-full bg-black hover:bg-gray-800 text-white">
+                <FaPaperPlane className="mr-2" /> Send OTP
               </Button>
             </form>
           ) : (
-            <div>
-              
-              <div className="flex justify-between mb-4">
+            <div className="space-y-4">
+              <div className="flex justify-between">
                 {[...Array(4)].map((_, index) => (
                   <Input
                     key={index}
@@ -185,10 +190,10 @@ const LoginCard = () => {
                     })}
                     type="text"
                     maxLength={1}
-                    className="w-14 flex items-center justify-center h-14 text-center text-2xl"
+                    className="w-14 h-14 text-center text-2xl"
                     classNames={{
                       input: "text-center",
-                      inputWrapper: "border border-gray-300",
+                      inputWrapper: "border-2 border-green-500 hover:border-green-600 focus:border-green-700",
                     }}
                     onKeyDown={(e) => {
                       if (e.key >= '0' && e.key <= '9') {
@@ -208,27 +213,23 @@ const LoginCard = () => {
                   />
                 ))}
               </div>
-              {errors.otp && <p className="text-red-500 text-sm mb-4">{errors.otp.message as string}</p>}
-                <Button className="w-full mb-4 bg-lime-600 hover:bg-lime-500 text-white" onClick={() => {
-                // Implement OTP verification logic here
-                handleOTPVerification();
-              }}>
-                Verify OTP
+              {errors.otp && <p className="text-red-500 text-sm">{errors.otp.message as string}</p>}
+              <Button className="w-full bg-black hover:bg-gray-800 text-white" onClick={handleOTPVerification}>
+                <FaLock className="mr-2" /> Verify OTP
               </Button>
               <div className="flex justify-between items-center">
                 <Button
-                  className={clsx({
-                    'bg-lime-600 hover:bg-lime-500 text-white': canResendOTP,
-                    'bg-lime-600 text-white': !canResendOTP,
-                    'cursor-not-allowed': !canResendOTP,
-                  })}
+                  className={clsx(
+                    'flex items-center',
+                    canResendOTP ? 'bg-black hover:bg-gray-800 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  )}
                   onClick={handleResendOTP}
                   disabled={!canResendOTP}
                 >
-                  Resend OTP
+                  <FaRedo className="mr-2" /> Resend OTP
                 </Button>
                 {!canResendOTP && (
-                  <div className="flex items-center">
+                  <div className="flex items-center text-gray-500">
                     <FiClock className="mr-2" />
                     <span>{countdown}s</span>
                   </div>

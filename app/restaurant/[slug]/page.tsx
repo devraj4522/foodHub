@@ -10,7 +10,7 @@ import { useParams } from 'next/navigation';
 import { useQuery } from 'react-query';
 import { Link } from '@nextui-org/link';
 import { Spinner } from '@nextui-org/spinner';
-import { useAddToCart } from '@/hooks/cart/useAddToCart';
+import { useAddToCart } from '@/hooks/cart/useUpdateCart';
 import { toast } from 'sonner';
 
 interface CartItem {
