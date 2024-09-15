@@ -102,10 +102,26 @@ export const getTopItems = async () => {
     return response
 }
 
-export const getProductsByRestaurant = async (restaurantId: string) => {
+export const getRestaurantById = (restaurantId: string) => {
     // const response = await axios.get(`${API}/api/products/restaurant/${restaurantId}`)
     // dummy response
-      const response = { success: true, message: "Products fetched successfully", products: [
+      const response = { success: true, message: "Products fetched successfully",
+        restaurant: {
+            id: 1,
+            name: 'Italian Bistro',
+            deliveryTime: '39 mins',
+            rating: '3.5',
+            reviews: '42k',
+            description: 'A cozy Italian restaurant known for its authentic pizzas and pastas.',
+            address: '123 Main St, Anytown, USA',
+            phone: '123-456-7890',
+            email: 'info@italianbistro.com',
+            website: 'www.italianbistro.com',
+            image: 'https://b.zmtcdn.com/data/pictures/chains/2/19418342/fd8aff752d2ee84cbebc859d6fd501d5.jpg',
+            averageCost: '₹300 for two',
+            topItems: ['Pizza', 'Pasta'],
+          },
+        products: [
         {
           id: 1,
           name: 'Italian Bistro',

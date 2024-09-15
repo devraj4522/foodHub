@@ -1,18 +1,18 @@
 'use client';
 import React from 'react';
-import { FaCartShopping } from 'react-icons/fa6';
-import {Breadcrumbs, BreadcrumbItem} from "@nextui-org/breadcrumbs";
-import { FaClock, FaTrain, FaInfoCircle } from 'react-icons/fa';
+import { FaClock, FaTrain, FaInfoCircle, FaShoppingCart, FaMapMarkerAlt, FaArrowRight, FaTag, FaArrowDown } from 'react-icons/fa';
+import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/breadcrumbs";
 import { Button } from "@nextui-org/button";
-import { FaShoppingCart } from 'react-icons/fa';
 import { useFetchProducts } from '@/hooks/restaurants/useFetchProducts';
 import { useParams } from 'next/navigation';
 import { useQuery } from 'react-query';
 import { Link } from '@nextui-org/link';
 import { Spinner } from '@nextui-org/spinner';
-import { useAddToCart } from '@/hooks/cart/useUpdateCart';
+import { useUpdateCart } from '@/hooks/cart/useUpdateCart';
 import { toast } from 'sonner';
-
+import { useRecoilState } from 'recoil';
+import { cartItemsAtom } from '@/recoil/atoms/cartAtom';
+import { getRestaurantById } from '@/utils/products/products';
 interface CartItem {
   id: string;
   name: string;
@@ -22,15 +22,20 @@ interface CartItem {
 
 export default function RestaurantPage() {
   const { slug } = useParams();
-  const { data: menu, isLoading } = useFetchProducts(slug as string);
-  const { addItemToCart, isLoading: addItemToCartLoading, isSuccess: addItemToCartSuccess} = useAddToCart();
+  const { updateCartItem, isLoading: addItemToCartLoading, isSuccess: addItemToCartSuccess} = useUpdateCart();
+  const [cartItems, setCartItems] = useRecoilState(cartItemsAtom);
   
+  const data = getRestaurantById(slug as string);
+  const restaurant = data?.restaurant;
+  const products = data?.products;
+
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>, item: CartItem) => {
     event.preventDefault();
-    addItemToCart(item);
+    const updatedCartItems = [...cartItems, item];
+    updateCartItem(updatedCartItems);
+    setCartItems(updatedCartItems);
   };
 
-  // Show loading toast while adding item to cart, then show success or error toast
   React.useEffect(() => {
     if (addItemToCartLoading) {
       toast.loading('Adding to cart...', { id: 'addToCart' });
@@ -43,7 +48,6 @@ export default function RestaurantPage() {
     }
   }, [addItemToCartLoading, addItemToCartSuccess]);
   
-
   return (
     <>
        <section className="bg-yellow-50 py-4 m-0">
@@ -69,11 +73,11 @@ export default function RestaurantPage() {
               </li>
               <li>
                 <span className="mx-2">/</span>
-                <a href="/restaurants" className="hover:underline">Restaurants</a>
+                <a href="/" className="hover:underline">Restaurants</a>
               </li>
               <li>
                 <span className="mx-2">/</span>
-                <span aria-current="page">Restaurant Name</span>
+                <Link href={`/restaurant/${slug}`} className="hover:underline">{restaurant?.name}</Link>
               </li>
             </ol>
           </nav>
@@ -92,8 +96,11 @@ export default function RestaurantPage() {
             <div className="lg:w-1/2">
               <h1 className="text-4xl sm:text-5xl font-bold mb-4">Burger King</h1>
               <p className="mb-6">BurgerBKinguis a fast food restaurant that serves burgers, fries, and other fast food items.rger King is a fast food restaurant that serves burgers, fries, and other fast food items.</p>
+              <div className="flex items-center pb-4 md:pb-8">
+                 <FaMapMarkerAlt className="text-lime-600 mr-2" />
+                 <p className="text-gray-700">123 Main St, Cityville, State 12345</p>
+               </div>
               <div className="flex flex-wrap gap-4">
-                <span className="badge badge-outline">Cuisine Type</span>
                 <span className="flex items-center bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
                   <svg className="w-4 h-4 mr-1 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -118,6 +125,25 @@ export default function RestaurantPage() {
                   Moderate
                 </span>
               </div>
+              {/* Get Directions make it look beautiful */}
+             <div className="mt-4 md:mt-8 space-y-3">
+               
+               <div className="flex items-center">
+                 <Button
+                   variant="shadow"
+                   startContent={<FaShoppingCart className="w-6 h-6" />}
+                   className="font-bold bg-lime-600 text-white hover:bg-lime-700 transition-colors duration-300 transform hover:scale-105 rounded-lg px-8 py-6 flex items-center justify-center space-x-3 shadow-xl text-md"
+                   onClick={() => {
+                     const menuSection = document.getElementById('menu-section');
+                     if (menuSection) {
+                       menuSection.scrollIntoView({ behavior: 'smooth' });
+                     }
+                   }}
+                 >
+                   <span>Order Online</span>
+                 </Button>
+               </div>
+             </div>
             </div>
           </div>
         </div>
@@ -158,7 +184,7 @@ export default function RestaurantPage() {
           <div className="md:w-3/4">
             <h3 className="text-xl font-semibold mb-4">Order Online</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {menu?.products.map((item) => (
+              {products?.map((item:any) => (
                 <Link href={`/food/${item.id}`} key={item.id}>
                   <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                   <img
@@ -174,7 +200,7 @@ export default function RestaurantPage() {
                       <Button
                         onClick={(event) => handleAddToCart(event, {id: item.id.toString(), name: item.name, price: item.price, quantity: 1})}
                         variant="shadow"
-                        endContent={<FaCartShopping className="w-4 h-4" />}
+                        endContent={<FaShoppingCart className="w-4 h-4" />}
                         className="font-semibold bg-lime-600 text-white"
                       >
                         Add
