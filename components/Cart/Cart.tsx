@@ -41,7 +41,7 @@ const Cart: React.FC = () => {
     setSelectedAddress(addresses[0] || '');
   }, [user, address, step]);
 
-
+  
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleAddressChange = useCallback((address: string) => {
@@ -92,7 +92,7 @@ const Cart: React.FC = () => {
         <FaShoppingCart size={20} />
         <h2 className="text-lg font-semibold">Your Cart</h2>
       </CardHeader>
-      <CardBody>
+      <CardBody className="max-h-[60vh] overflow-y-auto custom-scrollbar">
         {isLoading ? (
           <div className="text-center">Updating cart...</div>
         ) : cartItems.filter(item => item.quantity > 0).length > 0 ? (
@@ -195,7 +195,7 @@ const Cart: React.FC = () => {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="w-full md:w-96 p-4 bg-white min-h-screen fixed top-0 right-0 overflow-y-scroll z-40"
+          className="w-full md:w-96 p-4 bg-white min-h-screen fixed top-0 right-0 overflow-y-auto z-40"
           style={{
             boxShadow: '-4px 0 15px rgba(0, 0, 0, 0.1)',
             borderTopLeftRadius: '20px',
