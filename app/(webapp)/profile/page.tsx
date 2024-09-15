@@ -2,6 +2,7 @@ import React from 'react';
 import { FaUser, FaCog, FaHistory, FaHeart, FaCreditCard, FaSignOutAlt } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
 
+
 const ProfilePage = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">

@@ -17,7 +17,7 @@ export const cartItemsAtom = atom<CartItem[]>({
   default: [
     {
       id: '1',
-      name: 'Pizza',
+      name: 'Itallian Bistro',
       price: 10,
       quantity: 1,
     },

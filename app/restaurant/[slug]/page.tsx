@@ -3,7 +3,6 @@ import React from 'react';
 import { FaClock, FaTrain, FaInfoCircle, FaShoppingCart, FaMapMarkerAlt, FaArrowRight, FaTag, FaArrowDown } from 'react-icons/fa';
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/breadcrumbs";
 import { Button } from "@nextui-org/button";
-import { useFetchProducts } from '@/hooks/restaurants/useFetchProducts';
 import { useParams } from 'next/navigation';
 import { useQuery } from 'react-query';
 import { Link } from '@nextui-org/link';
@@ -31,7 +30,18 @@ export default function RestaurantPage() {
 
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>, item: CartItem) => {
     event.preventDefault();
-    const updatedCartItems = [...cartItems, item];
+    const existingItemIndex = cartItems.findIndex(cartItem => cartItem.id === item.id);
+    let updatedCartItems;
+    if (existingItemIndex !== -1) {
+      updatedCartItems = cartItems.map((cartItem, index) => {
+        if (index === existingItemIndex) {
+          return { ...cartItem, quantity: cartItem.quantity + 1 };
+        }
+        return cartItem;
+      });
+    } else {
+      updatedCartItems = [...cartItems, { ...item, quantity: 1 }];
+    }
     updateCartItem(updatedCartItems);
     setCartItems(updatedCartItems);
   };
