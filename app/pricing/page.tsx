@@ -47,7 +47,7 @@ export default function PhoneVerification() {
       if (response.ok) {
         setMessage('Verification successful');
       } else {
-        setMessage('Verification failed: ' + data.error);
+        setMessage('Verification failed:  ' + data.error);
       }
     } catch (error) {
       setMessage('Error verifying OTP: ' + (error instanceof Error ? error.message : 'Unknown error'));
