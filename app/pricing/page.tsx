@@ -50,7 +50,7 @@ export default function PhoneVerification() {
         setMessage('Verification failed:  ' + data.error);
       }
     } catch (error) {
-      setMessage('Error verifying OTP: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      setMessage('Error verifying OTP:' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
