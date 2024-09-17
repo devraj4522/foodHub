@@ -6,6 +6,7 @@ export interface UserData {
   email: string;
   phone: string;
   role?: string;
+  password: string;
 }
 
 export class User {
