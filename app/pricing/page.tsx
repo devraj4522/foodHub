@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, signInWithCredential, PhoneAuthProvider } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 // Initialize Firebase (make sure to replace with your config)
@@ -22,7 +22,7 @@ export default function PhoneVerification() {
   const [message, setMessage] = useState('');
 
   const auth = getAuth();
-
+  
   const handleSendOTP = async () => {
     try {
       const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
@@ -38,19 +38,23 @@ export default function PhoneVerification() {
 
   const handleVerifyOTP = async () => {
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ verificationId, otp }),
-      });
-      const data = await response.json();
-      if (response.ok) {
+      if (!verificationId) {
+        setMessage('Please send OTP first');
+        return;
+      }
+      const credential = PhoneAuthProvider.credential(verificationId, otp);
+      const result = await signInWithCredential(auth, credential);
+      if (result.user) {
         setMessage('Verification successful');
       } else {
-        setMessage('Verification failed:  ' + data.error);
+        setMessage('Verification failed: User not found');
       }
     } catch (error) {
-      setMessage('Error verifying OTP:' + (error instanceof Error ? error.message : 'Unknown error'));
+      if (error instanceof Error) {
+        setMessage('Verification failed: ' + error.message);
+      } else {
+        setMessage('Verification failed: Unknown error');
+      }
     }
   };
 
