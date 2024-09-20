@@ -1,12 +1,14 @@
 "use client";
-import React, { useState } from 'react';
-import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLock, FaBell, FaLanguage, FaCity, FaMapPin } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLock, FaLanguage, FaCity, FaMapPin } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { Switch } from "@nextui-org/switch";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/modal";
 import { Select, SelectItem } from "@nextui-org/select";
 import * as z from "zod";
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
+import { getUserById } from '@/server/controllers/userController'
 
 const schema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
@@ -17,23 +19,32 @@ const schema = z.object({
   state: z.string().min(2, "State must be at least 2 characters"),
   pinCode: z.string().regex(/^[0-9]{6}$/, "PIN code must be 6 digits"),
   language: z.string(),
-  // emailNotifications: z.boolean(),
-  // smsNotifications: z.boolean(),
-  // pushNotifications: z.boolean(),
 });
 
 type FormData = z.infer<typeof schema>;
 
-const UserAccountSettingsPage: React.FC = () => {
+const UserAccountSettingsPage: React.FC = async () => {
+  const session = await getServerSession();
+
+  if (!session || !session.user || !session.user.name) {
+    redirect("/login");
+  }
+
+
+  const userData = await getUserById(session.user.name);
+  if (!userData || !userData.name || !userData.email || !userData.phone || !userData.address || !userData.city || !userData.state || !userData.pinCode) {
+    return <div>Loading...</div>;
+  }
+
   const [formData, setFormData] = useState<FormData>({
-    fullName: "John Doe",
-    email: "john.doe@example.com",
-    phoneNumber: "9876543210",
-    address: "123 Main St",
-    city: "Mumbai",
-    state: "Maharashtra",
-    pinCode: "400001",
-    language: "English",
+    fullName: userData.name,
+    email: userData.email,
+    phoneNumber: userData.phone,
+    address: userData.address,
+    city: userData.city,
+    state: userData.state,
+    pinCode: userData.pinCode,
+    language: "English"
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string[]>>>({});

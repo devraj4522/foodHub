@@ -5,14 +5,14 @@ import { Input } from '@nextui-org/input';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { Modal, ModalContent, ModalHeader, ModalBody } from '@nextui-org/modal';
 import { useRecoilState } from 'recoil';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { userAtom } from '@/recoil/atoms/userAtom';
 import { toast } from 'sonner';
-import { useState } from 'react';
 import { FiClock, FiArrowLeft } from 'react-icons/fi';
 import clsx from 'clsx';
 import { FaUtensils, FaPhoneAlt, FaPaperPlane, FaLock, FaRedo } from 'react-icons/fa';
+import { registerUser, loginUser } from '@/server/controllers/userController';
 
 const LoginCard = () => {
   const [user, setUser] = useRecoilState(userAtom);
@@ -55,52 +55,79 @@ const LoginCard = () => {
   // send OTP
   const onSubmit = async (data: any) => {
     try {
-      // const response = await fetch('/api/login', { phone: data.phone });
-      const response = {
-        status: 200,
-        data: {
-          phone: "+91 9111111111",
-        }
-      }
-      if (response.status === 200) {
-        setOtp('1234');
+      const response = await fetch('/api/user/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'signup',
+          ...data
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setOtp('123456'); // This should be replaced with the actual OTP from the server
         setShowOTPScreen(true);
+      } else {
+        throw new Error('Failed to send OTP');
       }
     } catch (error) {
-      // pop up error
-      toast.error('Login failed:' + (error instanceof Error ? error.message : 'Unknown error'));
+      toast.error('Login failed: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
   const handleOTPVerification = async () => {
     try {
-      // Implement your OTP verification logic here
-      // For example:
-      // await verifyOTP(user.phone, data.otp);
-      // set user as logged in
-      const data = {
-        ...user,
-        isLoggedIn: true
+      const response = await fetch('/api/user/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'signin',
+          otp: otp,
+          phone: user.phone // Assuming you have the phone number stored in user state
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setUser({ ...result, isLoggedIn: true });
+        toast.success('OTP verified successfully');
+      } else {
+        throw new Error('OTP verification failed');
       }
-      setUser({ ...data });
-      toast.success('OTP verified successfully');
     } catch (error) {
-      toast.error('OTP verification failed:' + (error instanceof Error ? error.message : 'Unknown error'));
+      toast.error('OTP verification failed: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
   const handleResendOTP = async () => {
     if (canResendOTP) {
       try {
-        // Implement your OTP resend logic here
-        // For example:
-        // await resendOTP(user.phone);
-        setOtp(Math.floor(1000 + Math.random() * 9000).toString());
-        toast.success('OTP sent successfully');
-        setCanResendOTP(false);
-        setCountdown(30);
+        const response = await fetch('/api/user/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'resend',
+            phone: user.phone // Assuming you have the phone number stored in user state
+          }),
+        });
+
+        if (response.ok) {
+          setOtp(Math.floor(1000 + Math.random() * 9000).toString()); // This should be replaced with the actual OTP from the server
+          toast.success('OTP sent successfully');
+          setCanResendOTP(false);
+          setCountdown(30);
+        } else {
+          throw new Error('Failed to resend OTP');
+        }
       } catch (error) {
-        toast.error('Failed to resend OTP:' + (error instanceof Error ? error.message : 'Unknown error'));
+        toast.error('Failed to resend OTP: ' + (error instanceof Error ? error.message : 'Unknown error'));
       }
     }
   };

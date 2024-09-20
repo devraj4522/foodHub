@@ -18,7 +18,8 @@ model User {
   name      String
   phone     String   @unique @db.Char(10)
   email     String?  @unique
-  password  String
+  otpCode   String?
+  otpExpiresAt DateTime?
   verified  Boolean  @default(false)
   role      String   @default("customer")
   city      String?
@@ -35,6 +36,7 @@ model User {
 model Restaurant {
   id          String   @id @default(cuid())
   name        String
+  image       String
   description String?
   cuisine     String[]
   address     String
@@ -55,13 +57,12 @@ model Restaurant {
   reviews     Review[]
   favoritedBy User[]
 }
-
 model MenuItem {
   id           String     @id @default(cuid())
   name         String
   description  String?
   price        Float
-  category     String
+  rating       Float    @default(0)
   isVegetarian Boolean    @default(false)
   isVegan      Boolean    @default(false)
   isGlutenFree Boolean    @default(false)
@@ -71,6 +72,15 @@ model MenuItem {
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
   restaurantId String
   orderItems   OrderItem[]
+  category     Category   @relation(fields: [categoryId], references: [id])
+  categoryId   String
+}
+
+model Category {
+  id       String     @id @default(cuid())
+  name     String
+  description    String?
+  menuItems MenuItem[]
 }
 
 model Order {
