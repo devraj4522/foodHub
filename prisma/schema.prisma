@@ -28,6 +28,7 @@ model User {
   address   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  cart      Cart?
   orders    Order[]
   reviews   Review[]
   favorites Restaurant[]
@@ -71,6 +72,7 @@ model MenuItem {
   image        String?    // URL to the image
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
   restaurantId String
+  cartItems    CartItem[]
   orderItems   OrderItem[]
   category     Category   @relation(fields: [categoryId], references: [id])
   categoryId   String
@@ -110,6 +112,26 @@ model OrderItem {
   quantity   Int
   price      Float
   specialInstructions String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String     @unique
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id         String   @id @default(cuid())
+  cart       Cart     @relation(fields: [cartId], references: [id])
+  cartId     String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  menuItemId String
+  quantity   Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

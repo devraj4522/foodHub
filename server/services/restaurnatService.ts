@@ -5,6 +5,10 @@ export async function getRestaurantById(id: string) {
   return Restaurant.getRestaurantById(id)
 }
 
+export async function getAllRestaurants() {
+  return Restaurant.getAllRestaurants()
+}
+
 export async function createRestaurant(data: RestaurantData) {
   return Restaurant.createRestaurant(data)
 }

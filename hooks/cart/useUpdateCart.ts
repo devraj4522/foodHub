@@ -1,31 +1,42 @@
-import { useMutation } from "react-query";
-import { updateCart } from "@/utils/cart/cart";
-import { useRecoilState } from "recoil";
-import { cartItemsAtom } from "@/recoil/atoms/cartAtom";
-import { useState } from "react";
+// import { useMutation } from "react-query";
+// import { updateCart } from "@/utils/cart/cart";
+// import { useRecoilState } from "recoil";
+// import { cartAtom } from "@/recoil/atoms/cartAtom";
+// import { useState } from "react";
+// import { createCartItem } from "@/actions/cart";
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
+// export const useUpdateCart = () => {
+//   const [cart, setCart] = useRecoilState(cartAtom);
+//   const [isSuccess, setIsSuccess] = useState(false);
 
-export const useUpdateCart = () => {
-  const [cartItems, setCartItems] = useRecoilState(cartItemsAtom);
-  const [isSuccess, setIsSuccess] = useState(false);
+//   const updateMutation = useMutation(updateCart, {
+//     onSuccess: (response) => {
+//       // Assuming the API returns the updated cart items
+//       // setCartItems(response);
+//       setIsSuccess(true);
+//     },
+//   });
 
-  const { mutate, isLoading, error } = useMutation(updateCart, {
-    onSuccess: (response) => {
-      // Assuming the API returns the updated cart items
-      // setCartItems(response);
-      setIsSuccess(true);
-    },
-  });
+//   const createMutation = useMutation(createCartItem, {
+//     onSuccess: (newItem) => {
+//       setCartItems((prevItems) => [...prevItems, newItem]);
+//       setIsSuccess(true);
+//     },
+//   });
 
-    const updateCartItem = (items: CartItem[]) => {
-    mutate(items);
-  };
+//   const updateCartItem = (items: CartItem[]) => {
+//     updateMutation.mutate(items);
+//   };
 
-  return { updateCartItem, isLoading, error, isSuccess };
-};
+//   const addCartItem = (item: ICreateCartItemInput) => {
+//     createMutation.mutate(item);
+//   };
+
+//   return { 
+//     updateCartItem, 
+//     addCartItem,
+//     isLoading: updateMutation.isLoading || createMutation.isLoading,
+//     error: updateMutation.error || createMutation.error,
+//     isSuccess 
+//   };
+// };

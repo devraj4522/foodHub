@@ -16,7 +16,7 @@ export interface RestaurantData {
   closingTime: string;
   isActive: boolean;
   deliveryTime: number | null;
-  menu: MenuItemData[];
+  menu: IMenuItem[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -25,10 +25,10 @@ export interface CategoryData {
   id: string;
   name: string;
   description?: string;
-  menuItems: MenuItemData[]
+  menuItems: IMenuItem[]
 }
 
-export interface MenuItemData {
+export interface IMenuItem {
   id: string;
   name: string;
   description?: string;

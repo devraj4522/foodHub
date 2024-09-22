@@ -1,20 +1,9 @@
 import { prisma } from '@/server/lib/prisma'
 import { generateOTP } from '@/server/otp'
-
-export interface UserData {
-  id?: string;
-  name: string;
-  phone: string;
-  email?: string;
-  role?: string;
-  city?: string;
-  state?: string;
-  pinCode?: string;
-  address?: string;
-}
+import { IUser, ICreateUserInput } from '@/types/User';
 
 export class User {
-  static async create(userData: UserData) {
+  static async create(userData: ICreateUserInput) {
     return prisma.user.create({
       data: {
         ...userData,
@@ -32,25 +21,35 @@ export class User {
     return prisma.user.findUnique({ where: { phone } })
   }
 
+  static async findUnique(email: string, phone: string) {
+    return prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { phone },
+        ],
+      },
+    })
+  }
+
   static async findById(id: string) {
+
     return prisma.user.findUnique({ where: { id } })
   }
 
-  static async generateOTP(phone: string) {
+  static async generateOTP(userId: string) {
     // const otp = generateOTP();
     //TODO: remove this
-    const otp = '123456';
+    const otp = '1234';
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // OTP expires in 10 minutes
 
-    await prisma.user.update({
-      where: { phone },
+    return prisma.user.update({
+      where: { id: userId },
       data: {
         otpCode: otp,
         otpExpiresAt: expiresAt,
       },
     });
-
-    return otp;
   }
 
   static async verifyOTP(phone: string, otpToVerify: string) {
@@ -58,7 +57,6 @@ export class User {
       where: { phone },
       select: { otpCode: true, otpExpiresAt: true },
     });
-
     if (!user || !user.otpCode || !user.otpExpiresAt) {
       return false;
     }
@@ -78,11 +76,17 @@ export class User {
     return false;
   }
 
-  static async updateUserDetails(phone: string, userData: Partial<UserData>) {
-    return prisma.user.update({
-      where: { phone },
-      data: userData,
-    })
+  static async updateUserDetails(userData: Partial<ICreateUserInput> & { id: string }) {
+    const { id, ...updateData } = userData;
+    try{
+      return prisma.user.update({
+        where: { id },
+        data: updateData,
+      })
+    } catch (error) {
+      console.log(error)
+      throw new Error("Error Updating value")
+    }
   }
 
   static async getUserOrders(userId: string) {

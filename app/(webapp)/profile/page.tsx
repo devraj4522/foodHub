@@ -1,9 +1,14 @@
+"use client"
 import React from 'react';
 import { FaUser, FaCog, FaHistory, FaHeart, FaCreditCard, FaSignOutAlt } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
-
-
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '@/recoil/atoms/userAtom';
+import { useRouter } from 'next/navigation';
 const ProfilePage = () => {
+  const user = useRecoilValue(userAtom);
+  const router = useRouter()
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">My Profile</h1>
@@ -15,8 +20,8 @@ const ProfilePage = () => {
               <FaUser />
             </div>
             <div className="ml-6">
-              <h2 className="text-2xl font-semibold">John Doe</h2>
-              <p className="text-gray-600">john.doe@example.com</p>
+              <h2 className="text-2xl font-semibold">{user?.name}</h2>
+              <p className="text-gray-600">{user?.phone || user?.email}</p>
             </div>
           </div>
         </div>
@@ -27,6 +32,9 @@ const ProfilePage = () => {
             <li>
               <Button
                 variant="light"
+                onClick={() => {
+                  router.push("/user-settings");
+                }}
                 startContent={<FaCog className="text-lime-600" />}
                 className="w-full justify-start text-left"
               >
@@ -36,6 +44,7 @@ const ProfilePage = () => {
             <li>
               <Button
                 variant="light"
+                onClick={() => router.push("/order-history")}
                 startContent={<FaHistory className="text-lime-600" />}
                 className="w-full justify-start text-left"
               >

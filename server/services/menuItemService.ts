@@ -1,15 +1,15 @@
 import { MenuItem } from '../models/MenuItem'
-import { MenuItemData } from '@/types/Restaurant'
+import { IMenuItem } from '@/types/Restaurant'
 
 export async function getMenuItemById(id: string) {
   return MenuItem.getMenuItemById(id);
 }
 
-export async function createMenuItem(data: MenuItemData) {
+export async function createMenuItem(data: IMenuItem) {
   return MenuItem.createMenuItem(data);
 }
 
-export async function updateMenuItem(id: string, data: Partial<Omit<MenuItemData, 'id'>>) {
+export async function updateMenuItem(id: string, data: Partial<Omit<IMenuItem, 'id'>>) {
   return MenuItem.updateMenuItem(id, data);
 }
 

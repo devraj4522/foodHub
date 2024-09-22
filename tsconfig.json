@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/restaurant/[slug]"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/restaurant/[slug]", "app/api/user/login/generateOtp", "app/api/user/login/verifyOtp"],
   "exclude": ["node_modules"]
 }

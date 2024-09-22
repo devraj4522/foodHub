@@ -20,6 +20,10 @@ export class Restaurant {
     });
   }
 
+  static async getAllRestaurants() {
+    return prisma.restaurant.findMany();
+  }
+
   static async createRestaurant(data: RestaurantData) {
     const { menu, ...restaurantData } = data;
 

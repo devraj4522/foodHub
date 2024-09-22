@@ -4,11 +4,11 @@ import { link as linkStyles } from "@nextui-org/theme";
 import clsx from "clsx";
 import { FaAngleDown } from "react-icons/fa";
 import { FaLocationPin } from "react-icons/fa6";
+import { useRecoilValue } from "recoil";
+import { userAtom } from "@/recoil/atoms/userAtom";
 
 export const Location = () => {
     const { address } = useGeolocation();
-    // address are big so we need to make it smaller Like salt lake city...
-    const shortAddress = address.split(', ').slice(0, 2).join(', ') + '...';
 
     return (
         <NextLink
@@ -19,7 +19,7 @@ export const Location = () => {
                 color="foreground"
                 href="#"
               >
-              <FaLocationPin size={20} className="mr-2 text-green-600" />  {shortAddress} <FaAngleDown className=" -inset-0 -ml-1" />
+              <FaLocationPin size={20} className="mr-2 text-green-600" />  {address} <FaAngleDown className=" -inset-0 -ml-1" />
               </NextLink> 
     )
 }

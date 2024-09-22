@@ -19,17 +19,20 @@ import { useRecoilState } from "recoil";
 import { FaUserCircle } from "react-icons/fa";
 import LoginCard from "./LoginCard/LoginCard";
 import { showCartAtom } from "@/recoil/atoms/cartAtom";
-import { useGetCartItems } from "@/hooks/cart/useGetCart";
+import { useGetCart } from "@/hooks/cart/useGetCart";
 import { Location } from "./Location/Location";
-import { useGetUserHook } from "@/hooks/user/getUserHook";
+import { useVerifyJwtToken } from "@/hooks/user/auth/useVerifyJwtToken";
+import Cart from "./Cart/Cart";
+import { showLoginFormAtom } from "@/recoil/atoms/userAtom";
 
 export const Navbar = () => {
   const [showCart, setShowCart] = useRecoilState(showCartAtom);
-  const cartItems = useGetCartItems();
-  const { user, isLoading } = useGetUserHook();
-
+  const cart = useGetCart();
+  const { user } = useVerifyJwtToken();
+  const [showLoginForm, setShowLoginForm] = useRecoilState(showLoginFormAtom);
+  const cartItems = cart?.items || [];
+  
   const isLoggedIn = !!user;
-  const showLoginForm = !isLoggedIn;
 
   const handleCartClick = () => setShowCart(!showCart);
 
@@ -48,7 +51,7 @@ export const Navbar = () => {
     <Button
       as={Link}
       className="text-sm font-normal text-white bg-black hover:bg-gray-800"
-      onClick={() => {}}
+      onClick={() => {setShowLoginForm(true)}}
       variant="flat"
     >
       Login
@@ -89,7 +92,7 @@ export const Navbar = () => {
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
           {isLoggedIn ? (
-            <span className="font-bold text-black">{user.name.split(" ")[0]}</span>
+            <span className="font-bold text-black">{user?.name?.split(" ")[0]}</span>
           ) : renderLoginButton()}
         </NavbarItem>
       </NavbarContent>
@@ -101,8 +104,8 @@ export const Navbar = () => {
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {['About', 'Pricing', 'Cookie Policy'].map((item) => (
-            <NavbarMenuItem key={item}>
+          {['About', 'Pricing', 'Cookie Policy'].map((item, index) => (
+            <NavbarMenuItem key={index}>
               <Link
                 color="foreground"
                 href={`/${item.toLowerCase().replace(' ', '-')}`}
@@ -129,6 +132,7 @@ export const Navbar = () => {
           </NavbarMenuItem>
         </div>
       </NavbarMenu>
+      <Cart />
       {showLoginForm && <LoginCard />}
     </NextUINavbar>
   );

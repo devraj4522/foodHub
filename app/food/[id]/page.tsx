@@ -90,9 +90,10 @@ const TopItemsSection = ({ topItems }: { topItems: TopItem[] }) => (
       <p className="text-center text-gray-600 mb-8">Discover our most-loved dishes that keep customers coming back for more!</p>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {topItems.slice(0, 3).map((item: TopItem) => (
-          <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
+        {topItems.slice(0, 3).map((item: TopItem, index: number) => (
+          <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
             <img
+
               alt={item.name}
               className="w-full h-48 object-cover"
               src={item.image}

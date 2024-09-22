@@ -1,5 +1,5 @@
 import { prisma } from "@/server/lib/prisma";
-import { MenuItemData } from "@/types/Restaurant";
+import { IMenuItem } from "@/types/Restaurant";
 
 export class MenuItem {
   static async getMenuItemById(id: string) {
@@ -8,7 +8,7 @@ export class MenuItem {
     });
   }
 
-  static async createMenuItem(data: MenuItemData) {
+  static async createMenuItem(data: IMenuItem) {
     return prisma.menuItem.create({
       data: {
         ...data,
@@ -22,7 +22,7 @@ export class MenuItem {
     });
   }
 
-  static async updateMenuItem(id: string, data: Partial<Omit<MenuItemData, 'id'>>) {
+  static async updateMenuItem(id: string, data: Partial<Omit<IMenuItem, 'id'>>) {
     const updateData: any = { ...data };
 
     if (data.category?.id) {

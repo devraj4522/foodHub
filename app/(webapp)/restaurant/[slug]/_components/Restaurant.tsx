@@ -5,21 +5,23 @@ import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/breadcrumbs";
 import { Button } from "@nextui-org/button";
 import { useParams } from 'next/navigation';
 import { Link } from '@nextui-org/link';
-import { useUpdateCart } from '@/hooks/cart/useUpdateCart';
+// import { useUpdateCart } from '@/hooks/cart/useUpdateCart';
 import { toast } from 'sonner';
 import { useRecoilState } from 'recoil';
-import { cartItemsAtom } from '@/recoil/atoms/cartAtom';
-import { RestaurantData, MenuItemData } from '@/types/Restaurant';
+import { cartAtom } from '@/recoil/atoms/cartAtom';
+import { RestaurantData, IMenuItem } from '@/types/Restaurant';
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb';
 import { RestaurantHeroSection } from './RestaurantHeroSection/RestaurantHeroSection';
 import { TopInfoBar } from './TopInfoBar';
+import { addItemToCart } from '@/actions/cart';
+import { ICreateCartItemInput } from '@/types/Cart';
 
 export default function RestaurantPage({data}: {data: RestaurantData}) {
   const [activeCategory, setActiveCategory] = React.useState('');
-  const { updateCartItem, isLoading: addItemToCartLoading, isSuccess: addItemToCartSuccess} = useUpdateCart();
-  const [cartItems, setCartItems] = useRecoilState(cartItemsAtom);
+  // const { updateCartItem, isLoading: addItemToCartLoading, isSuccess: addItemToCartSuccess} = useUpdateCart();
+  // const [cartItems, setCartItems] = useRecoilState(cartItemsAtom);
 
-  
+  const [cart, setCart] = useRecoilState(cartAtom);
   const restaurant = data;
   const products = restaurant.menu;
  
@@ -54,35 +56,74 @@ export default function RestaurantPage({data}: {data: RestaurantData}) {
     }
   }, [restaurant?.openingTime, restaurant?.closingTime]);
 
-  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>, item: CartItem) => {
+  const handleAddToCart = async (event: React.MouseEvent<HTMLButtonElement>, menuItem: IMenuItem) => {
     event.preventDefault();
-    const existingItemIndex = cartItems.findIndex(cartItem => cartItem.id === item.id);
-    let updatedCartItems;
-    if (existingItemIndex !== -1) {
-      updatedCartItems = cartItems.map((cartItem, index) => {
-        if (index === existingItemIndex) {
-          return { ...cartItem, quantity: cartItem.quantity + 1 };
-        }
-        return cartItem;
-      });
-    } else {
-      updatedCartItems = [...cartItems, { ...item, quantity: 1 }];
+    if (!cart || !cart.id) {
+      toast.error('Cart not found');
+      return;
     }
-    updateCartItem(updatedCartItems);
-    setCartItems(updatedCartItems);
+
+    try {
+      const cartItemData: ICreateCartItemInput = {
+        cartId: cart.id,
+        quantity: 1,
+        menuItem: menuItem,
+        menuItemId: menuItem.id,
+      };
+
+      const response = await addItemToCart(cartItemData);
+      const {id, cartId, items, quantity} = response;
+      if (response && typeof response === 'object' && 'id' in response) {
+        toast.success('Item added to cart')
+        const newItem = {
+          id: id,
+          cartId: cartId,
+          menuItem: {
+            id: cartItemData.menuItemId,
+            name: cartItemData.menuItem.name,
+            price: cartItemData.menuItem.price,
+          },
+          quantity: quantity,
+        }
+        setCart((prevCart) => {
+          if (!prevCart) return null;
+          const existingItemIndex = prevCart.items.findIndex(
+            (item) => item.cartId === newItem.cartId && item.menuItem.id === newItem.menuItem.id
+          );
+          if (existingItemIndex !== -1) {
+            // Item already exists, update quantity
+            const updatedItems = [...prevCart.items];
+            updatedItems[existingItemIndex] = {
+              ...updatedItems[existingItemIndex],
+              quantity: updatedItems[existingItemIndex].quantity + 1
+            };
+            return { ...prevCart, items: updatedItems };
+          } else {
+            // Item doesn't exist, add new item
+            return { ...prevCart, items: [...prevCart.items, newItem] };
+          }
+        });
+      } else {
+        toast.error('Failed to add item to cart');
+      }
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+    }
   };
 
-  React.useEffect(() => {
-    if (addItemToCartLoading) {
-      toast.loading('Adding to cart...', { id: 'addToCart' });
-    } else {
-      if (addItemToCartSuccess) {
-        toast.success('Item added to cart', { id: 'addToCart' });
-      } else if (!addItemToCartLoading && !addItemToCartSuccess) {
-        toast.error('Failed to add item to cart', { id: 'addToCart' });
-      }
-    }
-  }, [addItemToCartLoading, addItemToCartSuccess]);
+   
+
+  // React.useEffect(() => {
+    // if (addItemToCartLoading) {
+    //   toast.loading('Adding to cart...', { id: 'addToCart' });
+    // } else {
+    //   if (addItemToCartSuccess) {
+    //     toast.success('Item added to cart', { id: 'addToCart' });
+    //   } else if (!addItemToCartLoading && !addItemToCartSuccess) {
+    //     toast.error('Failed to add item to cart', { id: 'addToCart' });
+    //   }
+    // }
+  // }, [addItemToCartLoading, addItemToCartSuccess]);
   
   return (
     <>
@@ -135,9 +176,10 @@ export default function RestaurantPage({data}: {data: RestaurantData}) {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {products
                       .filter(item => item.category.name === name)
-                      .map((item: MenuItemData) => (
-                        <Link className='cursor-pointer transition-all duration-300' href={`/food/${item.id}`} key={item.id}>
+                      .map((item: IMenuItem, index: number) => (
+                        <Link className='cursor-pointer transition-all duration-300' href={`/food/${item.id}`} key={index}>
                           <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:border-gray-200">
+
                             <div className="relative">
                               <img
                                 src={item.image}
@@ -157,7 +199,7 @@ export default function RestaurantPage({data}: {data: RestaurantData}) {
                               <div className="flex justify-between items-center">
                                 <span className="text-2xl font-bold text-lime-600">₹{item.price?.toFixed(2)}</span>
                                 <Button
-                                  onClick={(event) => handleAddToCart(event, {id: item.id.toString(), name: item.name, price: item.price, quantity: 1})}
+                                  onClick={(event) => handleAddToCart(event, item)}
                                   variant="shadow"
                                   endContent={<FaShoppingCart className="w-4 h-4" />}
                                   className="font-semibold bg-lime-600 text-white hover:bg-lime-700 transition-colors duration-300"

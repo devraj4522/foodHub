@@ -1,3 +1,4 @@
+"use client"
 // app/components/YouCanTrySection.tsx
 
 interface Item {
@@ -16,8 +17,7 @@ import { useProducts } from "@/hooks/products/useProducts";
 export default function TopItems() {
   // get items from hook
   const {data, isLoading, error} = useProducts();
-  console.log(data);
-  const items: Item[] = data?.products;
+  const items: Item[] = data || [];
 
   if (isLoading) return(
     <section className="py-8">
@@ -51,9 +51,10 @@ export default function TopItems() {
         {/* Scrollable container */}
         <div className="flex  space-x-4 no-scrollbar">
           <div className="flex justify-around  flex-wrap md:gap-4 gap-1">
-            {items.map((item) => (
-              <Link key={item.id} className="flex-shrink-0 w-16 md:w-40 text-center" href={`/food/${item.id}`} >
+            {items.map((item, index) => (
+              <Link key={index} className="flex-shrink-0 w-16 md:w-40 text-center" href={`/food/${item.id}`} >
                 <div className="w-full h-16 md:h-40 bg-white rounded-full flex items-center justify-center">
+
                   <img
                     src={item.image}
                     alt={item.name}

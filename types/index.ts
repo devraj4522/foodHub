@@ -9,13 +9,14 @@ export interface Address {
 }
 
 export interface UserDetails {
+  id?: string;
   name: string;
   email: string;
   phone: string;
-  address: string[];
+  address: string;
   city: string;
   state: string;
-  pincode: string;
+  pinCode: string;
   isLoggedIn: boolean;
 }
 
@@ -23,9 +24,9 @@ export interface Restaurant {
     id: number;
     name: string;
     deliveryTime: string;
-    averageCost: string;
+    avgCostForTwo: string;
     rating: string;
-      reviews: string;
-    topItems: string[];
+    reviews: string;
+    cuisine: string[];
     image: string;
 }

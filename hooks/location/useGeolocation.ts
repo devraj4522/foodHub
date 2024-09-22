@@ -1,13 +1,13 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { locationAtom, addressAtom } from '@/recoil/atoms/locationAtom';
+import { locationAtom, addressGeocodedAtom } from '@/recoil/atoms/locationAtom';
 import { fetchLocation } from '@/utils/location/fetchLocation';
 
 export function useGeolocation() {
   const [coordinates, setCoordinates] = useRecoilState(locationAtom);
   const [error, setError] = useState<string | null>(null);
-  const [address, setAddress] = useRecoilState(addressAtom);
+  const [address, setAddress] = useRecoilState(addressGeocodedAtom);
   
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -25,8 +25,10 @@ export function useGeolocation() {
       } else {
         fetchLocation(latitude, longitude)
           .then(data => {
-            setAddress(data?.display_name as string);
-            localStorage.setItem('userAddress', data?.display_name as string);
+            const fetchedAddress = data?.display_name as string;
+            const shortAddress = fetchedAddress.split(', ').slice(0, 2).join(', ') + '...';
+            setAddress(shortAddress);
+            localStorage.setItem('userAddress', fetchedAddress);
           })
           .catch(error => setError('Unable to retrieve your location'));
       }
@@ -39,5 +41,5 @@ export function useGeolocation() {
     navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
   }, []);
 
-  return { coordinates, error, address };
+  return { error, address };
 }

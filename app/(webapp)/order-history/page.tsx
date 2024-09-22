@@ -61,13 +61,15 @@ const OrderHistoryPage: React.FC = () => {
     onOpen();
   };
 
-  const renderOrderCard = (order: typeof mockOrders[0]) => (
+  const renderOrderCard = (order: typeof mockOrders[0], index: number) => (
     <Card 
       className="mb-4 cursor-pointer w-full hover:bg-gray-100"
+
       isPressable
-      key={order.id} 
+      key={index} 
       onPress={() => handleOrderClick(order)}
     >
+
       <CardHeader className="flex mb-0 pb-0 justify-between items-center">
         <span className="text-lg font-semibold pt-2">Order #{order.id}</span>
         <span className="text-sm text-gray-500">{order.date}</span>

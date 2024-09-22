@@ -8,8 +8,12 @@ export const locationAtom = atom({
   },
 });
 
-export const addressAtom = atom({
-  key: "addressAtom",
+export const addressGeocodedAtom = atom({
+  key: "addressGeocodedAtom",
   default: "",
 });
 
+export const userSavedAddressAtom = atom({
+  key: "userSavedAddressAtom",
+  default: "",
+});

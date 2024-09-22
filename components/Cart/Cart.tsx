@@ -10,11 +10,15 @@ import { useGeolocation } from "@/hooks/location/useGeolocation";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { showCartAtom } from '@/recoil/atoms/cartAtom';
-import { useGetCartItems } from '@/hooks/cart/useGetCart';
-import { useUpdateCart } from '@/hooks/cart/useUpdateCart';
+import { useGetCart } from '@/hooks/cart/useGetCart';
+// import { useUpdateCart } from '@/hooks/cart/useUpdateCart';
 import { userAtom } from '@/recoil/atoms/userAtom';
-import { cartItemsAtom } from '@/recoil/atoms/cartAtom';
+import { cartAtom } from '@/recoil/atoms/cartAtom';
 import Image from 'next/image';
+import { toast } from 'sonner';
+import {ICartState} from '@/types/Cart'
+import { updateCartItem } from '@/actions/cart';
+import { userSavedAddressAtom } from '@/recoil/atoms/locationAtom';
 
 interface CartItem {
   id: string;
@@ -27,22 +31,24 @@ const Cart: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>('upi');
   const [step, setStep] = useState<'cart' | 'address' | 'payment'>('cart');
   const [isCartVisible, setIsCartVisible] = useRecoilState(showCartAtom);
-  const [cartItems, setCartItems] = useRecoilState(cartItemsAtom);
-  const { updateCartItem, isSuccess, isLoading, error } = useUpdateCart();
+  const [cart, setCart] = useRecoilState(cartAtom);
+  // const { updateCartItem, isSuccess, isLoading, error } = useUpdateCart();
   const { address } = useGeolocation();
   const user = useRecoilValue(userAtom);
   const [allAddresses, setAllAddresses] = useState<string[]>([]);
   const [isQRVisible, setIsQRVisible] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState<string>('');
-
-  useEffect(() => {
-    const addresses = address ? [address, ...user.address] : user.address;
-    setAllAddresses(addresses);
-    setSelectedAddress(addresses[0] || '');
-  }, [user, address, step]);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const savedAddress = useRecoilValue(userSavedAddressAtom)
+  const cartItems = cart?.items || [];
   
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  useEffect(() => {
+    const addresses = [savedAddress, address].filter(Boolean);
+    setAllAddresses(addresses);
+    setSelectedAddress("");
+  }, [user, address, step, savedAddress]);
+
+  const totalPrice = cart?.items?.reduce((sum, item) => sum + (item?.menuItem?.price || 0) * (item?.quantity || 0), 0) || 0;
 
   const handleAddressChange = useCallback((address: string) => {
     setSelectedAddress(address);
@@ -56,35 +62,33 @@ const Cart: React.FC = () => {
   const handleCheckout = useCallback(() => {
     console.log("Proceeding to checkout");
     console.log("Order details:", {
-      items: cartItems,
+      items: cart?.items,
       totalPrice,
       address: selectedAddress,
       paymentMethod
     });
-  }, [cartItems, totalPrice, selectedAddress, paymentMethod]);
+  }, [cart?.items, totalPrice, selectedAddress, paymentMethod]);
 
   const handleQuantityChange = useCallback((id: string, change: number) => {
-    setCartItems(prevItems => {
-      const updatedItems = prevItems.map(item => {
+    setCart((prevCart: ICartState | null) => {
+      if (!prevCart) return null;
+      const updatedItems = prevCart.items.reduce((acc, item) => {
         if (item.id === id) {
           const newQuantity = Math.max(0, item.quantity + change);
-          return { ...item, quantity: newQuantity };
+          updateCartItem(id, { quantity: newQuantity });
+          if (newQuantity > 0) {
+            acc.push({ ...item, quantity: newQuantity });
+          }
+        } else {
+          acc.push(item);
         }
-        return item;
-      });
-      updateCartItem(updatedItems);
-      return updatedItems;
+        return acc;
+      }, [] as ICartState['items']);
+      return { ...prevCart, items: updatedItems };
     });
 
-    
-  }, [setCartItems, updateCartItem]);
-
-  useEffect(() => {
-    if (error) {
-      console.error("Error updating cart:", error);
-      // Implement error handling, e.g., show an error message to the user
-    }
-  }, [error]);
+    console.log("Cart updated");
+  }, [setCart]);
 
   const renderCartItems = useCallback(() => (
     <Card className="mb-4 shadow-md">
@@ -96,14 +100,14 @@ const Cart: React.FC = () => {
         {isLoading ? (
           <div className="text-center">Updating cart...</div>
         ) : cartItems.filter(item => item.quantity > 0).length > 0 ? (
-          cartItems.filter(item => item.quantity > 0).map((item: CartItem) => (
+          cartItems.filter(item => item.quantity > 0).map((item: any, index: number) => (
             <div key={item.id} className="flex justify-between items-center mb-3 py-2 border-b">
-              <span className="font-medium">{item.name}</span>
+              <span className="font-medium">{item.menuItem.name}</span>
               <div className="flex items-center">
                 <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onPress={() => handleQuantityChange(item.id, -1)} disabled={isLoading}>-</Button>
                 <span className="mx-3 font-semibold">{item.quantity}</span>
                 <Button size="sm" isIconOnly className="bg-gray-200 text-gray-700 min-w-8 h-8" onPress={() => handleQuantityChange(item.id, 1)} disabled={isLoading}>+</Button>
-                <span className="ml-4 font-semibold">₹{(item.price * item.quantity).toFixed(2)}</span>
+                <span className="ml-4 font-semibold">₹{(item.menuItem.price * item.quantity).toFixed(2)}</span>
               </div>
             </div>
           ))

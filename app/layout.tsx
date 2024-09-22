@@ -1,15 +1,12 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
-
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Footer from "@/components/Footer/Footer";
 import { Navbar } from "@/components/navbar";
-import Cart from "@/components/Cart/Cart";
 
 export const metadata: Metadata = {
   title: {
@@ -35,9 +32,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
 
-    // const res = fetch(`https://api.github.com/users/`)
-  // const data = res.json()
-  
 
   return (
     <html suppressHydrationWarning lang="en">
@@ -53,7 +47,6 @@ export default function RootLayout({
             <div className="relative flex flex-col h-screen">
               <Navbar />
               <main className="w-full flex-grow">
-                <Cart />
                 {children}
               </main>
             <Footer />

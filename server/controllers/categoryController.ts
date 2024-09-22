@@ -1,4 +1,4 @@
-import { CategoryData } from '../models/Category';
+import { CategoryData } from '@/types/Restaurant';
 import {
   getCategoryById,
   getCategoriesByRestaurantId,

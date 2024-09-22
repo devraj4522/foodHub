@@ -1,4 +1,4 @@
-import { MenuItemData } from "@/types/Restaurant";
+import { IMenuItem } from "@/types/Restaurant";
 import {
   getMenuItemById,
   createMenuItem,
@@ -11,11 +11,11 @@ export async function getMenuItemByIdController(id: string) {
   return getMenuItemById(id);
 }
 
-export async function createMenuItemController(data: MenuItemData) {
+export async function createMenuItemController(data: IMenuItem) {
   return createMenuItem(data);
 }
 
-export async function updateMenuItemController(id: string, data: Partial<Omit<MenuItemData, 'id'>>) {
+export async function updateMenuItemController(id: string, data: Partial<Omit<IMenuItem, 'id'>>) {
   return updateMenuItem(id, data);
 }
 

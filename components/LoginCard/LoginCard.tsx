@@ -12,124 +12,79 @@ import { toast } from 'sonner';
 import { FiClock, FiArrowLeft } from 'react-icons/fi';
 import clsx from 'clsx';
 import { FaUtensils, FaPhoneAlt, FaPaperPlane, FaLock, FaRedo } from 'react-icons/fa';
-import { registerUser, loginUser } from '@/server/controllers/userController';
+import { generateOTP, verifyOTP } from '@/actions/user/auth';
+import { useCountDownResendOtp } from '@/hooks/user/auth/useCountDownResendOtp';
+import Loading from './_components/Loading';
+import { showLoginFormAtom } from '@/recoil/atoms/userAtom';
+import { useRouter } from 'next/navigation';
+import { userSavedAddressAtom } from '@/recoil/atoms/locationAtom';
 
 const LoginCard = () => {
+  const router = useRouter();
   const [user, setUser] = useRecoilState(userAtom);
+  const [savedAddress, setSavedAddress] = useRecoilState(userSavedAddressAtom);
   const [otp, setOtp] = useState('');
-  const [isOpen, setIsOpen] = useState(true);
+  const [showLoginForm, setShowLoginForm] = useRecoilState(showLoginFormAtom);
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [canResendOTP, setCanResendOTP] = useState(true);
-  const [countdown, setCountdown] = useState(30);
   const [showOTPScreen, setShowOTPScreen] = useState(false);
-
-
-  // countdown for resend OTP
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (!canResendOTP && countdown > 0) {
-      interval = setInterval(() => {
-        setCountdown((prevCountdown) => {
-          if (prevCountdown <= 1) {
-            clearInterval(interval);
-            setCanResendOTP(true);
-            return 30; // Reset countdown to 30 seconds
-          }
-          return prevCountdown - 1;
-        });
-      }, 1000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [canResendOTP, countdown]);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const { canResendOTP, countdown, resetCountdown } = useCountDownResendOtp();
+  const [loading, setLoading] = useState(false);
 
   // show OTP screen if OTP is sent
   useEffect(() => {
     if (otp) {
+
       setShowOTPScreen(true);
     }
       
-  }, [otp, user.isLoggedIn]);
+  }, [otp, user?.isLoggedIn]);
 
   // send OTP
-  const onSubmit = async (data: any) => {
-    try {
-      const response = await fetch('/api/user/auth', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'signup',
-          ...data
-        }),
-      });
 
-      if (response.ok) {
-        const result = await response.json();
-        setOtp('123456'); // This should be replaced with the actual OTP from the server
-        setShowOTPScreen(true);
-      } else {
-        throw new Error('Failed to send OTP');
-      }
+  const onSubmit = async (data: any) => {
+    setLoading(true);
+    try {
+      const result = await generateOTP(data.phone);
+      setPhoneNumber(data.phone);
+      setShowOTPScreen(true);
+      toast.success('OTP sent successfully');
     } catch (error) {
-      toast.error('Login failed: ' + (error instanceof Error ? error.message : 'Unknown error'));
+
+      toast.error('Failed to send OTP: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
+    setLoading(false);
   };
 
-  const handleOTPVerification = async () => {
-    try {
-      const response = await fetch('/api/user/auth', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'signin',
-          otp: otp,
-          phone: user.phone // Assuming you have the phone number stored in user state
-        }),
-      });
 
-      if (response.ok) {
-        const result = await response.json();
-        setUser({ ...result, isLoggedIn: true });
-        toast.success('OTP verified successfully');
-      } else {
-        throw new Error('OTP verification failed');
-      }
+  const handleOTPVerification = async () => {
+    setLoading(true);
+    try {
+      const result = await verifyOTP(phoneNumber, otp);
+      setUser({ ...result.user, isLoggedIn: true, address: result.address });
+      setSavedAddress(result.address)
+      toast.success('OTP verified successfully');
+      setShowLoginForm(false);
+      router.push('/user-settings');
     } catch (error) {
       toast.error('OTP verification failed: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
+    setLoading(false);
   };
 
   const handleResendOTP = async () => {
+    setLoading(true);
     if (canResendOTP) {
       try {
-        const response = await fetch('/api/user/auth', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            action: 'resend',
-            phone: user.phone // Assuming you have the phone number stored in user state
-          }),
-        });
-
-        if (response.ok) {
-          setOtp(Math.floor(1000 + Math.random() * 9000).toString()); // This should be replaced with the actual OTP from the server
-          toast.success('OTP sent successfully');
-          setCanResendOTP(false);
-          setCountdown(30);
-        } else {
-          throw new Error('Failed to resend OTP');
-        }
+        const result = await generateOTP(phoneNumber);
+        toast.success('OTP sent successfully');
+        resetCountdown();
       } catch (error) {
+
         toast.error('Failed to resend OTP: ' + (error instanceof Error ? error.message : 'Unknown error'));
       }
     }
+    setLoading(false);
   };
 
   const handleBack = () => {
@@ -137,14 +92,13 @@ const LoginCard = () => {
     setOtp('');
   };
 
-  if (user.isLoggedIn) {
-    return <></>;
-  }
-
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={() => {setIsOpen(false)}}
+    loading ? <Loading/> : (
+      <Modal
+      isOpen={showLoginForm}
+
+      onClose={() => {setShowLoginForm(false)}}
+
       closeButton
       isDismissable={false}
       className="max-w-sm mx-auto relative rounded-lg p-4 md:p-6"
@@ -237,11 +191,20 @@ const LoginCard = () => {
                         }
                       }
                     }}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length === 1) {
+                        const newOtp = otp.split('');
+                        newOtp[index] = value;
+                        setOtp(newOtp.join(''));
+                      }
+
+                    }}
                   />
                 ))}
               </div>
               {errors.otp && <p className="text-red-500 text-sm">{errors.otp.message as string}</p>}
-              <Button className="w-full bg-black hover:bg-gray-800 text-white" onClick={handleOTPVerification}>
+              <Button className="w-full bg-black hover:bg-gray-800 text-white" onClick={handleSubmit(handleOTPVerification)}>
                 <FaLock className="mr-2" /> Verify OTP
               </Button>
               <div className="flex justify-between items-center">
@@ -267,7 +230,10 @@ const LoginCard = () => {
         </ModalBody>
       </ModalContent>
     </Modal>
+  )
   );
 };
+
+
 
 export default LoginCard;
