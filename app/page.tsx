@@ -4,12 +4,12 @@ import TopItems from "@/components/TrySection/TrySection";
 import RestaurantList from "@/components/RestaurantCard/RestaurantCard";
 
 
-export default function Home() {
+export default async function Home() {
   return (
     <>
       <HeroSection />
       <TopItems />
-      <RestaurantList />
+      {await RestaurantList()}
       <ExploreSection />
     </>
   );
