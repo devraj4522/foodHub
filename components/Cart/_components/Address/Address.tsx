@@ -7,13 +7,15 @@ import { userSavedAddressAtom } from '@/recoil/atoms/locationAtom';
 import { useGeolocation } from "@/hooks/location/useGeolocation";
 import { useState, useEffect } from "react";
 import { userAtom } from "@/recoil/atoms/userAtom";
+import { selectedAddressAtom } from "@/recoil/atoms/cartAtom";
+import { useRecoilState } from "recoil";
 
 const Address = () => {
   const savedAddress = useRecoilValue(userSavedAddressAtom)
   const { address } = useGeolocation();
-  const [selectedAddress, setSelectedAddress] = useState<string>('');
   const [allAddresses, setAllAddresses] = useState<string[]>([]);
   const user = useRecoilValue(userAtom);
+  const [selectedAddress, setSelectedAddress] = useRecoilState(selectedAddressAtom);
 
   useEffect(() => {
     const addresses = [savedAddress, address].filter(Boolean);

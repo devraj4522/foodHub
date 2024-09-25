@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { isCartVisibleAtom } from "@/recoil/atoms/cartAtom";
 import { createOrder } from "@/actions/order";
 import PlacingOrder from "@/components/Cart/_components/PlacingOrder";
+import { showCartAtom } from "@/recoil/atoms/cartAtom";
 
 const PaymentSection = () => {
   const [paymentMethod, setPaymentMethod] = useRecoilState(paymentMethodAtom);
@@ -29,7 +30,7 @@ const PaymentSection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-
+  
   const cartItems = cart?.items || [];
 
   const totalPrice = cart?.items?.reduce((sum, item) => sum + (item?.menuItem?.price || 0) * (item?.quantity || 0), 0) || 0;
@@ -77,11 +78,16 @@ const PaymentSection = () => {
       };
       const response = await createOrder(orderData);
       toast.success("Order placed successfully!");
+      setIsSuccess(true);
+
       setCart(null); // Clear the cart after successful order
       setIsCartVisible(false); // Close the cart modal
-      router.push(`/active-order/${response.id}`);
+      setTimeout(() => {
+        router.push(`/active-order/${response.id}`);
+      }, 1000);
     } catch (error) {
       console.error("Error creating order:", error);
+      setIsError(true);
       toast.error("Failed to place order. Please try again.");
     } finally {
       setIsLoading(false);

@@ -13,65 +13,65 @@ import LoadingMenuCard from "./Loading/LoadingMenuCard";
 export default function RestaurantCard({item}: {item: IMenuItem}) {
 
   const [cart, setCart] = useRecoilState(cartAtom);
-  const handleAddToCart = async (event: React.MouseEvent<HTMLButtonElement>, menuItem:IMenuItem) => {
-    event.preventDefault();
-    if (!cart || !cart.id) {
-      toast.error('Cart not found');
-      return;
-    }
-
-    try {
-      const cartItemData = {
-        cartId: cart.id,
-        quantity: 1,
-        menuItem: menuItem,
-        menuItemId: menuItem.id,
-      };
-
-      // do not allow to order from different restaurant
-      if (cart.items.length > 0 &&  cartItemData.menuItem.restaurantId !== cart.items[0].menuItem.restaurantId) {
-        toast.error('Order From Different Restaurant? Remove items from your cart');
+  const handleAddToCart = async (event: React.MouseEvent<HTMLButtonElement>,  menuItem:IMenuItem) => {
+      event.preventDefault();
+      if (!cart || !cart.id) {
+        toast.error('Cart not found');
         return;
       }
-      const response = await addItemToCart(cartItemData);
-      const {id, cartId, items, quantity} = response;
-      if (response && typeof response === 'object' && 'id' in response) {
-        toast.success('Item added to cart')
-        const newItem = {
-          id: id,
-          cartId: cartId,
-          menuItem: {
-            id: cartItemData.menuItemId,
-            restaurantId: cartItemData.menuItem.restaurantId,
-            name: cartItemData.menuItem.name,
-            price: cartItemData.menuItem.price,
-          },
-          quantity: quantity,
+
+      try {
+        const cartItemData = {
+          cartId: cart.id,
+          quantity: 1,
+          menuItem: menuItem,
+          menuItemId: menuItem.id,
+        };
+
+        // do not allow to order from different restaurant
+        if (cart.items.length > 0 &&  cartItemData.menuItem.restaurantId !== cart.items[0].menuItem.restaurantId) {
+          toast.error('Order From Different Restaurant? Remove items from your cart');
+          return;
         }
-        setCart((prevCart) => {
-          if (!prevCart) return null;
-          const existingItemIndex = prevCart.items.findIndex(
-            (item) => item.cartId === newItem.cartId && item.menuItem.id === newItem.menuItem.id
-          );
-          if (existingItemIndex !== -1) {
-            // Item already exists, update quantity
-            const updatedItems = [...prevCart.items];
-            updatedItems[existingItemIndex] = {
-              ...updatedItems[existingItemIndex],
-              quantity: updatedItems[existingItemIndex].quantity + 1
-            };
-            return { ...prevCart, items: updatedItems };
-          } else {
-            // Item doesn't exist, add new item
-            return { ...prevCart, items: [...prevCart.items, newItem] };
+        const response = await addItemToCart(cartItemData);
+        const {id, cartId, items, quantity} = response;
+        if (response && typeof response === 'object' && 'id' in response) {
+          toast.success('Item added to cart')
+          const newItem = {
+            id: id,
+            cartId: cartId,
+            menuItem: {
+              id: cartItemData.menuItemId,
+              restaurantId: cartItemData.menuItem.restaurantId,
+              name: cartItemData.menuItem.name,
+              price: cartItemData.menuItem.price,
+            },
+            quantity: quantity,
           }
-        });
-      } else {
-        toast.error('Failed to add item to cart');
+          setCart((prevCart) => {
+            if (!prevCart) return null;
+            const existingItemIndex = prevCart.items.findIndex(
+              (item) => item.cartId === newItem.cartId && item.menuItem.id === newItem.menuItem.id
+            );
+            if (existingItemIndex !== -1) {
+              // Item already exists, update quantity
+              const updatedItems = [...prevCart.items];
+              updatedItems[existingItemIndex] = {
+                ...updatedItems[existingItemIndex],
+                quantity: updatedItems[existingItemIndex].quantity + 1
+              };
+              return { ...prevCart, items: updatedItems };
+            } else {
+              // Item doesn't exist, add new item
+              return { ...prevCart, items: [...prevCart.items, newItem] };
+            }
+          });
+        } else {
+          toast.error('Failed to add item to cart');
+        }
+      } catch (error) {
+        console.error('Error adding item to cart:', error);
       }
-    } catch (error) {
-      console.error('Error adding item to cart:', error);
-    }
   };
   return (
     cart? 
