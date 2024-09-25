@@ -10,7 +10,7 @@ export async function createMenuItem(data: IMenuItem) {
 }
 
 export async function updateMenuItem(id: string, data: Partial<Omit<IMenuItem, 'id'>>) {
-  return MenuItem.updateMenuItem(id, data);
+  return {};
 }
 
 export async function deleteMenuItem(id: string) {

@@ -9,35 +9,32 @@ export class MenuItem {
   }
 
   static async createMenuItem(data: IMenuItem) {
+    const { category, restaurant, ...menuItemData } = data;
     return prisma.menuItem.create({
       data: {
-        ...data,
-        category: {
-          connect: { id: data.category.id }
-        },
-        restaurant: {
-          connect: { id: data.restaurant.id }
-        }
+        ...menuItemData,
+        categoryId: category.id,
+        restaurantId: restaurant.id,
       },
     });
   }
 
-  static async updateMenuItem(id: string, data: Partial<Omit<IMenuItem, 'id'>>) {
-    const updateData: any = { ...data };
+  // static async updateMenuItem(id: string, data: Partial<Omit<IMenuItem, 'id'>>) {
+  //   const { category, restaurant, ...updateData } = data;
 
-    if (data.category?.id) {
-      updateData.category = { connect: { id: data.category.id } };
-    }
+  //   if (category?.id) {
+  //     updateData.categoryId = category.id;
+  //   }
 
-    if (data.restaurant?.id) {
-      updateData.restaurant = { connect: { id: data.restaurant.id } };
-    }
+  //   if (restaurant?.id) {
+  //     updateData.restaurantId = restaurant.id;
+  //   }
 
-    return prisma.menuItem.update({
-      where: { id },
-      data: updateData,
-    });
-  }
+  //   return prisma.menuItem.update({
+  //     where: { id },
+  //     data: updateData,
+  //   });
+  // }
 
   static async deleteMenuItem(id: string) {
     return prisma.menuItem.delete({
