@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       if (existingUser) {
         ({ user, token } = await loginUser(phone));
       } else {
-        ({ user, token } = await registerUser({ phone, name: '' }));
+        ({ user, token } = await registerUser({ phone, name: '', otpCode: otp.toString(), email: '' }));
       }
       // console.log(user);
       // Set the token in an HTTP-only cookie
