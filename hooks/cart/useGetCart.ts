@@ -1,6 +1,5 @@
 import { useRecoilValue } from 'recoil';
 import { cartAtom } from '@/recoil/atoms/cartAtom';
-import { ICartState } from '@/types/Cart';
 import { getCartByUserId } from '@/actions/cart';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';

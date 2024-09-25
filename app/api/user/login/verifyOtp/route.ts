@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       } else {
         ({ user, token } = await registerUser({ phone, name: '' }));
       }
-      console.log(user);
+      // console.log(user);
       // Set the token in an HTTP-only cookie
       cookies().set('auth_token', token, {
         httpOnly: true,

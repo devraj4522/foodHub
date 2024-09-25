@@ -1,6 +1,7 @@
 import { prisma } from '@/server/lib/prisma'
 import { generateOTP } from '@/server/otp'
 import { IUser, ICreateUserInput } from '@/types/User';
+import { randomBytes, randomInt } from 'crypto';
 
 export class User {
   static async create(userData: ICreateUserInput) {
@@ -14,7 +15,7 @@ export class User {
   }
 
   static async findByEmail(email: string) {
-    return prisma.user.findUnique({ where: { email } })
+    return prisma.user.findFirst({ where: { email } })
   }
 
   static async findByPhone(phone: string) {
@@ -38,9 +39,7 @@ export class User {
   }
 
   static async generateOTP(userId: string) {
-    // const otp = generateOTP();
-    //TODO: remove this
-    const otp = '1234';
+    const otp = randomInt(1000, 9999).toString().padStart(4, '0');
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // OTP expires in 10 minutes
 
     return prisma.user.update({
@@ -66,8 +65,6 @@ export class User {
         where: { phone },
         data: {
           verified: true,
-          otpCode: null,
-          otpExpiresAt: null,
         },
       });
       return true;

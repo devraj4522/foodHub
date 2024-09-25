@@ -5,7 +5,9 @@ import { FaShoppingBag, FaMotorcycle, FaMapMarkerAlt, FaCheckCircle } from 'reac
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { Progress } from "@nextui-org/progress";
-import { FaPhone, FaMoneyBillWave } from 'react-icons/fa';
+import { FaPhone, FaMoneyBillWave, FaMobileAlt } from 'react-icons/fa';
+import { IOrder } from '@/types/Order';
+import { PaymentStatus } from '@/types/Order';
 
 // Mock data for active order
 const mockActiveOrder = {
@@ -20,7 +22,7 @@ const mockActiveOrder = {
   orderPlacedTime: new Date(Date.now() - 10 * 60000), // 10 minutes ago
 };
 
-const ActiveOrderPage: React.FC = () => {
+const ActiveOrderPageComponent: React.FC<{order: IOrder}> = ({order}) => {
   const [remainingTime, setRemainingTime] = useState(mockActiveOrder.estimatedDeliveryTime);
   const [orderProgress, setOrderProgress] = useState(0);
 
@@ -63,7 +65,7 @@ const ActiveOrderPage: React.FC = () => {
       
       <Card className="mb-8">
         <CardHeader className="flex justify-between items-center">
-          <span className="text-xl font-semibold">Order #{mockActiveOrder.id}</span>
+          <span className="text-xl font-semibold" data-id={order.id}>Order #{order.id.slice(-6)}</span>
           {renderOrderStatus()}
         </CardHeader>
         <CardBody>
@@ -89,30 +91,39 @@ const ActiveOrderPage: React.FC = () => {
 
           <div className="border-t pt-4">
             <h3 className="font-semibold mb-2">Order Details</h3>
-            {mockActiveOrder.items.map((item, index) => (
+            {order?.items.map((item, index) => (
               <div key={index} className="flex justify-between py-2">
-                <span>{item.quantity}x {item.name}</span>
-                <span>₹{item.price * item.quantity}</span>
+                <span>{item.quantity}x {item.menuItem.name}</span>
+                <span>₹{item.menuItem.price * item.quantity}</span>
               </div>
             ))}
             <div className="flex justify-between font-bold mt-2 pt-2 border-t">
               <span>Total</span>
-              <span>₹{mockActiveOrder.total}</span>
+              <span>₹{order.totalAmount}</span>
             </div>
           </div>
 
           <div className="mt-4 flex justify-between items-center">
             <div className="flex items-center">
-              <span className="font-semibold mr-2">Payment Status:</span>
-              {mockActiveOrder.isPaid ? (
+              <span className="font-semibold mr-2">Payment Method:</span>
+              {order.paymentStatus === PaymentStatus.COMPLETED ? (
                 <div className="flex items-center text-green-500">
                   <FaCheckCircle className="mr-1" />
                   <span>Paid</span>
                 </div>
               ) : (
                 <div className="flex items-center text-orange-500">
-                  <FaMoneyBillWave className="mr-1" />
-                  <span>Cash</span>
+                  {order.paymentMethod === 'upi' ? (
+                    <>
+                      <FaMobileAlt className="mr-1" />
+                      <span>UPI</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaMoneyBillWave className="mr-1" />
+                      <span>{order.paymentMethod.toUpperCase()}</span>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -120,7 +131,6 @@ const ActiveOrderPage: React.FC = () => {
         </CardBody>
       </Card>
 
-      {!mockActiveOrder.isPaid && (
         <Button 
           className="w-full text-white bg-lime-600 hover:bg-lime-700"
           size="lg" 
@@ -128,9 +138,8 @@ const ActiveOrderPage: React.FC = () => {
         >
           Call Delivery 
         </Button>
-      )}
     </div>
   );
 };
 
-export default ActiveOrderPage;
+export default ActiveOrderPageComponent;

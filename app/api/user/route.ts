@@ -29,7 +29,6 @@ export async function PUT(request: NextRequest) {
 
   try {
     const {user, token} = await updateUserDetailsController(userData);
-    console.log("token")
     cookies().set('auth_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

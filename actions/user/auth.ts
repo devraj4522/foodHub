@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios';
 
-export const generateOTP = async (phone: string) => {
+export const generateOTP = async (phone: string, email: string) => {
   try {
-    const response = await axios.post('/api/user/login/generateOtp', { phone });
+    const response = await axios.post('/api/user/login/generateOtp', { phone, email });
     if (response.statusText === 'OK') {
       return response.data;
     } else {

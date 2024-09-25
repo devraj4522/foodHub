@@ -7,14 +7,21 @@ export enum PaymentStatus {
   FAILED = 'failed',
 }
 
+
 export enum OrderStatus {
-  PENDING = 'pending',
+  PLACED = 'placed',
   PREPARING = 'preparing',
   OUT_FOR_DELIVERY = 'out_for_delivery',
   DELIVERED = 'delivered',
   CANCELLED = 'cancelled',
 }
 
+export enum PaymentMethod {
+  CASH = 'cash',
+  CARD = 'card',
+  UPI = 'upi',
+  NET_BANKING = 'net_banking',
+}
 
 export interface IOrder {
   id: string;
@@ -24,12 +31,11 @@ export interface IOrder {
   restaurantId: string;
   items: IOrderItem[];
   totalAmount: number;
-  paymentMethod?: string;
   paymentStatus: PaymentStatus;
   paymentVerified: boolean;
+  paymentMethod: PaymentMethod;
   orderStatus: OrderStatus;
-  deliveryAddress?: string;
-  deliveryInstructions?: string;
+  deliveryAddress: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,6 +51,25 @@ export interface IOrderItem {
   specialInstructions?: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ICreateOrderItemInput {
+  menuItemId: string;
+  quantity: number;
+  price: number;
+  specialInstructions?: string;
+}
+
+export interface ICreateOrderInput {
+  userId: string;
+  restaurantId: string;
+  items: ICreateOrderItemInput[];
+  totalAmount: number;
+  paymentStatus: PaymentStatus;
+  paymentVerified: boolean;
+  paymentMethod: PaymentMethod;
+  orderStatus: OrderStatus;
+  deliveryAddress: string;
 }
 
 export interface IReview {

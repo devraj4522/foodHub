@@ -39,6 +39,7 @@ export interface IMenuItem {
   spicyLevel?: number;
   isAvailable: boolean;
   image?: string;
+  restaurantId: string;
   restaurant: RestaurantData;
   category: CategoryData;
   rating: number;

@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
-  console.log(request);
+  // console.log(request);
   
   const path = request.nextUrl.pathname;
 

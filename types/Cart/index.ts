@@ -35,6 +35,7 @@ export interface ICartState {
     cartId: string;
     menuItem: {
       id: string;
+      restaurantId: string;
       name: string;
       price: number;
     };

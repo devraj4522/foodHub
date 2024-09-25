@@ -26,8 +26,7 @@ export function useGeolocation() {
         fetchLocation(latitude, longitude)
           .then(data => {
             const fetchedAddress = data?.display_name as string;
-            const shortAddress = fetchedAddress.split(', ').slice(0, 2).join(', ') + '...';
-            setAddress(shortAddress);
+            setAddress(fetchedAddress);
             localStorage.setItem('userAddress', fetchedAddress);
           })
           .catch(error => setError('Unable to retrieve your location'));

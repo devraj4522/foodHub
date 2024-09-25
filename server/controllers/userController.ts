@@ -26,6 +26,7 @@ export async function loginUser(phone: string) {
   const userData: IUserToken = {
     id: user.id,
     name: user.name,
+    otpCode: user.otpCode,
     phone: user.phone,
     email: user?.email || "",
     role: user.role,
@@ -50,13 +51,11 @@ export async function verifyOtpController(phoneNumber: string, otp: string) {
   return verifyOTP(phoneNumber, otp)
 }
 
-export async function generateOtpController(phoneNumber: string) {
-  return generateOTP(phoneNumber)
+export async function generateOtpController(phoneNumber: string, email:string) {
+  return generateOTP(phoneNumber, email)
 }
 
 export async function updateUserDetailsController(userData: Partial<ICreateUserInput> & { id: string }) {
-  console.log("userData")
-  console.log(userData)
   const user = await updateUserDetails(userData)
   const tokenData: IUserToken = {
     id: user.id,
@@ -64,6 +63,7 @@ export async function updateUserDetailsController(userData: Partial<ICreateUserI
     phone: user.phone,
     email: user?.email || "",
     role: user.role,
+    otpCode: user.otpCode,
     city: user.city || "",
     state: user.state || "",
     pinCode: user.pinCode || "",

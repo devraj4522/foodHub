@@ -48,6 +48,13 @@ export class CartItem {
       where: { id },
     });
   }
+
+  static async deleteCartItemByUserId(userId: string) {
+    return prisma.cartItem.deleteMany({
+      where: { cart: { userId } },
+    });
+  }
+
 }
 
 export class Cart {

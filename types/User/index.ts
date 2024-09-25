@@ -24,7 +24,9 @@ export interface IUser {
 export interface ICreateUserInput {
   name: string;
   phone: string;
-  email?: string;
+  email: string;
+  otpCode: string;
+  otpExpiresAt?: Date;
   role?: string;
   city?: string;
   state?: string;

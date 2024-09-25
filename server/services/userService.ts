@@ -1,7 +1,7 @@
 import { User } from '../models/User'
 import { ICreateUserInput } from '@/types/User'
 import { Cart } from '../models/Cart'
-
+import { sendSignupConfirmationEmail } from '../lib/sendInBlueEmail';
 export async function createUser(userData: ICreateUserInput) {
   const user = await User.create(userData);
   await Cart.createCart(user.id);
@@ -31,13 +31,24 @@ export async function verifyOTP(phone: string, otp: string) {
   return User.verifyOTP(phone, otp)
 }
 
-export async function generateOTP(phone: string) {
+export async function generateOTP(phone: string, email: string) {
   let user = await User.findByPhone(phone);
   if (!user) {
-    user = await User.create({ phone, name: '' });
+    user = await User.create({ phone, name: '', email, otpCode: '' });
     await Cart.createCart(user.id); 
   }
-  return User.generateOTP(user.id);
+  try {
+    const updated_user = await User.generateOTP(user.id);
+    if (user.email && updated_user.email && updated_user.email !== null) {
+      sendSignupConfirmationEmail(user.email, updated_user.otpCode as string);
+    }else{
+      throw new Error("Email not found")
+    }
+  } catch (error) {
+    console.log(error)
+    throw new Error("Error Generating OTP")
+  }
+  
 }
 
 

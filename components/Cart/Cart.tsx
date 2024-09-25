@@ -19,6 +19,13 @@ import { toast } from 'sonner';
 import {ICartState} from '@/types/Cart'
 import { updateCartItem } from '@/actions/cart';
 import { userSavedAddressAtom } from '@/recoil/atoms/locationAtom';
+import { createOrder } from '@/actions/order';
+import { ICreateOrderInput } from '@/types/Order';
+import {IUser} from '@/types/User'
+import { PaymentMethod, PaymentStatus, OrderStatus } from '@/types/Order';
+import { useRouter } from 'next/navigation';
+import CartSkeleton from './_components/CartSkeleton';
+import PlacingOrder from './_components/PlacingOrder';
 
 interface CartItem {
   id: string;
@@ -28,7 +35,7 @@ interface CartItem {
 }
 
 const Cart: React.FC = () => {
-  const [paymentMethod, setPaymentMethod] = useState<string>('upi');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.UPI);
   const [step, setStep] = useState<'cart' | 'address' | 'payment'>('cart');
   const [isCartVisible, setIsCartVisible] = useRecoilState(showCartAtom);
   const [cart, setCart] = useRecoilState(cartAtom);
@@ -40,12 +47,14 @@ const Cart: React.FC = () => {
   const [selectedAddress, setSelectedAddress] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const savedAddress = useRecoilValue(userSavedAddressAtom)
+  const router = useRouter();
   const cartItems = cart?.items || [];
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   
   useEffect(() => {
     const addresses = [savedAddress, address].filter(Boolean);
     setAllAddresses(addresses);
-    setSelectedAddress("");
+    setIsQRVisible(false);
   }, [user, address, step, savedAddress]);
 
   const totalPrice = cart?.items?.reduce((sum, item) => sum + (item?.menuItem?.price || 0) * (item?.quantity || 0), 0) || 0;
@@ -54,40 +63,90 @@ const Cart: React.FC = () => {
     setSelectedAddress(address);
   }, []);
 
-  const handlePaymentMethodChange = useCallback((method: string) => {
+  const handlePaymentMethodChange = useCallback((method: PaymentMethod) => {
     setPaymentMethod(method);
     setIsQRVisible(false);
   }, []);
 
-  const handleCheckout = useCallback(() => {
-    console.log("Proceeding to checkout");
-    console.log("Order details:", {
-      items: cart?.items,
-      totalPrice,
-      address: selectedAddress,
-      paymentMethod
-    });
-  }, [cart?.items, totalPrice, selectedAddress, paymentMethod]);
+  const handleCheckout = async () => {
+    try {
+      if (!user)
+      {
+        toast.error("User Must Be Sign In.");
+        return;
+      }
+      if (!cart || cart.items.length === 0)
+      {
+        toast.error("Cart is empty.");
+        return;
+      }
+
+      if (!selectedAddress || selectedAddress === "")
+      {
+        toast.error("Must have a delivery address.");
+        return;
+      }
+
+      setIsPlacingOrder(true);
+      const orderData: ICreateOrderInput = {
+        userId: user.id as string,
+        restaurantId: cart?.items[0].menuItem.restaurantId as string,
+        totalAmount: totalPrice,
+        paymentStatus: PaymentStatus.PENDING,
+        paymentVerified: false,
+        paymentMethod: paymentMethod,
+        orderStatus: OrderStatus.PLACED,
+        deliveryAddress: selectedAddress,
+        items: cartItems.map((item) => ({
+          menuItemId: item.menuItem.id,
+          quantity: item.quantity,
+          price: item.menuItem.price,
+          specialInstructions: "",
+        })),
+      };
+      const response = await createOrder(orderData);
+      toast.success("Order placed successfully!");
+      setCart(null); // Clear the cart after successful order
+      setIsCartVisible(false); // Close the cart modal
+      router.push(`/active-order/${response.id}`);
+    } catch (error) {
+      console.error("Error creating order:", error);
+      toast.error("Failed to place order. Please try again.");
+    } finally {
+      setIsPlacingOrder(false);
+    }
+  };
 
   const handleQuantityChange = useCallback((id: string, change: number) => {
-    setCart((prevCart: ICartState | null) => {
-      if (!prevCart) return null;
-      const updatedItems = prevCart.items.reduce((acc, item) => {
-        if (item.id === id) {
-          const newQuantity = Math.max(0, item.quantity + change);
-          updateCartItem(id, { quantity: newQuantity });
-          if (newQuantity > 0) {
-            acc.push({ ...item, quantity: newQuantity });
+    try{
+      setIsLoading(true);
+      setCart((prevCart: ICartState | null) => {
+        if (!prevCart) return null;
+        const updatedItems = prevCart.items.reduce((acc, item) => {
+          if (item.id === id) {
+            const newQuantity = Math.max(0, item.quantity + change);
+            updateCartItem(id, { quantity: newQuantity });
+            if (newQuantity > 0) {
+              acc.push({ ...item, quantity: newQuantity });
+            }
+          } else {
+            acc.push(item);
           }
-        } else {
-          acc.push(item);
-        }
-        return acc;
-      }, [] as ICartState['items']);
-      return { ...prevCart, items: updatedItems };
-    });
+          return acc;
+        }, [] as ICartState['items']);
+        return { ...prevCart, items: updatedItems };
+      });
+    }
+    catch (error)
+    {
+      console.error("Error updating cart:", error);
+      toast.error("Failed to update cart. Please try again.");
+    }
+    finally
+    {
+      setIsLoading(false);
+    }
 
-    console.log("Cart updated");
   }, [setCart]);
 
   const renderCartItems = useCallback(() => (
@@ -129,12 +188,12 @@ const Cart: React.FC = () => {
         <Select 
           label="Select Address" 
           placeholder="Choose an address"
-          defaultSelectedKeys={[selectedAddress]}
+          selectedKeys={selectedAddress ? [selectedAddress] : []}
           onChange={(e) => handleAddressChange(e.target.value)}
         >
           {allAddresses.length > 0 ? (
             allAddresses.map((item, index) => (
-              <SelectItem key={index} value={item}>
+              <SelectItem key={item} value={item}>
                 {item}
               </SelectItem>
             ))
@@ -158,7 +217,7 @@ const Cart: React.FC = () => {
         <Select 
           label="Select Payment Method" 
           placeholder="Choose a payment method"
-          onChange={(e) => handlePaymentMethodChange(e.target.value)}
+          onChange={(e) => handlePaymentMethodChange(e.target.value as PaymentMethod)}
           defaultSelectedKeys={["upi"]}
         >
           <SelectItem key="upi" value="upi">UPI</SelectItem>
@@ -206,7 +265,8 @@ const Cart: React.FC = () => {
             borderBottomLeftRadius: '20px'
           }}
         >
-          <div className="max-w-md mx-auto">
+          {isLoading? <CartSkeleton/> : (
+            <div className="max-w-md mx-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold text-black">Your Order</h1>
               <Button
@@ -270,6 +330,8 @@ const Cart: React.FC = () => {
               </>
             )}
           </div>
+          )}
+          {isPlacingOrder && <PlacingOrder isLoading={isPlacingOrder} isSuccess={isPlacingOrder} isError={isPlacingOrder}/>}
         </motion.div>
       )}
     </AnimatePresence>

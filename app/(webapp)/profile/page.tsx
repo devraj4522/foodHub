@@ -44,7 +44,7 @@ const ProfilePage = () => {
             <li>
               <Button
                 variant="light"
-                onClick={() => router.push("/order-history")}
+                onClick={() => router.push("/order-history/"+user?.id)}
                 startContent={<FaHistory className="text-lime-600" />}
                 className="w-full justify-start text-left"
               >

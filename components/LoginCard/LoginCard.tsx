@@ -11,7 +11,7 @@ import { userAtom } from '@/recoil/atoms/userAtom';
 import { toast } from 'sonner';
 import { FiClock, FiArrowLeft } from 'react-icons/fi';
 import clsx from 'clsx';
-import { FaUtensils, FaPhoneAlt, FaPaperPlane, FaLock, FaRedo } from 'react-icons/fa';
+import { FaUtensils, FaPhoneAlt, FaPaperPlane, FaLock, FaRedo, FaEnvelope } from 'react-icons/fa';
 import { generateOTP, verifyOTP } from '@/actions/user/auth';
 import { useCountDownResendOtp } from '@/hooks/user/auth/useCountDownResendOtp';
 import Loading from './_components/Loading';
@@ -28,34 +28,31 @@ const LoginCard = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showOTPScreen, setShowOTPScreen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
   const { canResendOTP, countdown, resetCountdown } = useCountDownResendOtp();
   const [loading, setLoading] = useState(false);
 
   // show OTP screen if OTP is sent
   useEffect(() => {
     if (otp) {
-
       setShowOTPScreen(true);
     }
-      
   }, [otp, user?.isLoggedIn]);
 
   // send OTP
-
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
-      const result = await generateOTP(data.phone);
+      const result = await generateOTP(data.phone, data.email);
       setPhoneNumber(data.phone);
+      setEmail(data.email);
       setShowOTPScreen(true);
-      toast.success('OTP sent successfully');
+      toast.success('OTP sent on your email');
     } catch (error) {
-
       toast.error('Failed to send OTP: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
     setLoading(false);
   };
-
 
   const handleOTPVerification = async () => {
     setLoading(true);
@@ -76,18 +73,17 @@ const LoginCard = () => {
     setLoading(true);
     if (canResendOTP) {
       try {
-        const result = await generateOTP(phoneNumber);
+        const result = await generateOTP(phoneNumber, email);
         toast.success('OTP sent successfully');
         resetCountdown();
       } catch (error) {
-
         toast.error('Failed to resend OTP: ' + (error instanceof Error ? error.message : 'Unknown error'));
       }
     }
     setLoading(false);
   };
 
-  const handleBack = () => {
+  const handleBack:any = () => {
     setShowOTPScreen(false);
     setOtp('');
   };
@@ -96,9 +92,7 @@ const LoginCard = () => {
     loading ? <Loading/> : (
       <Modal
       isOpen={showLoginForm}
-
       onClose={() => {setShowLoginForm(false)}}
-
       closeButton
       isDismissable={false}
       className="max-w-sm mx-auto relative rounded-lg p-4 md:p-6"
@@ -155,6 +149,28 @@ const LoginCard = () => {
                 />
               </div>
               {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message as string}</p>}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <FaEnvelope className="text-gray-500" />
+                </div>
+                <Input
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Please enter a valid email address",
+                    },
+                  })}
+                  type="email" 
+                  placeholder="Email"
+                  className="pl-10 focus:border-green-500 outline-1 focus:border-2 focus:ring-green-500 outline-none"
+                  classNames={{
+                    input: "bg-transparent",
+                    inputWrapper: "bg-default-100 hover:bg-default-200",
+                  }}
+                />
+              </div>
+              {errors.email && <p className="text-red-500 text-sm">{errors.email.message as string}</p>}
               <Button type="submit" color="primary" className="w-full bg-black hover:bg-gray-800 text-white">
                 <FaPaperPlane className="mr-2" /> Send OTP
               </Button>
@@ -198,7 +214,6 @@ const LoginCard = () => {
                         newOtp[index] = value;
                         setOtp(newOtp.join(''));
                       }
-
                     }}
                   />
                 ))}
@@ -233,7 +248,5 @@ const LoginCard = () => {
   )
   );
 };
-
-
 
 export default LoginCard;
