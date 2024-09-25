@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { getRestaurantByIdController } from "@/server/controllers/restaurantController";
 
-export async function GET(request: Request) {
+export async function GET(
+  request: Request,
+  { params }: { params: { slug: string } }
+) {
   try {
-    const { searchParams } = new URL(request.url);
-    const slug = searchParams.get("slug");
+    const { slug } = params;
 
     if (!slug) {
       return NextResponse.json({ error: "Slug is required" }, { status: 400 });
