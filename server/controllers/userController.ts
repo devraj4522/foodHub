@@ -1,25 +1,25 @@
-import { createUser, getUniqueUser, getUserByPhoneNumber, getUserById as getUserByIdService, verifyOTP, generateOTP, updateUserDetails, getUserOrders, getUserReviews, getUserFavorites } from '../services/userService'
+import { createUser, getUniqueUser, getUserByPhoneNumber, getUserById as getUserByIdService, verifyOTP, generateOTP, updateUserDetails, getUserOrders, getUserReviews, getUserFavorites, getUserByEmail } from '../services/userService'
 import { ICreateUserInput, IUserToken } from '@/types/User'
 import { generateToken, verifyToken } from '../services/authService'
 
-export async function registerUser(userData: ICreateUserInput) {
+export async function registerUser(userData: Omit<ICreateUserInput, 'phone'>) {
 
-  const existingUser = await getUniqueUser(userData.email || '', userData.phone || '')
+  const existingUser = await getUniqueUser(userData.email || '')
   if (existingUser) {
     throw new Error('Email already in use')
   }
   const user = await createUser(userData)
   const tokenData: IUserToken = {
     id: user.id,
-    ...userData
+    ...userData,
   }
   const token = generateToken(tokenData)
   return { user, token }
 
 }
 
-export async function loginUser(phone: string) {
-  const user = await getUserByPhoneNumber(phone)
+export async function loginUser(email: string) {
+  const user = await getUserByEmail(email)
   if (!user) {
     throw new Error('User not found')
   }
@@ -27,7 +27,6 @@ export async function loginUser(phone: string) {
     id: user.id,
     name: user.name,
     otpCode: user.otpCode,
-    phone: user.phone,
     email: user?.email || "",
     role: user.role,
     city: user.city || "",
@@ -47,12 +46,12 @@ export async function getUserByPhoneNumberController(phoneNumber: string) {
   return getUserByPhoneNumber(phoneNumber)
 }
 
-export async function verifyOtpController(phoneNumber: string, otp: string) {
-  return verifyOTP(phoneNumber, otp)
+export async function verifyOtpController(email: string, otp: string) {
+  return verifyOTP(email, otp)
 }
 
-export async function generateOtpController(phoneNumber: string, email:string) {
-  return generateOTP(phoneNumber, email)
+export async function generateOtpController(email: string) {
+  return generateOTP(email)
 }
 
 export async function updateUserDetailsController(userData: Partial<ICreateUserInput> & { id: string }) {
@@ -60,7 +59,6 @@ export async function updateUserDetailsController(userData: Partial<ICreateUserI
   const tokenData: IUserToken = {
     id: user.id,
     name: user.name,
-    phone: user.phone,
     email: user?.email || "",
     role: user.role,
     otpCode: user.otpCode,

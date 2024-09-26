@@ -140,6 +140,7 @@ const UserAccountSettingsPage: React.FC = () => {
               isInvalid={!!errors.email}
               errorMessage={errors.email?.[0]}
               size="lg"
+              readOnly
               className="w-full"
             />
             <div className="relative">
@@ -147,6 +148,7 @@ const UserAccountSettingsPage: React.FC = () => {
                 value={formData.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
                 placeholder="Phone"
+                required={true}
                 startContent={
                   <>
                     <FaPhone className="mr-2 text-lime-500" />

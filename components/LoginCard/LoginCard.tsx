@@ -27,7 +27,6 @@ const LoginCard = () => {
   const [showLoginForm, setShowLoginForm] = useRecoilState(showLoginFormAtom);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showOTPScreen, setShowOTPScreen] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const { canResendOTP, countdown, resetCountdown } = useCountDownResendOtp();
   const [loading, setLoading] = useState(false);
@@ -43,8 +42,7 @@ const LoginCard = () => {
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
-      const result = await generateOTP(data.phone, data.email);
-      setPhoneNumber(data.phone);
+      const result = await generateOTP(data.email);
       setEmail(data.email);
       setShowOTPScreen(true);
       toast.success('OTP sent on your email');
@@ -57,7 +55,7 @@ const LoginCard = () => {
   const handleOTPVerification = async () => {
     setLoading(true);
     try {
-      const result = await verifyOTP(phoneNumber, otp);
+      const result = await verifyOTP(email, otp);
       setUser({ ...result.user, isLoggedIn: true, address: result.address });
       setSavedAddress(result.address)
       toast.success('OTP verified successfully');
@@ -73,7 +71,7 @@ const LoginCard = () => {
     setLoading(true);
     if (canResendOTP) {
       try {
-        const result = await generateOTP(phoneNumber, email);
+        const result = await generateOTP(email);
         toast.success('OTP sent successfully');
         resetCountdown();
       } catch (error) {
@@ -121,7 +119,7 @@ const LoginCard = () => {
         <ModalBody>
           {!showOTPScreen ? (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="relative">
+              {/* <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <FaPhoneAlt className="text-gray-500" />
                 </div>
@@ -148,7 +146,7 @@ const LoginCard = () => {
                   }}
                 />
               </div>
-              {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message as string}</p>}
+              {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message as string}</p>} */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <FaEnvelope className="text-gray-500" />

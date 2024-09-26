@@ -1,11 +1,11 @@
-export const generateOTP = async (phone: string, email: string) => {
+export const generateOTP = async (email: string) => {
   try {
     const response = await fetch('/api/user/login/generateOtp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ phone, email }),
+      body: JSON.stringify({ email }),
     });
     if (response.ok) {
       return await response.json();
@@ -19,14 +19,14 @@ export const generateOTP = async (phone: string, email: string) => {
   }
 };
 
-export const verifyOTP = async (phone: string, otp: string) => {
+export const verifyOTP = async (email: string, otp: string) => {
   try {
     const response = await fetch('/api/user/login/verifyOtp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ phone, otp }),
+      body: JSON.stringify({ email, otp }),
     });
     if (response.ok) {
       return await response.json();

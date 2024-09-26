@@ -2,7 +2,7 @@ import { User } from '../models/User'
 import { ICreateUserInput } from '@/types/User'
 import { Cart } from '../models/Cart'
 import { sendSignupConfirmationEmail } from '../lib/sendInBlueEmail';
-export async function createUser(userData: ICreateUserInput) {
+export async function createUser(userData: Omit<ICreateUserInput, 'phone'>) {
   const user = await User.create(userData);
   await Cart.createCart(user.id);
   console.log("User created successfully")
@@ -11,11 +11,11 @@ export async function createUser(userData: ICreateUserInput) {
 }
 
 export async function getUserByEmail(email: string) {
-  return User.findByEmail(email)
+  return User.findUnique(email)
 }
 
-export async function getUniqueUser(email: string, phone: string) {
-  return User.findUnique(email, phone)
+export async function getUniqueUser(email: string) {
+  return User.findUnique(email)
 }
 
 export async function getUserById(id: string) {
@@ -27,14 +27,14 @@ export async function getUserByPhoneNumber(phone: string) {
   return User.findByPhone(phone)
 }
 
-export async function verifyOTP(phone: string, otp: string) {
-  return User.verifyOTP(phone, otp)
+export async function verifyOTP(email: string, otp: string) {
+  return User.verifyOTP(email, otp)
 }
 
-export async function generateOTP(phone: string, email: string) {
-  let user = await User.findByPhone(phone);
+export async function generateOTP(email: string) {
+  let user = await User.findByEmail(email);
   if (!user) {
-    user = await User.create({ phone, name: '', email, otpCode: '' });
+    user = await User.create({ name: '', email, otpCode: '' });
     await Cart.createCart(user.id); 
   }
   try {

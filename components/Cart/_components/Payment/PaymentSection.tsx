@@ -52,6 +52,10 @@ const PaymentSection = () => {
         toast.error("Cart is empty.");
         return;
       }
+      if (!user.phone || user.phone === ""){
+        router.push("/user-settings");
+        
+      }
 
       if (!selectedAddress || selectedAddress === "")
       {

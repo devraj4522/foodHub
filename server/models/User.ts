@@ -4,7 +4,7 @@ import { IUser, ICreateUserInput } from '@/types/User';
 import { randomBytes, randomInt } from 'crypto';
 
 export class User {
-  static async create(userData: ICreateUserInput) {
+  static async create(userData: Omit<ICreateUserInput, 'phone'>) {
     return prisma.user.create({
       data: {
         ...userData,
@@ -22,12 +22,11 @@ export class User {
     return prisma.user.findUnique({ where: { phone } })
   }
 
-  static async findUnique(email: string, phone: string) {
+  static async findUnique(email: string) {
     return prisma.user.findFirst({
       where: {
         OR: [
           { email },
-          { phone },
         ],
       },
     })
@@ -51,9 +50,9 @@ export class User {
     });
   }
 
-  static async verifyOTP(phone: string, otpToVerify: string) {
-    const user = await prisma.user.findUnique({
-      where: { phone },
+  static async verifyOTP(email: string, otpToVerify: string) {
+    const user = await prisma.user.findFirst({
+      where: { email },
       select: { otpCode: true, otpExpiresAt: true },
     });
     if (!user || !user.otpCode || !user.otpExpiresAt) {
@@ -61,8 +60,8 @@ export class User {
     }
 
     if (user.otpCode === otpToVerify && user.otpExpiresAt > new Date()) {
-      await prisma.user.update({
-        where: { phone },
+      await prisma.user.updateMany({
+        where: { email: email },
         data: {
           verified: true,
         },

@@ -1,20 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyOtpController, loginUser, registerUser } from '@/server/controllers/userController';
-import { getUserByPhoneNumber } from '@/server/services/userService';
+import { getUserByPhoneNumber, getUserByEmail } from '@/server/services/userService';
 import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
-  const { phone, otp } = await request.json();
+  const { email, otp } = await request.json();
 
   try {
-    const isVerified = await verifyOtpController(phone, otp);
+    const isVerified = await verifyOtpController(email, otp);
     if (isVerified) {
-      const existingUser = await getUserByPhoneNumber(phone);
+      const existingUser = await getUserByEmail(email);
       let user, token;
       if (existingUser) {
-        ({ user, token } = await loginUser(phone));
+        console.log("User already exists");
+        ({ user, token } = await loginUser(email));
       } else {
-        ({ user, token } = await registerUser({ phone, name: '', otpCode: otp.toString(), email: '' }));
+        ({ user, token } = await registerUser({ email, name: '', otpCode: otp.toString() }));
       }
       // console.log(user);
       // Set the token in an HTTP-only cookie

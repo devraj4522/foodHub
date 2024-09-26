@@ -34,6 +34,6 @@ export interface ICreateUserInput {
   address?: string;
 }
 
-export interface IUserToken extends ICreateUserInput {
+export interface IUserToken extends Omit<ICreateUserInput, 'phone'> {
   id: string;
 }
