@@ -3,7 +3,7 @@ import { getRestaurantByIdController } from "@/server/controllers/restaurantCont
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.nextUrl);
+    const { searchParams } = request.nextUrl;
     const slug = searchParams.get("slug");
 
     if (!slug) {
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error in GET /api/restaurant:", error);
+    // console.error("Error in GET /api/restaurant:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

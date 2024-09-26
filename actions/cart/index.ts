@@ -1,10 +1,12 @@
-import axios from 'axios';
 import { ICreateCartItemInput, ICartItem } from '@/types/Cart';
 
 export const getCartByUserId = async (userId: string) => {
   try {
-    const response = await axios.get(`/api/cart?userId=${userId}`);
-    return response.data;
+    const response = await fetch(`/api/cart?userId=${userId}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   } catch (error) {
     console.error('Error getting cart by user id:', error);
     throw error;
@@ -13,8 +15,17 @@ export const getCartByUserId = async (userId: string) => {
 
 export const addItemToCart = async (data: ICreateCartItemInput) => {
   try {
-    const response = await axios.post('/api/cart', data);
-    return response.data;
+    const response = await fetch('/api/cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   } catch (error) {
     console.error('Error creating cart item:', error);
     throw error;
@@ -23,8 +34,17 @@ export const addItemToCart = async (data: ICreateCartItemInput) => {
 
 export const updateCartItem = async (id: string, data: Partial<ICartItem>) => {
   try {
-    const response = await axios.put(`/api/cart?id=${id}`, data);
-    return response.data;
+    const response = await fetch(`/api/cart?id=${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   } catch (error) {
     console.error('Error updating cart item:', error);
     throw error;
@@ -33,7 +53,12 @@ export const updateCartItem = async (id: string, data: Partial<ICartItem>) => {
 
 export const deleteCartItem = async (id: string) => {
   try {
-    await axios.delete(`/api/cart?id=${id}`);
+    const response = await fetch(`/api/cart?id=${id}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
   } catch (error) {
     console.error('Error deleting cart item:', error);
     throw error;

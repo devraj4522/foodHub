@@ -4,7 +4,7 @@ import { ICreateCartItemInput } from '@/types/Cart'
 import { ICartItem } from '@/types/Cart'
 
 export async function GET(req: NextRequest, res: NextResponse) {
-  const { searchParams } = new URL(req.nextUrl)
+  const { searchParams } = req.nextUrl
   const userId = searchParams.get('userId')
   const cart = await getCartByUserIdController(userId as string)
   return NextResponse.json(cart, { status: 200 })

@@ -1,36 +1,58 @@
-import axios, { AxiosError } from 'axios';
-
 export const generateOTP = async (phone: string, email: string) => {
   try {
-    const response = await axios.post('/api/user/login/generateOtp', { phone, email });
-    if (response.statusText === 'OK') {
-      return response.data;
+    const response = await fetch('/api/user/login/generateOtp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, email }),
+    });
+    if (response.ok) {
+      return await response.json();
     } else {
-      throw new Error(response.data.error || 'Failed to generate OTP');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to generate OTP');
     }
   } catch (error) {
-    if (error instanceof AxiosError) {
-
-      throw new Error(error.response?.data.error || 'Failed to generate OTP');
-    }
+    console.error('Error generating OTP:', error);
     throw error;
   }
 };
 
 export const verifyOTP = async (phone: string, otp: string) => {
   try {
-    const response = await axios.post('/api/user/login/verifyOtp', { phone, otp });
-    return response.data;
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(error.response?.data.error || 'Failed to verify OTP');
+    const response = await fetch('/api/user/login/verifyOtp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, otp }),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to verify OTP');
     }
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
     throw error;
   }
 };
 
 export const verifyToken = async () => {
-  const response = await axios.get('/api/user/login/verifytoken');
-  return response.data;
+  try {
+    const response = await fetch('/api/user/login/verifytoken', {
+      method: 'GET',
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to verify token');
+    }
+  } catch (error) {
+    console.error('Error verifying token:', error);
+    throw error;
+  }
 };
-

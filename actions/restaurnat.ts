@@ -21,4 +21,3 @@ export async function getRestaurantBySlug(slug: string) {
     throw error;
   }
 }
-
