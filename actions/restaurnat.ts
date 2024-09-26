@@ -2,8 +2,7 @@ export async function getRestaurantBySlug(slug: string) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   
   // Construct the URL using URL constructor
-  const url = new URL('/api/restaurant', baseUrl);
-  url.searchParams.append('slug', slug);
+  const url = baseUrl + '/api/restaurant?slug=' + slug;
 
   try {
     const response = await fetch(url.toString(), {

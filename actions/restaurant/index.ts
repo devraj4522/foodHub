@@ -1,6 +1,6 @@
 export async function getAllRestaurants() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/restaurant/restaurants`)
+    const response = await fetch(`/api/restaurant/restaurants`)
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
