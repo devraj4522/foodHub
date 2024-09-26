@@ -1,8 +1,7 @@
 import { getAllRestaurants } from '@/actions/restaurant';
 import RestaurantListComponent from './_components/RestaurantCard';
 
-const RestaurantList = async() => {
-  const restaurants = await getAllRestaurants()
+const RestaurantList = ({restaurants}:{restaurants:any}) => {
  
   return (
     <RestaurantListComponent restaurants={restaurants} />
