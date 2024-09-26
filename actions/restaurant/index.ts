@@ -7,7 +7,7 @@ export async function getAllRestaurants() {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("error in fetch", error);
-    throw error;
+    console.error("error in fetch actions", error);
+    // throw error;
   }
 }
