@@ -14,16 +14,15 @@ import { toast } from "sonner";
 import { selectedAddressAtom } from "@/recoil/atoms/cartAtom";
 import { ICreateOrderInput } from "@/types/Order";
 import { useRouter } from "next/navigation";
-import { isCartVisibleAtom } from "@/recoil/atoms/cartAtom";
+import { showCartAtom } from "@/recoil/atoms/cartAtom";
 import { createOrder } from "@/actions/order";
 import PlacingOrder from "@/components/Cart/_components/PlacingOrder";
-import { showCartAtom } from "@/recoil/atoms/cartAtom";
 
 const PaymentSection = () => {
   const [paymentMethod, setPaymentMethod] = useRecoilState(paymentMethodAtom);
   const [isQRVisible, setIsQRVisible] = useState(false);
   const [selectedAddress, setSelectedAddress] = useRecoilState(selectedAddressAtom)
-  const [isCartVisible, setIsCartVisible] = useRecoilState(isCartVisibleAtom);
+  const [showCart, setShowCart] = useRecoilState(showCartAtom);
   const [cart, setCart] = useRecoilState(cartAtom);
   const router = useRouter();
   const user = useRecoilValue(userAtom)
@@ -85,7 +84,7 @@ const PaymentSection = () => {
       setIsSuccess(true);
 
       setCart(null); // Clear the cart after successful order
-      setIsCartVisible(false); // Close the cart modal
+      setShowCart(false); // Close the cart modal
       router.push(`/active-order/${response.id}`);
     } catch (error) {
       console.error("Error creating order:", error);

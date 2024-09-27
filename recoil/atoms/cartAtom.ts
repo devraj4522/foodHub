@@ -32,8 +32,4 @@ export const selectedAddressAtom = atom<string>({
 });
 
 
-export const isCartVisibleAtom = atom<boolean>({
-  key: 'isCartVisibleState',
-  default: false,
-});
 
