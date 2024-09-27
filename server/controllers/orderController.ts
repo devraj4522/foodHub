@@ -25,6 +25,6 @@ export async function getOrdersByStatusController(status: OrderStatus, userId: s
 
 export async function getOrderByIdController(orderId: string) {
     const order = await getOrderById(orderId);
-    console.log("order getOrderByIdController", order);
+    // console.log("order getOrderByIdController", order);
     return order;
 }

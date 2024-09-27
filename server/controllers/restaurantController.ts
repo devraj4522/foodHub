@@ -12,7 +12,7 @@ export async function getRestaurantByIdController(id: string) {
 export async function getAllRestaurantsController() {
   console.log("getAllRestaurantsController")
   const data = await getAllRestaurants()
-  console.log(data)
+  // console.log(data)
   return data
 }
 

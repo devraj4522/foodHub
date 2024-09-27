@@ -6,7 +6,7 @@ export async function createUser(userData: Omit<ICreateUserInput, 'phone'>) {
   const user = await User.create(userData);
   await Cart.createCart(user.id);
   console.log("User created successfully")
-  console.log(user)
+  // console.log(user)
   return user
 }
 
