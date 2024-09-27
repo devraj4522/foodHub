@@ -5,7 +5,12 @@ import RestaurantList from "@/components/RestaurantCard/RestaurantCard";
 import { getAllRestaurants } from "@/actions/restaurant";
 
 export default async function Home() {
-  const restaurants = await getAllRestaurants()
+  let restaurants = [];
+  try {
+    restaurants = await getAllRestaurants()
+  } catch (error) {
+    console.log("error in getAllRestaurants", error)
+  }
   return (
     <>
       <HeroSection />
