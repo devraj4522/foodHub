@@ -4,7 +4,7 @@ import { ICreateOrderInput } from "@/types/Order";
 const baseUrl = "http://localhost:3000/api/order";
 
 export async function createOrder(data: ICreateOrderInput){
-  const response = await fetch('/create', {
+  const response = await fetch('/api/order/create', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

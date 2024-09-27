@@ -74,8 +74,7 @@ export default function RestaurantCard({item}: {item: IMenuItem}) {
       }
   };
   return (
-    cart? 
-    (<Link className='cursor-pointer transition-all duration-300' href={`/food/${item.id}`}>
+    <Link className='cursor-pointer transition-all duration-300' href={`/food/${item.id}`}>
       <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:border-gray-200">
 
         <div className="relative">
@@ -107,8 +106,6 @@ export default function RestaurantCard({item}: {item: IMenuItem}) {
           </div>
         </div>
       </div>
-    </Link>):(
-      <LoadingMenuCard />
-    )
+    </Link>
   );
 }

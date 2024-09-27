@@ -86,9 +86,7 @@ const PaymentSection = () => {
 
       setCart(null); // Clear the cart after successful order
       setIsCartVisible(false); // Close the cart modal
-      setTimeout(() => {
-        router.push(`/active-order/${response.id}`);
-      }, 1000);
+      router.push(`/active-order/${response.id}`);
     } catch (error) {
       console.error("Error creating order:", error);
       setIsError(true);
