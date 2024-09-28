@@ -12,7 +12,7 @@ export const TopInfoBar = ({openingTime, closingTime}: {openingTime: string, clo
              </div>
              <div className="flex items-center space-x-2 border-l-4 border-yellow-300 pl-4 py-2">
                <FaTrain className="text-yellow-600 text-xl flex-shrink-0" />
-               <span className="font-semibold text-xs sm:text-base">Order from Train</span>
+               <span className="font-semibold text-xs sm:text-base">Fastest Delivery</span>
              </div>
            </div>
          </div>

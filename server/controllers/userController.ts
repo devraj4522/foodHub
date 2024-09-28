@@ -88,3 +88,4 @@ export async function getUserFavoritesController(userId: string) {
 export async function getUserFromTokenController(token: string) {
   return verifyToken(token)
 }
+

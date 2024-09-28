@@ -3,12 +3,9 @@ import { Button } from "@nextui-org/button";
 import { FaShoppingCart } from "react-icons/fa";
 import { IMenuItem } from "@/types/Restaurant";
 import { toast } from "sonner";
-import { ICart } from "@/types/Cart";
 import { addItemToCart } from '@/actions/cart';
 import { useRecoilState } from "recoil";
 import { cartAtom } from "@/recoil/atoms/cartAtom";
-import { ICreateCartItemInput } from '@/types/Cart';
-import LoadingMenuCard from "./Loading/LoadingMenuCard";
 
 export default function RestaurantCard({item}: {item: IMenuItem}) {
 

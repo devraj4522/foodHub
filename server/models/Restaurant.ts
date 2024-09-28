@@ -47,5 +47,41 @@ export class Restaurant {
       where: { id },
     });
   }
+
+  static async searchRestaurantsORMenuItems(query: string) {
+    return prisma.restaurant.findMany({
+      where: {
+            name: {
+              contains: query,
+              mode: 'insensitive',
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        avgCostForTwo: true,
+        rating: true,
+        image: true,
+        cuisine: true,
+        deliveryTime: true,
+        menu: {
+          where: {
+            name: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            rating: true,
+            image: true,
+          },
+        },
+      },
+    });
+  }
+
 }
 

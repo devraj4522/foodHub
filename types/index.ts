@@ -20,7 +20,7 @@ export interface UserDetails {
   isLoggedIn: boolean;
 }
 
-export interface Restaurant {
+export interface IRestaurant {
     id: number;
     name: string;
     deliveryTime: string;
@@ -29,4 +29,5 @@ export interface Restaurant {
     reviews: string;
     cuisine: string[];
     image: string;
+    createdAt: number;
 }

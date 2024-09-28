@@ -22,7 +22,6 @@ export interface ICart {
 export interface ICreateCartItemInput {
   cartId: string;
   menuItemId: string;
-  menuItem: IMenuItem;
   quantity: number;
 }
 

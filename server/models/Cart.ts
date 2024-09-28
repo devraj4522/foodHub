@@ -1,5 +1,5 @@
 import { prisma } from "@/server/lib/prisma";
-import { ICartItem } from "@/types/Cart";
+import { ICartItem, ICreateCartItemInput } from "@/types/Cart";
 
 export class CartItem {
   static async getCartItemById(id: string) {
@@ -8,7 +8,7 @@ export class CartItem {
     });
   }
   
-  static async createCartItem(data: Omit<ICartItem, 'id' | 'createdAt' | 'updatedAt'>) {
+  static async createCartItem(data: ICreateCartItemInput) {
     const existingItem = await prisma.cartItem.findFirst({
       where: {
         cartId: data.cartId,

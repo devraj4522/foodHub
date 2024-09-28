@@ -1,7 +1,9 @@
 import { User } from '../models/User'
+
 import { ICreateUserInput } from '@/types/User'
 import { Cart } from '../models/Cart'
 import { sendSignupConfirmationEmail } from '../lib/sendInBlueEmail';
+
 export async function createUser(userData: Omit<ICreateUserInput, 'phone'>) {
   const user = await User.create(userData);
   await Cart.createCart(user.id);
@@ -48,8 +50,8 @@ export async function generateOTP(email: string) {
     console.log(error)
     throw new Error("Error Generating OTP")
   }
-  
 }
+
 
 
 export async function updateUserDetails(userData: Partial<ICreateUserInput> & { id: string }) {

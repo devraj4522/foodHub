@@ -44,3 +44,35 @@ export interface IMenuItem {
   category: CategoryData;
   rating: number;
 }
+
+export interface IMenuSearchResult {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  rating: number;
+  isVegetarian: boolean;
+  isVegan: boolean;
+  isGlutenFree: boolean;
+  spicyLevel: number;
+  isAvailable: boolean;
+  image: string;
+  restaurantId: string;
+  categoryId: string;
+}
+
+export interface ISearchResult {
+  id: string;
+  image: string;
+  name: string;
+  cuisine: string[];
+  avgCostForTwo: number;
+  rating: number;
+  deliveryTime: number;
+  menu: {
+  id: string;
+  name: string;
+  price: number;
+  rating: number;
+}[];
+}

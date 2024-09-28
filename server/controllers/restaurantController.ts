@@ -1,5 +1,5 @@
 import { RestaurantData } from '@/types/Restaurant'
-import { createRestaurant, getRestaurantById, updateRestaurant, deleteRestaurant, getAllRestaurants } from '../services/restaurnatService'
+import { createRestaurant, getRestaurantById, updateRestaurant, deleteRestaurant, getAllRestaurants, searchRestaurantsORMenuItems } from '../services/restaurnatService'
 
 export async function createRestaurantController(data: RestaurantData) {
   return createRestaurant(data)
@@ -23,3 +23,9 @@ export async function updateRestaurantController(id: string, data: Partial<Omit<
 export async function deleteRestaurantController(id: string) {
   return deleteRestaurant(id)
 }
+
+export async function searchRestaurantsORMenuItemsController(query: string) {
+  return searchRestaurantsORMenuItems(query)
+}
+
+

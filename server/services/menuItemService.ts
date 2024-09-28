@@ -1,4 +1,4 @@
-// import { MenuItem } from '../models/MenuItem'
+import { MenuItem } from '../models/MenuItem'
 // import { IMenuItem } from '@/types/Restaurant'
 
 // export async function getMenuItemById(id: string) {
@@ -20,3 +20,11 @@
 // export async function getMenuItemsByRestaurant(restaurantId: string) {
 //   return MenuItem.getMenuItemsByRestaurant(restaurantId);
 // }
+
+export async function searchMenuItems(query: string) {
+  return MenuItem.searchMenuItems(query);
+}
+
+export async function getMenuItemByIdService(id: string) {
+  return MenuItem.getMenuItemById(id);
+}

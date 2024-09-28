@@ -100,7 +100,7 @@ export default function RestaurantPage({data}: {data: RestaurantData}) {
 
           {/* Menu Widget */}
           <div className="md:w-3/4">
-            <h3 className="text-xl font-semibold mb-4">Order Online</h3>
+            <h3 className="text-xl font-semibold mb-4" id='menu-section'>Order Online</h3>
             {categories
               .map(({ name }, index) => (
                 <div key={index} id={`category-${name}`} className="mb-8">

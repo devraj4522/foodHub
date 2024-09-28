@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateUserDetailsController, getUserById } from '../../../server/controllers/userController';
-import { middleware } from '../../midleware';
+import { middleware } from '../../middleware';
 import { cookies } from 'next/headers';
 
 export async function GET(request: NextRequest) {

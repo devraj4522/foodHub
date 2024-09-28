@@ -11,6 +11,7 @@
 //   return getMenuItemById(id);
 // }
 
+import { searchMenuItems, getMenuItemByIdService } from '../services/menuItemService';
 // export async function createMenuItemController(data: IMenuItem) {
 //   return createMenuItem(data);
 // }
@@ -26,3 +27,12 @@
 // export async function getMenuItemsByRestaurantController(restaurantId: string) {
 //   return getMenuItemsByRestaurant(restaurantId);
 // }
+
+export async function searchMenuItemsController(query: string) {
+  return searchMenuItems(query);
+}
+
+export async function getMenuItemByIdController(id: string) {
+  return getMenuItemByIdService(id);
+}
+

@@ -52,7 +52,7 @@ export default function TopItems() {
         <div className="flex  space-x-4 no-scrollbar">
           <div className="flex justify-around  flex-wrap md:gap-4 gap-1">
             {items.map((item, index) => (
-              <Link key={index} className="flex-shrink-0 w-16 md:w-40 text-center" href={`/food/${item.id}`} >
+              <Link key={index} className="flex-shrink-0 w-16 md:w-40 text-center" href={`/search?query=${item.name}`} >
                 <div className="w-full h-16 md:h-40 bg-white rounded-full flex items-center justify-center">
 
                   <img

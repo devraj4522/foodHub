@@ -1,5 +1,6 @@
 'use client';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from "react-query";
+
 export default function RootLayout({
   children,
 }: {
@@ -7,7 +8,7 @@ export default function RootLayout({
 }) {
   const queryClient = new QueryClient();
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}> 
       {children}
     </QueryClientProvider>
   );
