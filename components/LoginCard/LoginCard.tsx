@@ -62,7 +62,7 @@ const LoginCard = () => {
       setShowLoginForm(false);
       router.push('/user-settings');
     } catch (error) {
-      toast.error('OTP verification failed: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      toast.error((error instanceof Error ? error.message : 'Unknown error'));
     }
     setLoading(false);
   };

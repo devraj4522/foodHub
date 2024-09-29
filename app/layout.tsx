@@ -43,7 +43,7 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Toaster />
+        <Toaster position="top-right" />
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
             <div className="relative flex flex-col h-screen">
               <Navbar />
