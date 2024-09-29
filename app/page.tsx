@@ -3,10 +3,16 @@ import HeroSection from "@/components/Hero/Hero";
 import TopItems from "@/components/TrySection/TrySection";
 import RestaurantList from "@/components/RestaurantCard/RestaurantCard";
 import { getAllRestaurants } from "@/actions/restaurant";
+import { notFound } from "next/navigation";
 
 export default async function Home() {
-  const restaurants = await getAllRestaurants()
-  console.log(restaurants)
+  let restaurants = null;
+  try {
+    restaurants = await getAllRestaurants()
+  } catch (error) {
+    console.log("error in Home")
+    return notFound()
+  }
   return (
     <>
       <HeroSection />
