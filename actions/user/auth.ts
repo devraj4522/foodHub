@@ -56,3 +56,21 @@ export const verifyToken = async () => {
     throw error;
   }
 };
+
+
+export const logout = async () => {
+  try {
+    const response = await fetch('/api/user/login/logout', {
+      method: 'GET',
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to logout');
+    }
+  } catch (error) {
+    console.error('Error logging out:', error);
+    throw error;
+  }
+};

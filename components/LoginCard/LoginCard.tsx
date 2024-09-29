@@ -183,7 +183,9 @@ const LoginCard = () => {
                       required: "OTP is required",
                       pattern: { value: /^[0-9]$/, message: "Please enter a valid digit" },
                     })}
-                    type="text"
+                    type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     maxLength={1}
                     className="w-14 h-14 text-center text-2xl"
                     classNames={{
@@ -211,6 +213,9 @@ const LoginCard = () => {
                         const newOtp = otp.split('');
                         newOtp[index] = value;
                         setOtp(newOtp.join(''));
+                        if (index < 3) {
+                          document.getElementsByName(`otp${index + 1}`)[0].focus();
+                        }
                       }
                     }}
                   />

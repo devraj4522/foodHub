@@ -156,7 +156,7 @@ interface SearchInputProps {
 
 function SearchInput({ searchTerm, setSearchTerm, searchType, setSuggestions, searchInputRef }: SearchInputProps) {
   return (
-    <div className="mb-8 relative">
+    <div className="mb-2 relative">
       <Input
         ref={searchInputRef}
         placeholder={searchType === 'restaurant' ? "Search for restaurants" : "Search for dishes"}

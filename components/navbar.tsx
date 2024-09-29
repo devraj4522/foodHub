@@ -24,14 +24,17 @@ import { Location } from "./Location/Location";
 import { useVerifyJwtToken } from "@/hooks/user/auth/useVerifyJwtToken";
 import Cart from "./Cart/Cart";
 import { showLoginFormAtom } from "@/recoil/atoms/userAtom";
+import { usePathname } from "next/navigation";
+import ProfileDropDown from "./Navbar/ProfileDropDown/ProfileDropDown";
 
 export const Navbar = () => {
   const [showCart, setShowCart] = useRecoilState(showCartAtom);
   const cart = useGetCart();
   const { user } = useVerifyJwtToken();
   const [showLoginForm, setShowLoginForm] = useRecoilState(showLoginFormAtom);
+  const isHomePage = usePathname() === '/';
+
   const cartItems = cart?.items || [];
-  
   const isLoggedIn = !!user;
 
   const handleCartClick = () => setShowCart(!showCart);
@@ -59,7 +62,11 @@ export const Navbar = () => {
   );
 
   return (
-    <NextUINavbar className="lg:py-4 py-2 bg-transparent" maxWidth="xl" position="sticky">
+    <NextUINavbar 
+      className={`lg:py-4 py-2 ${isHomePage ? 'bg-transparent' : 'bg-[#f4f4f4]'}`} 
+      maxWidth="xl" 
+      position="sticky"
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -86,13 +93,10 @@ export const Navbar = () => {
             </div>
           </Link>
           {renderCartIcon()}
-          <Link aria-label="Profile" href="/profile">
-            <FaUserCircle className="text-black" size={24} />
-          </Link>
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
           {isLoggedIn ? (
-            <span className="font-bold text-black">{user?.name?.split(" ")[0]}</span>
+             <ProfileDropDown />
           ) : renderLoginButton()}
         </NavbarItem>
       </NavbarContent>

@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Section */}
           <div className="mb-8 sm:mb-0">
-            <h3 className="text-lg font-semibold mb-4">Company</h3>
+            <h3 className="text-lg font-semibold mb-4">Products</h3>
             <ul>
               <li className="mb-2">
                 <Link href="/about" className="hover:text-gray-400">
@@ -18,7 +18,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li className="mb-2">
-                <Link href="#" className="hover:text-gray-400">
+                <Link href="/contact-us" className="hover:text-gray-400">
                   Work With Us
                 </Link>
               </li>
@@ -35,22 +35,22 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Support</h3>
             <ul>
               <li className="mb-2">
-                <Link href="#" className="hover:text-gray-400">
+                <Link href="/contact-us" className="hover:text-gray-400">
                   Contact us
                 </Link>
               </li>
               <li className="mb-2">
-                <Link href="#" className="hover:text-gray-400">
+                <Link href="/contact-us" className="hover:text-gray-400">
                   Help & Support
                 </Link>
               </li>
               <li className="mb-2">
-                <Link href="#" className="hover:text-gray-400">
+                <Link href="/contact-us" className="hover:text-gray-400">
                   Partner with us
                 </Link>
               </li>
               <li className="mb-2">
-                <Link href="#" className="hover:text-gray-400">
+                <Link href="/contact-us" className="hover:text-gray-400">
                   Ride with us
                 </Link>
               </li>
@@ -100,7 +100,7 @@ export default function Footer() {
           <div className="text-center lg:text-left mb-4 lg:mb-0">
             <p>© 2024 FoodKloud</p>
             <p className="text-sm md:text-base">
-              <span className="block md:inline md:ml-2">Call Us: {siteConfig.links.phone} {" |"}</span>
+              <span className="block md:inline">Call Us: {siteConfig.links.phone} {" |"}</span>
               <span className="block md:inline md:ml-2">{siteConfig.links.email}</span>
             </p>
           </div>

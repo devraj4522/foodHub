@@ -27,8 +27,8 @@ export default function HeroSection() {
       backgroundSize: 'cover',
       backgroundPosition: 'bottom',
       backgroundRepeat: 'no-repeat',
-      marginTop: '-64px', // Adjust this value based on your navbar height
-      paddingTop: '64px'  // Add padding to push content below navbar
+      marginTop: '-70px', // Adjust this value based on your navbar height
+      paddingTop: '10px'  // Add padding to push content below navbar
       }}>
       {/* Background image */}
       <div className="absolute inset-0 bg-cover bg-center bg-hero-pattern opacity-70"></div>
