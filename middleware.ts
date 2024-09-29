@@ -22,11 +22,12 @@ export function middleware(request: NextRequest) {
     const origin = request.headers.get('origin');
     const currentUrl = process.env.NEXT_PUBLIC_API_URL as string;
     const currentHost = currentUrl.replace('https://', '').replace('http://', '').replace('://', '');
-    
+
     // Allow requests from the same origin or if referer is from the same host
     if (referer?.startsWith(currentHost) || origin?.startsWith(currentHost) || request.headers.get('host')?.startsWith(currentHost)) {
       return NextResponse.next();
     } else {
+      console.log("Access Denied")
       return new NextResponse('Access Denied', { status: 403 });
     }
   }
