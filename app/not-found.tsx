@@ -27,7 +27,7 @@ export default function NotFound({
         />
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Oops! Page not found</h1>
         <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8">
-          We can't seem to find the page you're looking for. Let's get you back on track!
+          We can&apos;t seem to find the page you&apos;re looking for. Let&apos;s get you back on track!
         </p>
         <div className="flex flex-col justify-center items-center gap-3 sm:gap-4">
           <Link href="/" passHref className="w-full sm:w-auto">

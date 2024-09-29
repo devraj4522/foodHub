@@ -26,7 +26,7 @@ export default function Error({
         />
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Oops! Something went wrong</h1>
         <p className="text-gray-600 mb-6">
-          We're sorry, but it seems there was an error. Don't worry, it's not your fault!
+          We&apos;re sorry, but it seems there was an error. Don&apos;t worry, it&apos;s not your fault!
         </p>
         <button
           onClick={() => reset()}
