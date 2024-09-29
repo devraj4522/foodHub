@@ -119,7 +119,7 @@ interface SearchHeaderProps {
 
 function SearchHeader({ searchTerm, setSearchTerm, searchType, toggleSearchType, suggestions, setSuggestions, searchInputRef }: SearchHeaderProps) {
   return (
-    <div className="mb-12 py-8 text-center bg-lime-100">
+    <div className="mb-12 py-8 text-center bg-[#EFDCB1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-4xl text-black font-bold mb-4">Find Your Next Favorite Meal</h1>
         <p className="text-xl text-gray-800 mb-8">Discover amazing restaurants and delicious dishes near you</p>
@@ -213,7 +213,7 @@ interface SearchTypeToggleProps {
 
 function SearchTypeToggle({ searchType, toggleSearchType }: SearchTypeToggleProps) {
   return (
-    <div className="mb-4 flex justify-center">
+    <div className="mb-4 mt-4 flex justify-center">
       <div className="flex gap-4">
         <Button 
           className={`${searchType === 'restaurant'? 'bg-gray-900 text-white': 'bg-gray-300 text-gray-800'}`}

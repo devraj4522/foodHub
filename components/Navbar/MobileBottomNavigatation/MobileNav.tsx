@@ -23,10 +23,12 @@ export const MobileBottomNav = () => {
 
   return (
     <NavbarComponent
-     style={{
-      top: "calc(100vh - 4rem + 4px)"
+     classNames={{
+      base: "!top-auto !-bottom-1"
      }}
-     className="sm:hidden fixed left-0 right-0 h-16 bg-[#f2f2f2] shadow-lg z-50 w-full" maxWidth="full" isBordered>
+     shouldHideOnScroll={false}
+     isBlurred={false}
+     className=" sm:hidden fixed  left-0 h-16 bg-[#f2f2f2] shadow-lg z-50 w-full " maxWidth="full" isBordered>
       <NavbarContent className="flex justify-between w-full px-2" justify="center">
         <NavbarItem className="flex-1">
           <Link href="/" className={`flex justify-center items-center w-full h-full ${isActive("/") ? "text-[#06C167]" : "text-black"}`}>

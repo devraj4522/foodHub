@@ -30,6 +30,7 @@ export async function getUserByPhoneNumber(phone: string) {
 }
 
 export async function verifyOTP(email: string, otp: string) {
+  console.log("Verifying OTP", email, otp)
   return User.verifyOTP(email, otp)
 }
 
@@ -41,6 +42,7 @@ export async function generateOTP(email: string) {
   }
   try {
     const updated_user = await User.generateOTP(user.id);
+    console.log("otp", updated_user.otpCode)
     if (user.email && updated_user.email && updated_user.email !== null) {
       sendSignupConfirmationEmail(user.email, updated_user.otpCode as string);
     }else{

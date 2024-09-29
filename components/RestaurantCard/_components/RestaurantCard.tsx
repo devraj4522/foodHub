@@ -70,8 +70,13 @@ const RestaurantListComponent = ({restaurants}: {restaurants: IRestaurant[]}) =>
   return (
     <section className="py-8 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Filter Section */}
-      <div className="flex space-x-2 mb-4">
+     
+
+      {/* Restaurant List */}
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-left py-2 mb-4">Explore Restaurants Near You</h2>
+
+       {/* Filter Section */}
+       <div className="flex space-x-2 mb-4 md:mb-8">
       <Popover placement="bottom-start" >
           <PopoverTrigger>
             <Button
@@ -119,8 +124,6 @@ const RestaurantListComponent = ({restaurants}: {restaurants: IRestaurant[]}) =>
         </Button>
       </div>
 
-      {/* Restaurant List */}
-      <h2 className="text-3xl font-bold text-gray-900 text-left py-2 mb-4">Explore Restaurants Near You</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {sortedRestaurants?.map((restaurant:IRestaurant, index: number) => (
         <Link href={`/restaurant/${restaurant.id}`} className='' key={index}>
@@ -138,8 +141,12 @@ const RestaurantListComponent = ({restaurants}: {restaurants: IRestaurant[]}) =>
          {/* Details Section */}
          <div className="md:w-full md:p-4 w-2/3 flex flex-col justify-between px-4">
            {/* Name and Rating */}
-           <div className="flex justify-between items-center">
-             <h3 className="text-lg font-semibold text-gray-900">{restaurant.name}</h3>
+           <div className="flex pt-2 md:pt-0 justify-between items-center">
+             <h3 className="text-lg font-semibold text-gray-900 text-ellipsis overflow-hidden">{restaurant.name}</h3>
+             <div className="flex items-center space-x-1 p-1 px-2 rounded-full bg-green-500">
+                  <span className="text-white font-medium">{restaurant.rating}</span>
+                  <FaStar className="text-white w-3 h-3" />
+                </div>
            </div>
    
            {/* Cuisine and Price */}
@@ -147,14 +154,10 @@ const RestaurantListComponent = ({restaurants}: {restaurants: IRestaurant[]}) =>
               <div className="text-sm">
                 {restaurant.cuisine.join(' • ')}
               </div>
-                <div className="flex items-center space-x-1 p-1 px-2 rounded-full bg-green-500">
-                  <span className="text-white font-medium">{restaurant.rating}</span>
-                  <FaStar className="text-white w-3 h-3" />
-                </div>
            </div>
    
            {/* Delivery Time */}
-           <div className="flex justify-between items-center text-gray-500 mt-2">
+           <div className="flex justify-between items-center text-gray-500 mt-2 pb-2 md:pb-0">
              <div className="flex items-center space-x-1">
                <FiClock className="text-gray-400" />
                <span className="text-sm"> {restaurant.deliveryTime} mins</span>

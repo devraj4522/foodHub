@@ -74,7 +74,7 @@ const ProfileDropDown: React.FC = () => {
             </DropdownMenu>
           </Dropdown>
 
-          <Modal isOpen={showLogoutModal} onOpenChange={setShowLogoutModal}>
+          <Modal isOpen={showLogoutModal} onOpenChange={setShowLogoutModal} placement='center'>
             <ModalContent className="bg-white rounded-lg p-4 max-w-[90%] w-full sm:max-w-sm mx-auto">
               {(onClose) => (
                 <>
@@ -117,7 +117,7 @@ const ProfileDropDown: React.FC = () => {
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions" variant="solid" onAction={(key) => handleAction(key.toString())}>
-          <DropdownItem key="login" className="h-14 gap-2">
+          <DropdownItem key="login" className="h-8 bg-slate-100 gap-2">
             Login
           </DropdownItem>
         </DropdownMenu>

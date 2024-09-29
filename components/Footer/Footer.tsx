@@ -96,17 +96,17 @@ export default function Footer() {
         </div>
 
         {/* Social & Extra Section */}
-        <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col lg:flex-row justify-between items-center">
-          <div className="text-center lg:text-left mb-4 lg:mb-0">
-            <p>© 2024 FoodKloud</p>
+        <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col lg:flex-row md:justify-between md:items-center">
+          <div className=" lg:text-left mb-4 lg:mb-0">
+            <p>©2024 FoodKloud</p>
             <p className="text-sm md:text-base">
-              <span className="block md:inline">Call Us: {siteConfig.links.phone} {" |"}</span>
-              <span className="block md:inline md:ml-2">{siteConfig.links.email}</span>
+              <span className=" inline">Call Us: {siteConfig.links.phone} {" |"}</span>
+              <span className="inline md:ml-2">{siteConfig.links.email}</span>
             </p>
           </div>
 
           {/* Social Links */}
-          <div className="flex flex-wrap justify-center lg:justify-end space-x-4 md:space-x-6">
+          <div className="flex flex-wrap justify-start lg:justify-end space-x-4 md:space-x-6">
             {['Linkedin', 'Instagram', 'Facebook', 'Pinterest', 'Twitter'].map((social, index) => (
               <Link key={index} href="#" className="hover:text-gray-400 mb-2 md:mb-0">
                 {social}

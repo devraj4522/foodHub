@@ -119,7 +119,8 @@ const OrderHistory = ({orders}: {orders: IOrder[]}) => {
       </Tabs>
 
       <Modal 
-        isOpen={isOpen} 
+        isOpen={isOpen}
+        placement='center'
         onOpenChange={onOpenChange}
         size="3xl"
       >

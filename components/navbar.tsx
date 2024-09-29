@@ -26,6 +26,7 @@ import Cart from "./Cart/Cart";
 import { showLoginFormAtom } from "@/recoil/atoms/userAtom";
 import { usePathname } from "next/navigation";
 import ProfileDropDown from "./Navbar/ProfileDropDown/ProfileDropDown";
+import { useState } from "react";
 
 export const Navbar = () => {
   const [showCart, setShowCart] = useRecoilState(showCartAtom);
@@ -33,6 +34,7 @@ export const Navbar = () => {
   const { user } = useVerifyJwtToken();
   const [showLoginForm, setShowLoginForm] = useRecoilState(showLoginFormAtom);
   const isHomePage = usePathname() === '/';
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const cartItems = cart?.items || [];
   const isLoggedIn = !!user;
@@ -54,18 +56,24 @@ export const Navbar = () => {
     <Button
       as={Link}
       className="text-sm font-normal text-white bg-black hover:bg-gray-800"
-      onClick={() => {setShowLoginForm(true)}}
+      onClick={() => {setShowLoginForm(true); setIsMenuOpen(false);}}
       variant="flat"
     >
       Login
     </Button>
   );
 
+  const handleMenuItemClick = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <NextUINavbar 
       className={`lg:py-4 py-2 ${isHomePage ? 'bg-transparent' : 'bg-[#f4f4f4]'}`} 
       maxWidth="xl" 
       position="sticky"
+      isMenuOpen={isMenuOpen}
+      onMenuOpenChange={setIsMenuOpen}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -108,13 +116,14 @@ export const Navbar = () => {
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {['About', 'Pricing', 'Cookie Policy'].map((item, index) => (
+          {['About', 'Contact Us', 'Search'].map((item, index) => (
             <NavbarMenuItem key={index}>
               <Link
                 color="foreground"
                 href={`/${item.toLowerCase().replace(' ', '-')}`}
                 size="lg"
                 className="text-black"
+                onClick={handleMenuItemClick}
               >
                 {item}
               </Link>
@@ -127,7 +136,7 @@ export const Navbar = () => {
               <Button
                 as={Link}
                 className="text-sm font-normal text-white bg-black hover:bg-gray-800 w-full"
-                onClick={() => {}}
+                onClick={() => {setShowLoginForm(true); setIsMenuOpen(false);}}
                 variant="flat"
               >
                 Login

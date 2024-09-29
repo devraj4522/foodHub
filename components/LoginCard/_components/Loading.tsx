@@ -8,6 +8,7 @@ const Loading: React.FC = () => {
     <Modal
       isOpen={true}
       isDismissable={false}
+      placement='center'
       closeButton={false}
       className="max-w-sm mx-auto relative rounded-lg p-4 md:p-6"
     >

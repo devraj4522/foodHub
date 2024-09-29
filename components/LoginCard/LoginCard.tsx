@@ -91,6 +91,7 @@ const LoginCard = () => {
       <Modal
       isOpen={showLoginForm}
       onClose={() => {setShowLoginForm(false)}}
+      placement='center'
       closeButton
       isDismissable={false}
       className="max-w-sm mx-auto relative rounded-lg p-4 md:p-6"

@@ -22,19 +22,13 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <div className="relative w-full h-[80vh] flex flex-col justify-center items-center overflow-hidden" style={{ 
+    <div className="relative w-full bg-right-bottom md:bg-bottom md:-mt-16 -mt-20 pt-4 h-[50vh] md:h-[80vh] flex flex-col justify-center items-center overflow-hidden" style={{ 
       backgroundImage: 'url(https://res.cloudinary.com/dhcwfa4vu/image/upload/v1727517386/foodhub/static/MacBook_Pro_16__-_1_1_ynhtve.webp)',
       backgroundSize: 'cover',
-      backgroundPosition: 'bottom',
       backgroundRepeat: 'no-repeat',
-      marginTop: '-70px', // Adjust this value based on your navbar height
-      paddingTop: '10px'  // Add padding to push content below navbar
       }}>
-      {/* Background image */}
-      <div className="absolute inset-0 bg-cover bg-center bg-hero-pattern opacity-70"></div>
-
       {/* Search Box */}
-      <div className="relative z-10 text-center mt-4 px-4 md:px-0">
+      <div className="relative z-10 text-center md:mt-4 px-4 md:px-0">
         <h1 className="text-3xl md:text-5xl max-w-xl font-bold text-gray-800 mb-4 md:mb-6">Order Your Favorite <br/> Food</h1>
         <input
           type="text"

@@ -1,31 +1,17 @@
 "use client";
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
-import { Select, SelectItem } from "@nextui-org/select";
-import { FaShoppingCart, FaMapMarkerAlt, FaWallet, FaArrowLeft } from 'react-icons/fa';
+import { FaShoppingCart, FaArrowLeft } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
-import { useGeolocation } from "@/hooks/location/useGeolocation";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { showCartAtom } from '@/recoil/atoms/cartAtom';
-import { useGetCart } from '@/hooks/cart/useGetCart';
-// import { useUpdateCart } from '@/hooks/cart/useUpdateCart';
-import { userAtom } from '@/recoil/atoms/userAtom';
 import { cartAtom } from '@/recoil/atoms/cartAtom';
-import Image from 'next/image';
 import { toast } from 'sonner';
 import {ICartState} from '@/types/Cart'
 import { updateCartItem } from '@/actions/cart';
-import { userSavedAddressAtom } from '@/recoil/atoms/locationAtom';
-import { createOrder } from '@/actions/order';
-import { ICreateOrderInput } from '@/types/Order';
-import {IUser} from '@/types/User'
-import { PaymentMethod, PaymentStatus, OrderStatus } from '@/types/Order';
-import { useRouter } from 'next/navigation';
 import CartSkeleton from './_components/CartSkeleton';
-import PlacingOrder from './_components/PlacingOrder';
 import Address from './_components/Address/Address';
 import PaymentSelection from './_components/Payment/PaymentSection';
 import { selectedAddressAtom } from '@/recoil/atoms/cartAtom';
