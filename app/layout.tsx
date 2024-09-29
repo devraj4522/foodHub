@@ -7,6 +7,7 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Footer from "@/components/Footer/Footer";
 import { Navbar } from "@/components/navbar";
+import { MobileBottomNav } from "@/components/Navbar/MobileBottomNavigatation/MobileNav";
 
 export const metadata: Metadata = {
   title: {
@@ -49,6 +50,8 @@ export default function RootLayout({
               <main className="w-full flex-grow">
                 {children}
               </main>
+              <MobileBottomNav />
+        
             <Footer />
             </div>
         </Providers>
