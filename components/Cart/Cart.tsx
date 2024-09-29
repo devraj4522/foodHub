@@ -87,81 +87,95 @@ const Cart: React.FC = () => {
     </Card>
   ), [cartItems, handleQuantityChange, isLoading]);
 
+  const handleOutsideClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      setIsCartVisible(false);
+    }
+  }, [setIsCartVisible]);
 
   return (
     <AnimatePresence>
       {isCartVisible && (
         <motion.div
-          initial={{ x: '100%' }}
-          animate={{ x: 0 }}
-          exit={{ x: '100%' }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="w-full md:w-96 p-4 bg-white min-h-screen fixed top-0 right-0 overflow-y-auto z-40"
-          style={{
-            boxShadow: '-4px 0 15px rgba(0, 0, 0, 0.1)',
-            borderTopLeftRadius: '20px',
-            borderBottomLeftRadius: '20px'
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={handleOutsideClick}
         >
-          {isLoading? <CartSkeleton/> : (
-            <div className="max-w-md mx-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold text-black">Your Order</h1>
-              <Button
-                isIconOnly
-                className="bg-transparent p-0"
-                onClick={() => setIsCartVisible(false)}
-              >
-                <IoMdClose className="text-black" size={28} />
-              </Button>
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="w-full md:w-96 p-4 bg-white min-h-screen fixed top-0 right-0 overflow-y-auto z-40"
+            style={{
+              boxShadow: '-4px 0 15px rgba(0, 0, 0, 0.1)',
+              borderTopLeftRadius: '20px',
+              borderBottomLeftRadius: '20px'
+            }}
+          >
+            {isLoading? <CartSkeleton/> : (
+              <div className="max-w-md mx-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold text-black">Your Order</h1>
+                <Button
+                  isIconOnly
+                  className="bg-transparent p-0"
+                  onClick={() => setIsCartVisible(false)}
+                >
+                  <IoMdClose className="text-black" size={28} />
+                </Button>
+              </div>
+              {step !== 'cart' && (
+                <Button
+                  className="mb-4 bg-black text-white"
+                  onClick={() => setStep(step === 'payment' ? 'address' : 'cart')}
+                >
+                  <FaArrowLeft className="mr-2" /> Back
+                </Button>
+              )}
+              {step === 'cart' && (
+                <>
+                  {renderCartItems()}
+                  <Button 
+                    className="w-full bg-black text-white mb-4"
+                    onClick={() => {
+                      if (cartItems.some(item => item.quantity > 0)) {
+                        setStep('address');
+                      }
+                    }}
+                    disabled={!cartItems.some(item => item.quantity > 0)}
+                  >
+                    Proceed to Address
+                  </Button>
+                </>
+              )}
+              {step === 'address' && (
+                <>
+                  <Address />
+                  <Button 
+                    className="w-full bg-black text-white mb-4"
+                    onClick={() => {
+                      if (selectedAddress) {
+                        setStep('payment');
+                      }
+                    }}
+                    disabled={!selectedAddress}
+                  >
+                    Proceed to Payment
+                  </Button>
+                </>
+              )}
+              {step === 'payment' && (
+                <>
+                  <PaymentSelection />
+                </>
+              )}
             </div>
-            {step !== 'cart' && (
-              <Button
-                className="mb-4 bg-black text-white"
-                onClick={() => setStep(step === 'payment' ? 'address' : 'cart')}
-              >
-                <FaArrowLeft className="mr-2" /> Back
-              </Button>
             )}
-            {step === 'cart' && (
-              <>
-                {renderCartItems()}
-                <Button 
-                  className="w-full bg-black text-white mb-4"
-                  onClick={() => {
-                    if (cartItems.some(item => item.quantity > 0)) {
-                      setStep('address');
-                    }
-                  }}
-                  disabled={!cartItems.some(item => item.quantity > 0)}
-                >
-                  Proceed to Address
-                </Button>
-              </>
-            )}
-            {step === 'address' && (
-              <>
-                <Address />
-                <Button 
-                  className="w-full bg-black text-white mb-4"
-                  onClick={() => {
-                    if (selectedAddress) {
-                      setStep('payment');
-                    }
-                  }}
-                  disabled={!selectedAddress}
-                >
-                  Proceed to Payment
-                </Button>
-              </>
-            )}
-            {step === 'payment' && (
-              <>
-                <PaymentSelection />
-              </>
-            )}
-          </div>
-          )}
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

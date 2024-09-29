@@ -6,7 +6,7 @@ import { getAllRestaurants } from "@/actions/restaurant";
 
 export default async function Home() {
   const restaurants = await getAllRestaurants()
-
+  console.log(restaurants)
   return (
     <>
       <HeroSection />

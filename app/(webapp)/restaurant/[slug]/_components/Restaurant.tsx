@@ -15,7 +15,7 @@ import { RestaurantHeroSection } from './RestaurantHeroSection/RestaurantHeroSec
 import { TopInfoBar } from './TopInfoBar';
 import RestaurantCard from './RestaurantCard';
 
-export default function RestaurantPage({data}: {data: RestaurantData}) {
+export default function RestaurantComponent({data}: {data: RestaurantData}) {
   const [activeCategory, setActiveCategory] = React.useState('');
   // const { updateCartItem, isLoading: addItemToCartLoading, isSuccess: addItemToCartSuccess} = useUpdateCart();
   // const [cartItems, setCartItems] = useRecoilState(cartItemsAtom);

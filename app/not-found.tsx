@@ -29,15 +29,15 @@ export default function NotFound({
         <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8">
           We can&apos;t seem to find the page you&apos;re looking for. Let&apos;s get you back on track!
         </p>
-        <div className="flex flex-col justify-center items-center gap-3 sm:gap-4">
+        <div className="flex flex-row justify-center items-center gap-3 sm:gap-4">
           <Link href="/" passHref className="w-full sm:w-auto">
             <Button className="bg-black text-white w-full sm:w-auto" size="lg" startContent={<HiOutlineHome />}>
-              Go to Home
+              Home
             </Button>
           </Link>
           <Link href="/search" passHref className="w-full sm:w-auto">
             <Button className="bg-gray-200 text-gray-800 w-full sm:w-auto" size="lg" variant="flat" startContent={<HiOutlineShoppingBag />}>
-              Browse Restaurants
+              Restaurants
             </Button>
           </Link>
         </div>

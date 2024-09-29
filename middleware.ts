@@ -20,18 +20,17 @@ export function middleware(request: NextRequest) {
   if (path.startsWith('/api')) {
     const referer = request.headers.get('referer');
     const origin = request.headers.get('origin');
-
+    const currentUrl = process.env.NEXT_PUBLIC_API_URL as string;
+    const currentHost = currentUrl.replace('https://', '').replace('http://', '').replace('://', '');
+    
     // Allow requests from the same origin or if referer is from the same host
-    if (origin === request.nextUrl.origin || (referer && new URL(referer).host === request.headers.get('host'))) {
+    if (referer?.startsWith(currentHost) || origin?.startsWith(currentHost) || request.headers.get('host')?.startsWith(currentHost)) {
       return NextResponse.next();
     } else {
       return new NextResponse('Access Denied', { status: 403 });
     }
   }
 
-
-  // Check if the path is public
-  const isPublicPath = publicPaths.some(publicPath => path === publicPath);
 
   // Get the token from the cookies
   const token = request.cookies.get('auth_token')?.value;
