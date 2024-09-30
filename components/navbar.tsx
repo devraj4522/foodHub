@@ -96,7 +96,7 @@ export const Navbar = () => {
         <NavbarItem className="hidden sm:flex gap-6">
           <Link aria-label="Phone" className="flex items-center" href={`tel:${siteConfig.links.phone}`} isExternal>
             <HiPhoneArrowDownLeft className="mr-2 text-black" size={20} />
-            <div className="text-black text-sm hidden lg:block">
+            <div className="text-black text-sm hidden md:block">
               Call Us at <br/> <p className="font-bold">{siteConfig.links.phone}</p>
             </div>
           </Link>

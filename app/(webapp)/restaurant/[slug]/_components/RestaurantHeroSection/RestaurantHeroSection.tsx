@@ -4,9 +4,9 @@ import { FaMapMarkerAlt, FaShoppingCart } from "react-icons/fa";
 
 export const RestaurantHeroSection = ({restaurant}: {restaurant: RestaurantData}) => {
   return(
-  <section className="bg-lime-200 overflow-hidden mb-8">
+  <section className="bg-[#FFF2D6] overflow-hidden mb-8">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col lg:flex-row items-center gap-8">
+      <div className="flex flex-col lg:flex-row md:items-center gap-8">
         <img
           src={restaurant?.image}
           alt={restaurant?.name}
@@ -18,7 +18,7 @@ export const RestaurantHeroSection = ({restaurant}: {restaurant: RestaurantData}
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">{restaurant?.name}</h1>
           <p className="mb-6">{restaurant?.description}</p>
           <div className="flex items-center pb-4 md:pb-8">
-             <FaMapMarkerAlt className="text-lime-600 mr-2" />
+             <FaMapMarkerAlt className="text-yellow-600 mr-2" />
              <p className="text-gray-700">{restaurant?.address} {" "} {restaurant?.city} {" "} {restaurant?.state} {" "} { restaurant.pinCode}</p>
            </div>
           <div className="flex flex-wrap gap-4">

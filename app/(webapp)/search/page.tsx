@@ -12,7 +12,8 @@ import { useSearch } from '@/hooks/search/useSearch';
 import { useSearchMenu } from '@/hooks/search/useSearchMenu';
 import { IMenuSearchResult, ISearchResult } from '@/types/Restaurant';
 import { SearchResults } from './_components/SearchResults';
-
+import { useSetRecoilState } from 'recoil';
+import { showCartAtom } from '@/recoil/atoms/cartAtom';
 
 type SearchType = 'restaurant' | 'menu';
 
@@ -22,11 +23,13 @@ export default function SearchPage() {
   const [suggestions, setSuggestions] = useState<ISearchResult[] | IMenuSearchResult[]>([]);
   const [searchType, setSearchType] = useState<SearchType>('menu');
   const searchInputRef = useRef<HTMLInputElement>(null);
-  
+  const setIsCartOpen = useSetRecoilState(showCartAtom);
+
   const { data: restaurantSearchData, isLoading: isRestaurantLoading, refetch: refetchRestaurants } = useSearch(searchTerm);
   const { data: menuSearchData, isLoading: isMenuLoading, refetch: refetchMenu } = useSearchMenu(searchTerm);
 
   useEffect(() => {
+    setIsCartOpen(false);
     const searchParams = new URLSearchParams(window.location.search);
     const queryParam = searchParams.get('query');
     if (queryParam) {
@@ -96,6 +99,7 @@ export default function SearchPage() {
         suggestions={suggestions}
         setSuggestions={setSuggestions}
         searchInputRef={searchInputRef}
+        isLoading={searchType === 'restaurant' ? isRestaurantLoading : isMenuLoading}
       />
       <SearchResults 
         searchTerm={searchTerm}
@@ -115,14 +119,15 @@ interface SearchHeaderProps {
   suggestions: ISearchResult[] | IMenuSearchResult[];
   setSuggestions: (suggestions: ISearchResult[] | IMenuSearchResult[]) => void;
   searchInputRef: React.RefObject<HTMLInputElement>;
+  isLoading: boolean;
 }
 
-function SearchHeader({ searchTerm, setSearchTerm, searchType, toggleSearchType, suggestions, setSuggestions, searchInputRef }: SearchHeaderProps) {
+function SearchHeader({ searchTerm, setSearchTerm, searchType, toggleSearchType, suggestions, setSuggestions, searchInputRef, isLoading }: SearchHeaderProps) {
   return (
     <div className="mb-12 py-8 text-center bg-[#EFDCB1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-4xl text-black font-bold mb-4">Find Your Next Favorite Meal</h1>
-        <p className="text-xl text-gray-800 mb-8">Discover amazing restaurants and delicious dishes near you</p>
+        <p className="md:block hidden text-xl text-gray-800 mb-8">Discover amazing restaurants and delicious dishes near you</p>
 
         <SearchInput 
           searchTerm={searchTerm}
@@ -135,6 +140,7 @@ function SearchHeader({ searchTerm, setSearchTerm, searchType, toggleSearchType,
         <SearchSuggestions 
           suggestions={suggestions}
           searchType={searchType}
+          isLoading={isLoading}
         />
 
         <SearchTypeToggle 
@@ -178,28 +184,41 @@ function SearchInput({ searchTerm, setSearchTerm, searchType, setSuggestions, se
 interface SearchSuggestionsProps {
   suggestions: ISearchResult[] | IMenuSearchResult[];
   searchType: SearchType;
+  isLoading: boolean;
 }
 
-function SearchSuggestions({ suggestions, searchType }: SearchSuggestionsProps) {
+function SearchSuggestions({ suggestions, searchType, isLoading }: SearchSuggestionsProps) {
   return (
-    <div className="max-w-md mx-auto">
-      {suggestions.length > 0 && (
-        <div className="absolute z-10 max-w-md w-full mt-1 bg-white shadow-lg rounded-md overflow-hidden">
-          {suggestions.map((item) => (
-            <Link href={searchType === 'restaurant' ? `/restaurant/${item.id}` : `/menu-item/${item.id}`} key={item.id}>
-              <div className="flex items-center p-2 hover:bg-gray-100">
-                <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded-md mr-3" />
-                <div>
-                  <h4 className="font-semibold">{item.name}</h4>
-                  {searchType === 'restaurant' ? (
-                    <p className="text-sm text-gray-600">{(item as ISearchResult).cuisine.join(', ')}</p>
-                  ) : (
-                    <p className="text-sm text-gray-600">₹{(item as IMenuSearchResult).price}</p>
-                  )}
+    <div className="max-w-sm  ml-6 sm:mx-auto sm:max-w-md">
+      {(suggestions.length > 0 || isLoading) && (
+        <div className="absolute max-w-sm sm:max-w-md z-10 w-full mt-1 bg-white shadow-lg rounded-md overflow-hidden">
+          {isLoading ? (
+            Array(3).fill(0).map((_, index) => (
+              <div key={index} className="flex items-center p-2">
+                <Skeleton className="w-12 h-12 rounded-md mr-3" />
+                <div className="flex-1">
+                  <Skeleton className="h-4 w-3/4 mb-2" />
+                  <Skeleton className="h-3 w-1/2" />
                 </div>
               </div>
-            </Link>
-          ))}
+            ))
+          ) : (
+            suggestions.map((item) => (
+              <Link href={searchType === 'restaurant' ? `/restaurant/${item.id}` : `/menu-item/${item.id}`} key={item.id}>
+                <div className="flex max-w-md mx-auto items-center p-2 hover:bg-gray-100">
+                  <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded-md mr-3" />
+                  <div>
+                    <h4 className="font-semibold">{item.name}</h4>
+                    {searchType === 'restaurant' ? (
+                      <p className="text-sm text-gray-600">{(item as ISearchResult).cuisine.join(', ')}</p>
+                    ) : (
+                      <p className="text-sm text-gray-600">₹{(item as IMenuSearchResult).price}</p>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            ))
+          )}
         </div>
       )}
     </div>
@@ -219,13 +238,13 @@ function SearchTypeToggle({ searchType, toggleSearchType }: SearchTypeToggleProp
           className={`${searchType === 'restaurant'? 'bg-gray-900 text-white': 'bg-gray-300 text-gray-800'}`}
           onClick={() => toggleSearchType('restaurant')}
         >
-          Search Restaurants
+          Restaurants
         </Button>
         <Button 
           className={`${searchType === 'menu'? 'bg-gray-900 text-white': 'bg-gray-300 text-gray-800'}`}
           onClick={() => toggleSearchType('menu')}
         >
-          Search Menu Items
+          Dishes
         </Button>
       </div>
     </div>

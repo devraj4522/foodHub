@@ -73,7 +73,7 @@ const RestaurantListComponent = ({restaurants}: {restaurants: IRestaurant[]}) =>
      
 
       {/* Restaurant List */}
-      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-left py-2 mb-4">Explore Restaurants Near You</h2>
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-left py-2 mb-4"> Restaurants Near You</h2>
 
        {/* Filter Section */}
        <div className="flex space-x-2 mb-4 md:mb-8">
@@ -144,8 +144,8 @@ const RestaurantListComponent = ({restaurants}: {restaurants: IRestaurant[]}) =>
            <div className="flex pt-2 md:pt-0 justify-between items-center">
              <h3 className="text-lg font-semibold text-gray-900 text-ellipsis overflow-hidden">{restaurant.name}</h3>
              <div className="flex items-center space-x-1 p-1 px-2 rounded-full bg-green-500">
-                  <span className="text-white font-medium">{restaurant.rating}</span>
-                  <FaStar className="text-white w-3 h-3" />
+                  <span className="text-white text-sm md:text-base font-medium">{restaurant.rating}</span>
+                  <FaStar className="text-white w-2 h-2 md:w-3 md:h-3" />
                 </div>
            </div>
    
@@ -162,7 +162,7 @@ const RestaurantListComponent = ({restaurants}: {restaurants: IRestaurant[]}) =>
                <FiClock className="text-gray-400" />
                <span className="text-sm"> {restaurant.deliveryTime} mins</span>
              </div>
-             <div className="text-sm">₹{restaurant.avgCostForTwo} for two</div>
+             <div className="text-sm font-semibold text-gray-700">₹{restaurant.avgCostForTwo} for two</div>
            </div>
 
          </div>

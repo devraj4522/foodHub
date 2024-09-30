@@ -36,7 +36,7 @@ export default function Error({
             </Button>
           </Link>
           <Link href="/search" passHref className="w-full sm:w-auto">
-            <Button className="bg-gray-200 text-gray-800 w-full sm:w-auto" size="lg" variant="flat" startContent={<HiOutlineShoppingBag />}>
+            <Button className="bg-gray-200 text-black w-full sm:w-auto" size="lg" variant="flat" startContent={<HiOutlineShoppingBag />}>
               Restaurants
             </Button>
           </Link>
