@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { FaClock, FaTrain, FaStar, FaShoppingCart } from 'react-icons/fa';
+import { FaClock, FaTrain, FaStar, FaShoppingCart, FaCheckCircle, FaCheckSquare } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -12,42 +12,9 @@ import { userAtom } from '@/recoil/atoms/userAtom';
 import { toast } from 'sonner';
 import { addItemToCart } from '@/actions/cart';
 import { IMenuItem } from '@/types/Restaurant';
+import { FoodItem } from '@/types/Food';
+import BreadCrumb from './BreadCrumb';
 
-interface FoodItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  rating: number;
-  isVegetarian: boolean;
-  isVegan: boolean;
-  isGlutenFree: boolean;
-  spicyLevel: number;
-  isAvailable: boolean;
-  image: string;
-  restaurantId: string;
-  categoryId: string;
-  restaurant: {
-    id: string;
-    name: string;
-    image: string;
-    description: string;
-    cuisine: string[];
-    address: string;
-    city: string;
-    state: string;
-    pinCode: string;
-    phone: string;
-    rating: number;
-    avgCostForTwo: number;
-    openingTime: string;
-    closingTime: string;
-    isActive: boolean;
-    deliveryTime: number;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
 
 interface TopItem {
   id: number;
@@ -65,7 +32,7 @@ interface TopItem {
 }
 
 const FoodItemDetails = ({ foodItem, handleAddToCart }: { foodItem: FoodItem, handleAddToCart: (event: React.MouseEvent<HTMLButtonElement>, menuItem:Omit<IMenuItem, 'restaurant' | 'category' | 'rating'>) => void }) => (
-  <section className="bg-lime-200 overflow-hidden mb-8">
+  <section className="bg-[#FFF2D6] overflow-hidden mb-8">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col lg:flex-row items-center gap-8">
         <img
@@ -80,7 +47,7 @@ const FoodItemDetails = ({ foodItem, handleAddToCart }: { foodItem: FoodItem, ha
           <p className="text-2xl font-semibold mb-2">{foodItem.restaurant.name}</p>
           <p className="mb-6">{foodItem.description}</p>
           <div className="flex items-center pb-4 md:pb-8">
-             <FaMapMarkerAlt className="text-lime-600 mr-2" />
+             <FaMapMarkerAlt className="text-yellow-700 mr-2" />
              <p className="text-gray-700">{foodItem.restaurant.address} {" "} {foodItem.restaurant.city} {" "} {foodItem.restaurant.state} {" "} {foodItem.restaurant.pinCode}</p>
            </div>
           <div className="flex flex-wrap gap-4">
@@ -252,37 +219,24 @@ export default function FoodItemPage({foodItem}: {foodItem: FoodItem}) {
 
   return (
     <>
-      <section className="bg-yellow-100 py-4 m-0">
+    <section className="bg-yellow-50 py-4 m-0">
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between h-full">
-            <div className="flex items-center space-x-2 border-l-4 border-lime-300 pl-4 py-2 mb-4 sm:mb-0">
-              <FaClock className="text-lime-500 text-xl" />
-              <span className="font-semibold">Delivery: {foodItem?.restaurant.openingTime} - {foodItem?.restaurant.closingTime}</span>
+          <div className="flex flex-row items-center justify-between h-full">
+            <div className="flex items-center space-x-2 border-l-4 border-yellow-300 pl-4 py-2">
+              <FaClock className="text-green-600 text-xl flex-shrink-0" />
+              <span className="font-semibold text-xs md:text-base">Delivery {foodItem?.restaurant.openingTime} - {foodItem?.restaurant.closingTime}</span>
             </div>
-            <div className="flex items-center space-x-2 border-l-4 border-lime-300 pl-4 py-2">
-              <FaTrain className="text-lime-500 text-xl" />
-              <span className="font-semibold">Order from Anywhere</span>
-            </div>
+            <div className="flex items-center space-x-2 border-l-4 border-yellow-300 pl-4 py-2">
+               <FaTrain className="text-yellow-600 text-xl flex-shrink-0" />
+               <span className="font-semibold text-wrap text-xs sm:text-base">Fastest Delivery</span>
+              
+             </div>
           </div>
         </div>
       </section>
-      <section className='relative w-full bg-yellow-50 overflow-hidden'>
-        <nav aria-label="Breadcrumb" className="py-4 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-black">
-          <ol className="flex flex-wrap items-center space-x-2">
-            <li>
-              <Link href="/" className="hover:underline">Home</Link>
-            </li>
-            <li>
-              <span className="mx-2">/</span>
-              <Link href={`/restaurant/restaurants/${foodItem?.restaurant.id}`} className="hover:underline">{foodItem?.restaurant.name}</Link>
-            </li>
-            <li>
-              <span className="mx-2">/</span>
-              <span aria-current="page">{foodItem?.name}</span>
-            </li>
-          </ol>
-        </nav>
-      </section>
+
+      <BreadCrumb foodItem={foodItem} />
       <FoodItemDetails foodItem={foodItem} handleAddToCart={handleAddToCart} />
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

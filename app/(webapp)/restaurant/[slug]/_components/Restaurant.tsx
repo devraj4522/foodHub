@@ -65,13 +65,13 @@ export default function RestaurantComponent({data}: {data: RestaurantData}) {
       <RestaurantHeroSection restaurant={restaurant} />
 
       {/* Menu Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-3xl font-bold mb-8">Menu</h2>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <h2 className="text-2xl md:text-3xl font-bold mb-8">Menu</h2>
         <div className="flex flex-col md:flex-row gap-8">
           {/* Categories Widget */}
           <div className="md:w-1/4 mb-8 md:mb-0">
             <div className="sticky top-20">
-              <h3 className="text-xl font-semibold mb-4">Categories</h3>
+              <h3 className="text-lg md:text-xl font-semibold mb-4">Categories</h3>
               <ul className="space-y-2">
                 {
                   categories.map(({ name, count }, index) => (
@@ -86,8 +86,8 @@ export default function RestaurantComponent({data}: {data: RestaurantData}) {
                         }}
                         className={`w-full text-left py-2 px-4 rounded-lg transition-colors ${
                           activeCategory === name
-                            ? 'bg-lime-200'
-                            : 'hover:bg-lime-100'
+                            ? 'bg-[#FFF2D6]'
+                            : 'hover:bg-[#fbf4e6]'
                         }`}
                       >
                         {name} ({count})

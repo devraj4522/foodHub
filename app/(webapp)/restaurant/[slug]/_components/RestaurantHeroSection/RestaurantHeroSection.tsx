@@ -15,8 +15,8 @@ export const RestaurantHeroSection = ({restaurant}: {restaurant: RestaurantData}
           className="rounded-lg shadow-2xl w-full lg:w-1/2 object-cover"
         />
         <div className="lg:w-1/2">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4">{restaurant?.name}</h1>
-          <p className="mb-6">{restaurant?.description}</p>
+          <h1 className="text-3xl md:text-5xl font-bold mb-2 md:mb-4">{restaurant?.name}</h1>
+          <p className="mb-4 md:mb-6">{restaurant?.description}</p>
           <div className="flex items-center pb-4 md:pb-8">
              <FaMapMarkerAlt className="text-yellow-600 mr-2" />
              <p className="text-gray-700">{restaurant?.address} {" "} {restaurant?.city} {" "} {restaurant?.state} {" "} { restaurant.pinCode}</p>
@@ -53,7 +53,7 @@ export const RestaurantHeroSection = ({restaurant}: {restaurant: RestaurantData}
              <Button
                variant="shadow"
                startContent={<FaShoppingCart className="w-6 h-6" />}
-               className="font-bold bg-lime-600 text-white hover:bg-lime-700 transition-colors duration-300 transform hover:scale-105 rounded-lg px-8 py-6 flex items-center justify-center space-x-3 shadow-xl text-md"
+               className="font-bold bg-green-600 text-white hover:bg-green-700 transition-colors duration-300 transform hover:scale-105 rounded-lg px-8 py-6 flex items-center justify-center space-x-3 shadow-xl text-md"
                onClick={() => {
 
                  const menuSection = document.getElementById('menu-section');
