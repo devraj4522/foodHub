@@ -23,7 +23,7 @@ const mockActiveOrder = {
 };
 
 const ActiveOrderPageComponent: React.FC<{order: IOrder}> = ({order}) => {
-  const [remainingTime, setRemainingTime] = useState(new Date(order.createdAt).getTime() + 50 * 60 * 1000);
+  const [remainingTime, setRemainingTime] = useState(50 * 60 * 1000);
   const [orderProgress, setOrderProgress] = useState(0);
 
   useEffect(() => {
