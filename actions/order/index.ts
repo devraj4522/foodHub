@@ -1,7 +1,7 @@
 import { IOrder } from "@/types/Order";
 import { OrderStatus } from "@/types/Order";
 import { ICreateOrderInput } from "@/types/Order";
-const baseUrl = "http://localhost:3000/api/order";
+const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/order`;
 
 export async function createOrder(data: ICreateOrderInput){
   const response = await fetch('/api/order/create', {
