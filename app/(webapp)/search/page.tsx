@@ -189,9 +189,9 @@ interface SearchSuggestionsProps {
 
 function SearchSuggestions({ suggestions, searchType, isLoading }: SearchSuggestionsProps) {
   return (
-    <div className="max-w-sm  ml-6 sm:mx-auto sm:max-w-md">
+    <div className="sm:max-w-sm max-w-xs  ml-6 sm:mx-auto md:max-w-md">
       {(suggestions.length > 0 || isLoading) && (
-        <div className="absolute max-w-sm sm:max-w-md z-10 w-full mt-1 bg-white shadow-lg rounded-md overflow-hidden">
+        <div className="absolute max-w-xs sm:max-w-sm md:max-w-md z-10 w-full mt-1 bg-white shadow-lg rounded-md overflow-hidden">
           {isLoading ? (
             Array(3).fill(0).map((_, index) => (
               <div key={index} className="flex items-center p-2">

@@ -12,16 +12,20 @@ import { toast } from 'sonner';
 import { logout } from '@/actions/user/auth';
 import { useSetRecoilState } from 'recoil';
 import { cartAtom } from '@/recoil/atoms/cartAtom';
+import { showCartAtom } from '@/recoil/atoms/cartAtom';
+import { FaUser } from 'react-icons/fa';
 const ProfileDropDown: React.FC = () => {
   const router = useRouter();
   const [user, setUser] = useRecoilState(userAtom);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const setCart = useSetRecoilState(cartAtom);
   const setShowLoginForm = useSetRecoilState(showLoginFormAtom)
+  const setShowCart = useSetRecoilState(showCartAtom)
 
   const handleSignOut = async () => {
     setUser(null);
     setCart(null);
+    setShowCart(false)
     // Remove the auth_token cookie
     await logout();
     toast.success('Signed out successfully');
@@ -34,9 +38,11 @@ const ProfileDropDown: React.FC = () => {
       setShowLogoutModal(true);
     }
     else if (key === 'login'){
+      setShowCart(false)
       setShowLoginForm(true)
     }
     else{
+      setShowCart(false)
       router.push(key);
     }
   };
@@ -51,16 +57,17 @@ const ProfileDropDown: React.FC = () => {
                 as="button"
                 className="w-10 h-10 justify-center items-center bg-transparent text-black" size="sm"
                 name={user.name}
+                onClick={()=> setShowCart(false)}
                 src={"/assets/user.svg"}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat" onAction={(key) => handleAction(key.toString())}>
-              <DropdownItem key="profile" className="h-14 gap-2">
+              <DropdownItem key="profile" className="h-14 gap-2 hover:underline">
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold">{user.email}</p>
               </DropdownItem>
               <DropdownItem key="order-history" startContent={<FaHistory />}>
-                Order History
+                Orders
               </DropdownItem>
               <DropdownItem key="settings" startContent={<FaCog />}>
                 Settings

@@ -12,7 +12,7 @@ export const useVerifyJwtToken = () => {
           const userData = await verifyToken();
           setUser(userData.user);
         } catch (error) {
-          console.error('Token verification failed:', error);
+          // console.error('Token verification failed:', error);
           setUser(null); // Clear user data if verification fails
         }
      
