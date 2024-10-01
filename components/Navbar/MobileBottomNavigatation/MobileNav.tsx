@@ -11,6 +11,7 @@ import { Navbar as NavbarComponent, NavbarContent, NavbarItem } from "@nextui-or
 import ProfileDropDown from "../ProfileDropDown/ProfileDropDown";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
+
 export const MobileBottomNav = () => {
   const pathname = usePathname();
   const [showCart, setShowCart] = useRecoilState(showCartAtom);
@@ -43,7 +44,7 @@ export const MobileBottomNav = () => {
      }}
      shouldHideOnScroll={false}
      isBlurred={false}
-     className=" md:hidden fixed  left-0 h-16 bg-[#f2f2f2] shadow-lg z-50 w-full " maxWidth="full" isBordered>
+     className=" md:hidden fixed  left-0 h-16 bg-white border-t border-gray-200 shadow-lg z-50 w-full " maxWidth="full" isBordered>
       <NavbarContent className="flex justify-between w-full px-2" justify="center">
         <NavbarItem className="flex-1">
           <Link onPress={() => handleClick("/")} className={`flex justify-center items-center w-full h-full ${isActive("/") ? "text-[#b2a500] !opacity-100" : "text-black"}`}>

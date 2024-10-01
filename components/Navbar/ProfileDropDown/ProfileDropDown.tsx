@@ -66,7 +66,7 @@ const ProfileDropDown: React.FC = () => {
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold">{user.email}</p>
               </DropdownItem>
-              <DropdownItem key="order-history" startContent={<FaHistory />}>
+              <DropdownItem key={`order-history/${user.id}`} startContent={<FaHistory />}>
                 Orders
               </DropdownItem>
               <DropdownItem key="settings" startContent={<FaCog />}>

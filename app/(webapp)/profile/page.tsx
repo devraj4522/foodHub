@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/button";
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '@/recoil/atoms/userAtom';
 import { useRouter } from 'next/navigation';
+
 const ProfilePage = () => {
   const user = useRecoilValue(userAtom);
   const router = useRouter()

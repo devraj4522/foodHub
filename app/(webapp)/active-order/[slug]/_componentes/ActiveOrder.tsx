@@ -1,75 +1,83 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FaShoppingBag, FaMotorcycle, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
+import { FaShoppingBag, FaMotorcycle, FaMapMarkerAlt, FaCheckCircle, FaUtensils, FaTruck, FaTimesCircle } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { Progress } from "@nextui-org/progress";
 import { FaPhone, FaMoneyBillWave, FaMobileAlt } from 'react-icons/fa';
-import { IOrder } from '@/types/Order';
+import { IOrder, OrderStatus } from '@/types/Order';
 import { PaymentStatus } from '@/types/Order';
-
-// Mock data for active order
-const mockActiveOrder = {
-  id: 1,
-  items: [
-    { name: 'Burger', price: 250, quantity: 1 },
-    { name: 'Fries', price: 100, quantity: 1 },
-  ],
-  total: 350,
-  isPaid: false,
-  estimatedDeliveryTime: 50, // in minutes
-  orderPlacedTime: new Date(Date.now() - 10 * 60000), // 10 minutes ago
-};
 
 const ActiveOrderPageComponent: React.FC<{order: IOrder}> = ({order}) => {
   const [remainingTime, setRemainingTime] = useState(50 * 60 * 1000);
   const [orderProgress, setOrderProgress] = useState(0);
-
+  
   useEffect(() => {
     const timer = setInterval(() => {
-      const elapsedTime = (Date.now() - mockActiveOrder.orderPlacedTime.getTime()) / 60000;
-      const newRemainingTime = Math.max(0, mockActiveOrder.estimatedDeliveryTime - elapsedTime);
+      const elapsedTime = (new Date().getTime() - new Date(order.createdAt).getTime()) / 60000;
+      const newRemainingTime = Math.max(0, 50 - elapsedTime);
       setRemainingTime(Math.round(newRemainingTime));
-      setOrderProgress((elapsedTime / mockActiveOrder.estimatedDeliveryTime) * 100);
+      setOrderProgress((elapsedTime / 50) * 100);
     }, 1000);
 
     return () => clearInterval(timer);
   }, []);
 
   const renderOrderStatus = () => {
-    if (orderProgress < 33) {
-      return (
-        <div className="flex items-center text-orange-500">
-          <FaShoppingBag className="mr-2" /> Order Placed
-        </div>
-      );
-    } else if (orderProgress < 66) {
-      return (
-        <div className="flex items-center text-lime-500">
-          <FaMotorcycle className="mr-2" /> On the Way
-        </div>
-      );
-    } else {
-      return (
-        <div className="flex items-center text-green-500">
-          <FaMapMarkerAlt className="mr-2" /> Arriving Soon
-        </div>
-      );
+    switch (order.orderStatus) {
+      case OrderStatus.PLACED:
+        return (
+          <div className="flex items-center text-green-600">
+            <FaShoppingBag className="mr-2" /> Order Placed
+          </div>
+        );
+      case OrderStatus.PREPARING:
+        return (
+          <div className="flex items-center text-yellow-500">
+            <FaUtensils className="mr-2" /> Preparing
+          </div>
+        );
+      case OrderStatus.OUT_FOR_DELIVERY:
+        return (
+          <div className="flex items-center text-yellow-700">
+            <FaTruck className="mr-2" /> Out for Delivery
+          </div>
+        );
+      case OrderStatus.DELIVERED:
+        return (
+          <div className="flex items-center text-green-500">
+            <FaCheckCircle className="mr-2" /> Delivered
+          </div>
+        );
+      case OrderStatus.CANCELLED:
+        return (
+          <div className="flex items-center text-red-500">
+            <FaTimesCircle className="mr-2" /> Cancelled
+          </div>
+        );
+      default:
+        return (
+          <div className="flex items-center text-gray-500">
+            <FaMapMarkerAlt className="mr-2" /> Check Status
+          </div>
+        );
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-lime-600">Active Order</h1>
+      <h1 className="md:block hidden md:text-3xl font-bold mb-8 text-gray-800">Active Order</h1>
       
       <Card className="mb-8">
         <CardHeader className="flex justify-between items-center">
-          <span className="text-xl font-semibold" data-id={order.id}>Order #{order.id.slice(-6)}</span>
+          <span className="text-base md:text-xl font-semibold" data-id={order.id}>Order #{order.id.slice(-6)}</span>
           {renderOrderStatus()}
         </CardHeader>
         <CardBody>
-          <div className="mb-4">
+          {(order.orderStatus === OrderStatus.PLACED || order.orderStatus === OrderStatus.PREPARING || order.orderStatus === OrderStatus.OUT_FOR_DELIVERY) && (
+            <>
+            <div className="mb-4">
             <Progress 
               className="mb-2"
               color="success"
@@ -81,13 +89,16 @@ const ActiveOrderPageComponent: React.FC<{order: IOrder}> = ({order}) => {
               <span>Delivered</span>
             </div>
           </div>
-          
           <div className="text-center mb-6">
-            <p className="text-2xl font-bold mb-2">
-              {remainingTime > 0 ? `${remainingTime} minutes` : "Arriving any moment!"}
-            </p>
-            <p className="text-gray-600">Estimated delivery time</p>
-          </div>
+          <p className="text-2xl font-bold mb-2">
+            {remainingTime > 0 ? `${remainingTime} minutes` : "Arriving any moment!"}
+          </p>
+          <p className="text-gray-600">Estimated delivery time</p>
+        </div>
+        </>
+          )}
+          
+          
 
           <div className="border-t pt-4">
             <h3 className="font-semibold mb-2">Order Details</h3>
@@ -107,12 +118,12 @@ const ActiveOrderPageComponent: React.FC<{order: IOrder}> = ({order}) => {
             <div className="flex items-center">
               <span className="font-semibold mr-2">Payment Method:</span>
               {order.paymentStatus === PaymentStatus.COMPLETED ? (
-                <div className="flex items-center text-green-500">
+                <div className="flex items-center text-green-600">
                   <FaCheckCircle className="mr-1" />
                   <span>Paid</span>
                 </div>
               ) : (
-                <div className="flex items-center text-orange-500">
+                <div className="flex items-center text-yellow-700">
                   {order.paymentMethod === 'upi' ? (
                     <>
                       <FaMobileAlt className="mr-1" />
@@ -132,7 +143,7 @@ const ActiveOrderPageComponent: React.FC<{order: IOrder}> = ({order}) => {
       </Card>
 
         <Button 
-          className="w-full text-white bg-lime-600 hover:bg-lime-700"
+          className="w-full text-white bg-green-600 hover:bg-green-700"
           size="lg" 
           startContent={<FaPhone />}
         >
