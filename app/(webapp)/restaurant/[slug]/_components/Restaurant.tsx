@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FaClock, FaTrain, FaInfoCircle, FaShoppingCart, FaMapMarkerAlt, FaArrowRight, FaTag, FaArrowDown, FaStar } from 'react-icons/fa';
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/breadcrumbs";
 import { Button } from "@nextui-org/button";
@@ -14,6 +14,8 @@ import BreadCrumb from '@/components/BreadCrumb/BreadCrumb';
 import { RestaurantHeroSection } from './RestaurantHeroSection/RestaurantHeroSection';
 import { TopInfoBar } from './TopInfoBar';
 import RestaurantCard from './RestaurantCard';
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
+import { Avatar } from '@nextui-org/avatar';
 
 export default function RestaurantComponent({data}: {data: RestaurantData}) {
   const [activeCategory, setActiveCategory] = React.useState('');
@@ -68,39 +70,9 @@ export default function RestaurantComponent({data}: {data: RestaurantData}) {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <h2 className="text-2xl md:text-3xl font-bold mb-8">Menu</h2>
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Categories Widget */}
-          <div className="md:w-1/4 mb-8 md:mb-0">
-            <div className="sticky top-20">
-              <h3 className="text-lg md:text-xl font-semibold mb-4">Categories</h3>
-              <ul className="space-y-2">
-                {
-                  categories.map(({ name, count }, index) => (
-                    <li key={index}>
-                      <button 
-                        onClick={() => {
-                          const element = document.getElementById(`category-${name}`);
-                          if (element) {
-                            element.scrollIntoView({ behavior: 'smooth' });
-                          }
-                          setActiveCategory(name);
-                        }}
-                        className={`w-full text-left py-2 px-4 rounded-lg transition-colors ${
-                          activeCategory === name
-                            ? 'bg-[#FFF2D6]'
-                            : 'hover:bg-[#fbf4e6]'
-                        }`}
-                      >
-                        {name} ({count})
-                      </button>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </div>
-
           {/* Menu Widget */}
-          <div className="md:w-3/4">
-            <h3 className="text-xl font-semibold mb-4" id='menu-section'>Order Online</h3>
+          <div className="w-full">
+            {/* <h3 className="text-xl font-semibold mb-4" id='menu-section'>Order Online</h3> */}
             {categories
               .map(({ name }, index) => (
                 <div key={index} id={`category-${name}`} className="mb-8">
@@ -117,6 +89,38 @@ export default function RestaurantComponent({data}: {data: RestaurantData}) {
           </div>
         </div>
       </section>
+
+      {/* Floating Menu Button */}
+      <Dropdown>
+        <DropdownTrigger>
+          <Button
+            className="fixed text-center bottom-20 right-6 z-50 bg-black text-white rounded-full shadow-lg py-6 px-4 font-bold"
+            startContent={<img  src={"/assets/menuIcon.svg"} className="w-8 h-8 mt-1 text-white" />}
+          >
+            Menu
+          </Button>
+          
+        </DropdownTrigger>
+        <DropdownMenu aria-label="Menu Categories">
+          {[{name: "All", count: products.length}].concat(categories).map(({ name, count }, index) => (
+            <DropdownItem
+              key={index.toString()}
+              onClick={() => {
+                const element = document.getElementById(`category-${name}`);
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActiveCategory(name);
+              }}
+            >
+              <div className="flex flex-row justify-between">
+                <span className="text-gray-950 font-bold text-md">{name}</span>
+                <span className="text-gray-500 text-sm">{count} {count === 1 ? "item" : "items"}</span>
+              </div>
+            </DropdownItem>
+          ))}
+        </DropdownMenu>
+      </Dropdown>
     </>
   );
   };

@@ -69,7 +69,7 @@ const ProfileDropDown: React.FC = () => {
               <DropdownItem key={`order-history/${user.id}`} startContent={<FaHistory />}>
                 Orders
               </DropdownItem>
-              <DropdownItem key="settings" startContent={<FaCog />}>
+              <DropdownItem key="user-settings" startContent={<FaCog />}>
                 Settings
               </DropdownItem>
               <DropdownItem key="search" startContent={<FaSearch />}>
@@ -86,7 +86,7 @@ const ProfileDropDown: React.FC = () => {
               {(onClose) => (
                 <>
                   <ModalHeader className="text-xl items-center justify-center text-center sm:text-2xl font-bold mb-2 sm:mb-4 flex">
-                    <IoLogOutOutline className="mr-2 text-xl text-green-600 font-bold" /> Sign out
+                    Sign out
                   </ModalHeader>
                   <ModalBody>
                     <p className="text-gray-600 text-center mb-4 sm:mb-6 text-sm sm:text-base">Are you sure you want to sign out?</p>

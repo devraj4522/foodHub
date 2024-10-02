@@ -91,12 +91,12 @@ export default function RestaurantCard({item}: {item: IMenuItem}) {
           <h4 className="text-xl font-bold mb-2 text-gray-800">{item.name}</h4>
           <p className="text-gray-600 mb-4 text-sm line-clamp-2">{item.description}</p>
           <div className="flex justify-between items-center">
-            <span className="text-2xl font-bold text-lime-600">₹{item.price?.toFixed(2)}</span>
+            <span className="text-2xl font-bold text-green-600">₹{item.price?.toFixed(2)}</span>
             <Button
               onClick={(event) => handleAddToCart(event, item)}
               variant="shadow"
               endContent={<FaShoppingCart className="w-4 h-4" />}
-              className="font-semibold bg-lime-600 text-white hover:bg-lime-700 transition-colors duration-300"
+              className="font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors duration-300"
             >
               Add to Cart
             </Button>

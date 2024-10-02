@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLock, FaLanguage, FaCity, FaMapPin } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/modal";
-import { Select, SelectItem } from "@nextui-org/select";
 import * as z from "zod";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
@@ -103,24 +101,24 @@ const UserAccountSettingsPage: React.FC = () => {
   return (
    isLoading ? <Loading/> : (
     <div className="max-w-4xl mx-auto px-4 py-8">
-    <h1 className="text-3xl font-bold mb-8 text-lime-600">Account Settings</h1>
+    <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-gray-800">Account Settings</h1>
     
-    <div className="bg-white shadow-md rounded-lg overflow-hidden border border-lime-300">
-      <div className="p-6 bg-lime-50">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
+      <div className="p-6 bg-lime-50 border border-b border-gray-200 shadow-inner">
         <div className="flex items-center">
           <div className="w-20 h-20 bg-lime-500 rounded-full flex items-center justify-center text-3xl text-white">
             <FaUser />
           </div>
           <div className="ml-6">
-            <h2 className="text-2xl font-semibold text-green-800">{formData.name}</h2>
-            <p className="text-lime-600">{formData.email}</p>
+            <h2 className="text-xl md:text-2xl font-semibold text-green-800">{formData.name}</h2>
+            <p className="text-sm md:text-base text-lime-600">{formData.email}</p>
           </div>
         </div>
       </div>
       
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         <div>
-          <h3 className="text-xl font-semibold mb-4 text-green-700">Personal Information</h3>
+          <h3 className="text-lg md:text-xl font-semibold mb-4 text-green-700">Personal Information</h3>
           <div className="space-y-4">
             <Input
               value={formData.name}
@@ -166,7 +164,7 @@ const UserAccountSettingsPage: React.FC = () => {
         </div>
 
         <div>
-          <h3 className="text-xl font-semibold mb-4 text-green-700">Address</h3>
+          <h3 className="text-lg md:text-xl font-semibold mb-4 text-green-700">Address</h3>
           <div className="space-y-4">
             <Input
               value={formData.address}

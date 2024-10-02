@@ -37,7 +37,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
 
   // If the path is private or not public, and there's no token, redirect to login
-  if (privatePaths.includes(path)) {
+  if (privatePaths.includes(path) && !token) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
