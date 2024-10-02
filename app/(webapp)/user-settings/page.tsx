@@ -4,9 +4,6 @@ import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLock, FaLanguage, FaCity
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import * as z from "zod";
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { getUserById } from '@/server/controllers/userController'
 import { useRecoilState } from 'recoil';
 import { userAtom } from '@/recoil/atoms/userAtom';
 import { updateUserDetails } from '@/actions/user/userDetails';
@@ -48,7 +45,7 @@ const UserAccountSettingsPage: React.FC = () => {
       name: user?.name ?? "",
       email: user?.email ?? "",
       phone: user?.phone ?? "",
-      address: savedAddress,
+      address: user?.address ?? savedAddress,
       city: user?.city ?? "",
       state: user?.state ?? "",
       pinCode: user?.pinCode ?? "",
