@@ -95,7 +95,7 @@ export default function RestaurantComponent({data}: {data: RestaurantData}) {
         <DropdownTrigger>
           <Button
             className="fixed text-center bottom-20 right-6 z-50 bg-black text-white rounded-full shadow-lg py-6 px-4 font-bold"
-            startContent={<img  src={"/assets/menuIcon.svg"} className="w-8 h-8 mt-1 text-white" />}
+            startContent={<img  src={"/assets/menuIcon.svg"} alt="Menu" className="w-8 h-8 mt-1 text-white" />}
           >
             Menu
           </Button>
