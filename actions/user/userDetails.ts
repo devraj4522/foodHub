@@ -10,11 +10,9 @@ export const updateUserDetails = async (userData: Omit<ICreateUserInput, 'otpCod
             },
             body: JSON.stringify(userData),
         });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
         return await response.json();
     } catch (error) {
-        return { error: error as string };
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        return { error: errorMessage };
     }
 }

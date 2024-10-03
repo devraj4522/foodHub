@@ -38,7 +38,8 @@ export async function PUT(request: NextRequest) {
     });
     return NextResponse.json(user);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update user data' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 

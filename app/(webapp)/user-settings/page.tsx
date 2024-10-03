@@ -10,6 +10,7 @@ import { updateUserDetails } from '@/actions/user/userDetails';
 import { Loading } from './_components/Loading';
 import { userSavedAddressAtom } from "@/recoil/atoms/locationAtom"
 import { toast } from 'sonner';
+import { ZodError } from 'zod';
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -38,7 +39,7 @@ const UserAccountSettingsPage: React.FC = () => {
     pinCode: "",
   });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string[]>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   
   useEffect(() => {
     setFormData({
@@ -50,7 +51,7 @@ const UserAccountSettingsPage: React.FC = () => {
       state: user?.state ?? "",
       pinCode: user?.pinCode ?? "",
     })
-  }, [user])
+  }, [user, savedAddress])
 
   const handleChange = (name: keyof FormData, value: string | boolean) => {
     const updatedFormData = { ...formData, [name]: value };
@@ -64,7 +65,7 @@ const UserAccountSettingsPage: React.FC = () => {
         const fieldErrors = error.flatten().fieldErrors;
         setErrors(prev => ({
           ...prev,
-          [name]: fieldErrors[name] as string[] | undefined
+          [name]: fieldErrors[name]?.[0] || undefined
         }));
       }
     }
@@ -82,28 +83,40 @@ const UserAccountSettingsPage: React.FC = () => {
       {
         setUser({...user, ...result.data})
         setSavedAddress(result.data.address)
+        toast.success("User details updated successfully")
       }
-        else{
+      else {
         toast.error(result.error)
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setErrors(error.flatten().fieldErrors as Partial<Record<keyof FormData, string[]>>);
+        const newErrors: Partial<Record<keyof FormData, string>> = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0] as keyof FormData] = err.message;
+          }
+        });
+        setErrors(newErrors);
+        toast.error("Please correct the errors in the form")
+      } else {
+        toast.error("An unexpected error occurred")
       }
     }
-    setIsLoading(false)
+    finally{
+      setIsLoading(false)
+    }
   };
 
 
   return (
    isLoading ? <Loading/> : (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-4 md:py-8">
     <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-gray-800">Account Settings</h1>
     
     <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
       <div className="p-6 bg-lime-50 border border-b border-gray-200 shadow-inner">
         <div className="flex items-center">
-          <div className="w-20 h-20 bg-lime-500 rounded-full flex items-center justify-center text-3xl text-white">
+          <div className="md:w-20 md:h-20 w-12 h-12 bg-lime-500 rounded-full flex items-center justify-center text-3xl text-white">
             <FaUser />
           </div>
           <div className="ml-6">
@@ -123,7 +136,7 @@ const UserAccountSettingsPage: React.FC = () => {
               placeholder="Name"
               startContent={<FaUser className="text-lime-500" />}
               isInvalid={!!errors.name}
-              errorMessage={errors.name?.[0]}
+              errorMessage={errors.name}
               size="lg"
               className="w-full"
             />
@@ -133,7 +146,7 @@ const UserAccountSettingsPage: React.FC = () => {
               placeholder="Email"
               startContent={<FaEnvelope className="text-lime-500" />}
               isInvalid={!!errors.email}
-              errorMessage={errors.email?.[0]}
+              errorMessage={errors.email}
               size="lg"
               readOnly
               className="w-full"
@@ -152,7 +165,7 @@ const UserAccountSettingsPage: React.FC = () => {
                 }
                 maxLength={10}
                 isInvalid={!!errors.phone}
-                errorMessage={errors.phone?.[0]}
+                errorMessage={errors.phone}
                 size="lg"
                 className="w-full"
               />
@@ -169,7 +182,7 @@ const UserAccountSettingsPage: React.FC = () => {
               placeholder="Address"
               startContent={<FaMapMarkerAlt className="text-lime-500" />}
               isInvalid={!!errors.address}
-              errorMessage={errors.address?.[0]}
+              errorMessage={errors.address}
               size="lg"
               className="w-full"
             />
@@ -180,7 +193,7 @@ const UserAccountSettingsPage: React.FC = () => {
                 placeholder="City"
                 startContent={<FaCity className="text-lime-500" />}
                 isInvalid={!!errors.city}
-                errorMessage={errors.city?.[0]}
+                errorMessage={errors.city}
                 size="lg"
                 className="w-full"
               />
@@ -190,7 +203,7 @@ const UserAccountSettingsPage: React.FC = () => {
                 placeholder="State"
                 startContent={<FaMapMarkerAlt className="text-lime-500" />}
                 isInvalid={!!errors.state}
-                errorMessage={errors.state?.[0]}
+                errorMessage={errors.state}
                 size="lg"
                 className="w-full"
               />
@@ -200,7 +213,7 @@ const UserAccountSettingsPage: React.FC = () => {
                 placeholder="PIN Code"
                 startContent={<FaMapPin className="text-lime-500" />}
                 isInvalid={!!errors.pinCode}
-                errorMessage={errors.pinCode?.[0]}
+                errorMessage={errors.pinCode}
                 size="lg"
                 className="w-full"
               />

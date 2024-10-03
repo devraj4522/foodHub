@@ -2,7 +2,7 @@ import { prisma } from '@/server/lib/prisma'
 import { generateOTP } from '@/server/otp'
 import { IUser, ICreateUserInput } from '@/types/User';
 import { randomBytes, randomInt } from 'crypto';
-
+import { handlePrismaError } from '@/server/lib/prismaError';
 export class User {
   static async create(userData: Omit<ICreateUserInput, 'phone'>) {
     return prisma.user.create({
@@ -74,14 +74,31 @@ export class User {
 
   static async updateUserDetails(userData: Partial<ICreateUserInput> & { id: string }) {
     const { id, ...updateData } = userData;
-    try{
-      return prisma.user.update({
+    try {
+      // Check if phone number is being updated and is unique
+      if (updateData.phone) {
+        const existingUser = await prisma.user.findFirst({
+          where: {
+            phone: updateData.phone,
+            NOT: { id: id }
+          }
+        });
+        if (existingUser) {
+          throw new Error('Phone number already in use');
+        }
+      }
+
+      return await prisma.user.update({
         where: { id },
         data: updateData,
-      })
+      });
     } catch (error) {
-      console.log(error)
-      throw new Error("Error Updating value")
+      // console.error("Error updating user details:", error);
+      if (error instanceof Error) {
+        throw error;
+      } else {
+        throw new Error(handlePrismaError(error));
+      }
     }
   }
 

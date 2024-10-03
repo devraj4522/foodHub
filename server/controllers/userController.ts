@@ -61,6 +61,7 @@ export async function updateUserDetailsController(userData: Partial<ICreateUserI
     name: user.name,
     email: user?.email || "",
     role: user.role,
+    phone: user?.phone || "",
     otpCode: user.otpCode,
     city: user.city || "",
     state: user.state || "",

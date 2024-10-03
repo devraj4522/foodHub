@@ -43,24 +43,24 @@ const ProfilePageComponent = () => {
             <div className=" bg-transparent rounded-full flex items-center justify-center text-3xl text-white">
             <Avatar src={"/assets/user.svg"} alt="User" className="w-16 bg-transparent h-16 md:w-20 md:h-20 mt-4" />
             </div>
-            <div className="ml-6">
-              <h2 className="text-2xl font-semibold text-gray-950">{user?.name}</h2>
-              <p className="text-gray-950">{user?.phone || user?.email}</p>
+            <div className="md:ml-6 ml-2">
+              <h2 className="md:text-2xl break-words text-lg font-bold text-gray-950">{user?.name}</h2>
+              <p className="text-gray-950 break-words text-sm md:text-base">{user?.phone || user?.email}</p>
             </div>
           </div>
         </div>
         
         <div className="p-6">
-          <h3 className="text-xl font-semibold mb-4">Settings</h3>
+          <h3 className="md:text-xl text-lg font-bold mb-0 md:mb-4">Settings</h3>
           <ul className="md:space-y-4">
-            <li>
+            <li className='px-0'>
               <Button
                 variant="light"
                 onClick={() => {
                   router.push("/user-settings");
                 }}
                 startContent={<FaCog className="text-black" />}
-                className="w-full justify-start text-left"
+                className="w-full md:text-xl text-lg px-0 justify-start text-left"
               >
                 Account Settings
               </Button>
@@ -70,7 +70,7 @@ const ProfilePageComponent = () => {
                 variant="light"
                 onClick={() => router.push("/active-orders/"+user?.id)}
                 startContent={<IoBag className="text-black" />}
-                className="w-full justify-start text-left"
+                className="w-full px-0 justify-start text-left"
               >
                 Active Orders
               </Button>
@@ -80,7 +80,7 @@ const ProfilePageComponent = () => {
                 variant="light"
                 onClick={() => router.push("/order-history/"+user?.id)}
                 startContent={<FaHistory className="text-black" />}
-                className="w-full justify-start text-left"
+                className="w-full px-0 justify-start text-left"
               >
                 Order History
               </Button>
