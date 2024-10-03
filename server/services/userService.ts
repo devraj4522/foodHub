@@ -58,15 +58,10 @@ export async function generateOTP(email: string) {
 
 export async function updateUserDetails(userData: Partial<ICreateUserInput> & { id: string }) {
   try {
-    try {
-      return await User.updateUserDetails(userData)
-    } catch (error) {
-      console.log(error)
-      throw new Error("Error Updating value")
-    }
+    const updatedUser = await User.updateUserDetails(userData);
+    return updatedUser;
   } catch (error) {
-    console.log(error)
-    throw new Error ("Error Updating value")
+    throw error;
   }
 }
 
