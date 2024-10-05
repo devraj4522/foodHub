@@ -4,7 +4,7 @@ export const getProducts = async () => {
     // const response = await axios.get(`${API}/api/products`)
     // dummy response
     const response: any = { success: true, message: "Products fetched successfully", products:   [
-        { id: 1, name: 'Dosha', image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/PC_Mweb/Dosa.png' },
+        { id: 1, name: 'Dosa', image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/PC_Mweb/Dosa.png' },
         { id: 2, name: 'Biryani', image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/PC_Mweb/Biryani.png' },
         
         { id: 3, name: 'Rasmalai', image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/PC_Mweb/Rasgulla.png' },
