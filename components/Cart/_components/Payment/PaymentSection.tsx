@@ -84,7 +84,7 @@ const PaymentSection = () => {
       toast.success("Order placed successfully!");
       setIsSuccess(true);
 
-      setCart(null); // Clear the cart after successful order
+      setCart(prevCart => prevCart ? { ...prevCart, items: [] } : null); // Clear the cart items but keep the cart object
       setShowCart(false); // Close the cart modal
       router.push(`/active-order/${response.id}`);
     } catch (error) {
