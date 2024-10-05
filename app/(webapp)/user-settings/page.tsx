@@ -79,11 +79,12 @@ const UserAccountSettingsPage: React.FC = () => {
       const id = user?.id
       if (id === null || id === undefined ) throw Error("User Must have id.")
       const result = await updateUserDetails({...s, id, address: s.address})
-      if (result && typeof result === 'object' && 'data' in  result) 
+
+      if (result && typeof result === 'object') 
       {
-        setUser({...user, ...result.data})
-        setSavedAddress(result.data.address)
-        toast.success("User details updated successfully")
+        setUser({...user, ...result})
+        setSavedAddress(result.address)
+        toast.success("Details Saved!")
       }
       else {
         toast.error(result.error)

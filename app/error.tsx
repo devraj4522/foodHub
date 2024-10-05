@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { HiOutlineHome, HiOutlinePhone, HiOutlineShoppingBag } from "react-icons/hi";
+import { HiShoppingBag } from "react-icons/hi2";
 import { Button } from "@nextui-org/button";
 
 export default function Error({
@@ -36,7 +37,7 @@ export default function Error({
             </Button>
           </Link>
           <Link href="/search" passHref className="w-full sm:w-auto">
-            <Button className="bg-gray-200 text-black w-full sm:w-auto" size="lg" variant="flat" startContent={<HiOutlineShoppingBag />}>
+            <Button className="bg-gray-200 text-black w-full sm:w-auto" size="lg" variant="flat" startContent={<HiShoppingBag />}>
               Restaurants
             </Button>
           </Link>

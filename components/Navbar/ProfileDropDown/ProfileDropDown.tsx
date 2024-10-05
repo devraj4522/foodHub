@@ -43,7 +43,7 @@ const ProfileDropDown: React.FC = () => {
     }
     else{
       setShowCart(false)
-      router.push(key);
+      router.push(`/${key}`);
     }
   };
 

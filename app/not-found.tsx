@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { HiOutlineHome, HiOutlinePhone, HiOutlineShoppingBag } from "react-icons/hi";
 import { Button } from "@nextui-org/button";
+import { FaBagShopping } from "react-icons/fa6";
 
 export default function NotFound({
   error,
@@ -36,7 +37,7 @@ export default function NotFound({
             </Button>
           </Link>
           <Link href="/search" passHref className="w-full sm:w-auto">
-            <Button className="bg-gray-200 text-gray-900 w-full sm:w-auto" size="lg" variant="flat" startContent={<HiOutlineShoppingBag />}>
+            <Button className="bg-gray-200 text-gray-900 w-full sm:w-auto" size="lg" variant="flat" startContent={<FaBagShopping />}>
               Restaurants
             </Button>
           </Link>
