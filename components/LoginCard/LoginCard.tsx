@@ -57,10 +57,12 @@ const LoginCard = () => {
     try {
       const result = await verifyOTP(email, otp);
       setUser({ ...result.user, isLoggedIn: true, address: result.address });
-      setSavedAddress(result.address)
+      setSavedAddress(result.user.address)
       toast.success('OTP verified successfully');
       setShowLoginForm(false);
-      router.push('/user-settings');
+      if (!result.user.address || !result.user.phone || !result.user.name || !result.user.pinCode) {
+        router.push('/user-settings');
+      }
     } catch (error) {
       toast.error((error instanceof Error ? error.message : 'Unknown error'));
     }
