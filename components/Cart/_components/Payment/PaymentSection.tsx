@@ -51,9 +51,10 @@ const PaymentSection = () => {
         toast.error("Cart is empty.");
         return;
       }
-      if (!user.phone || user.phone === ""){
+      if (!user.phone || user.phone === "" || !user.address || user.address === "" || !user.city || user.city === "" || !user.state || user.state === "" || !user.pinCode || user.pinCode === "" || !user.name || user.name === ""){
         router.push("/user-settings");
-        
+        toast.error("Please fill in all the required fields in your profile.");
+        return;
       }
 
       if (!selectedAddress || selectedAddress === "")
