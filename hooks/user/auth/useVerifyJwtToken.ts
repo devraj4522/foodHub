@@ -17,6 +17,7 @@ export const useVerifyJwtToken = () => {
         } catch (error) {
           // console.error('Token verification failed:', error);
           setUser(null); // Clear user data if verification fails
+          setSavedAddress('')
         }
      
     };

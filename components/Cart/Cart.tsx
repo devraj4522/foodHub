@@ -109,7 +109,7 @@ const Cart: React.FC = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="w-full md:w-96 p-4 bg-white  min-h-[80vh] overflow-hidden fixed top-0 right-0 overflow-y-auto z-40"
+            className="w-full md:w-96 p-4 bg-white  min-h-[80vh] md:min-h-[100vh] h-full overflow-hidden fixed top-0 right-0 overflow-y-auto z-40"
             style={{
               boxShadow: '-4px 0 15px rgba(0, 0, 0, 0.1)',
               borderTopLeftRadius: '20px',
