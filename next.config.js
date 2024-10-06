@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  rules: {
+    'react/jsx-sort-props': 'off'
+  },
   images: {
     remotePatterns: [
       {

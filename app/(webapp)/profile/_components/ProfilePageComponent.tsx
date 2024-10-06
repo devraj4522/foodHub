@@ -1,6 +1,8 @@
 "use client"
 import React, { useState } from 'react';
-import { FaUser, FaCog, FaHistory, FaHeart, FaCreditCard, FaSignOutAlt, FaMotorcycle } from 'react-icons/fa';
+import { FaCog, FaHistory, FaSignOutAlt, FaTimes } from 'react-icons/fa';
+import { IoBag } from 'react-icons/io5';
+
 import { Button } from "@nextui-org/button";
 import { useRecoilState } from 'recoil';
 import { userAtom } from '@/recoil/atoms/userAtom';
@@ -11,8 +13,6 @@ import { showCartAtom } from '@/recoil/atoms/cartAtom';
 import { toast } from 'sonner';
 import { logout } from '@/actions/user/auth';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/modal";
-import { IoBag, IoCart, IoLogOutOutline } from 'react-icons/io5';
-import { FaTimes } from 'react-icons/fa';
 
 const ProfilePageComponent = () => {
   const [user, setUser] = useRecoilState(userAtom);

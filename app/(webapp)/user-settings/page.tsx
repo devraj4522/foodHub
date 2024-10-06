@@ -10,7 +10,6 @@ import { updateUserDetails } from '@/actions/user/userDetails';
 import { Loading } from './_components/Loading';
 import { userSavedAddressAtom } from "@/recoil/atoms/locationAtom"
 import { toast } from 'sonner';
-import { ZodError } from 'zod';
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -40,7 +39,8 @@ const UserAccountSettingsPage: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
-  
+  console.log("savedAddress\n\n\n", savedAddress)
+  console.log("user\n\n\n", user)
   useEffect(() => {
     setFormData({
       name: user?.name ?? "",

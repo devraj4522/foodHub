@@ -85,6 +85,9 @@ export class Order {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 
@@ -93,6 +96,9 @@ export class Order {
       where: {
         orderStatus: status,
         userId: userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }

@@ -62,20 +62,20 @@ const ProfileDropDown: React.FC = () => {
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat" onAction={(key) => handleAction(key.toString())}>
-              <DropdownItem key="profile" className="h-14 gap-2 hover:underline">
+              <DropdownItem textValue={user.email} key="profile" className="h-14 gap-2 hover:underline">
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold">{user.email}</p>
               </DropdownItem>
-              <DropdownItem key={`order-history/${user.id}`} startContent={<FaHistory />}>
+              <DropdownItem textValue="Orders" key={`order-history/${user.id}`} startContent={<FaHistory />}>
                 Orders
               </DropdownItem>
-              <DropdownItem key="user-settings" startContent={<FaCog />}>
+              <DropdownItem textValue="Settings" key="user-settings" startContent={<FaCog />}>
                 Settings
               </DropdownItem>
-              <DropdownItem key="search" startContent={<FaSearch />}>
+              <DropdownItem textValue="Search" key="search" startContent={<FaSearch />}>
                 Search
               </DropdownItem>
-              <DropdownItem key="logout" startContent={<FaSignOutAlt />} color="danger">
+              <DropdownItem textValue="Log Out" key="logout" startContent={<FaSignOutAlt />} color="danger">
                 Log Out
               </DropdownItem>
             </DropdownMenu>
@@ -124,7 +124,7 @@ const ProfileDropDown: React.FC = () => {
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions" variant="solid" onAction={(key) => handleAction(key.toString())}>
-          <DropdownItem key="login" className="h-8 bg-slate-100 gap-2">
+          <DropdownItem textValue="Login" key="login" className="h-8 bg-slate-100 gap-2">
             Login
           </DropdownItem>
         </DropdownMenu>

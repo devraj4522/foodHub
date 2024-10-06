@@ -104,6 +104,7 @@ export default function RestaurantComponent({data}: {data: RestaurantData}) {
         <DropdownMenu aria-label="Menu Categories">
           {[{name: "All", count: products.length}].concat(categories).map(({ name, count }, index) => (
             <DropdownItem
+             textValue={name}
               key={index.toString()}
               onClick={() => {
                 const element = document.getElementById(`category-${name}`);
