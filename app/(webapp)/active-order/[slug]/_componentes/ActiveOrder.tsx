@@ -1,18 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FaShoppingBag, FaMotorcycle, FaMapMarkerAlt, FaCheckCircle, FaUtensils, FaTruck, FaTimesCircle } from 'react-icons/fa';
+import { FaShoppingBag, FaMapMarkerAlt, FaCheckCircle, FaUtensils, FaTruck, FaTimesCircle } from 'react-icons/fa';
+import { FaPhone, FaMoneyBillWave, FaMobileAlt } from 'react-icons/fa';
+
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { Progress } from "@nextui-org/progress";
-import { FaPhone, FaMoneyBillWave, FaMobileAlt } from 'react-icons/fa';
-import { IOrder, OrderStatus } from '@/types/Order';
-import { PaymentStatus } from '@/types/Order';
+
+import { IOrder, OrderStatus, PaymentStatus } from '@/types/Order';
 
 const ActiveOrderPageComponent: React.FC<{order: IOrder}> = ({order}) => {
   const [remainingTime, setRemainingTime] = useState(50);
   const [orderProgress, setOrderProgress] = useState(0);
-  
+
   useEffect(() => {
     const timer = setInterval(() => {
       const elapsedTime = (new Date().getTime() - new Date(order.createdAt).getTime()) / 60000;

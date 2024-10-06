@@ -1,6 +1,8 @@
 "use client";
+
 import React, { useState } from 'react';
-import { FaShoppingBag, FaCalendarAlt, FaHistory, FaReceipt, FaUtensils, FaTruck, FaPercent } from 'react-icons/fa';
+import { FaShoppingBag, FaCalendarAlt, FaHistory, FaReceipt, FaUtensils } from 'react-icons/fa';
+
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { Tabs, Tab } from "@nextui-org/tabs";
@@ -16,6 +18,7 @@ const OrderHistory = ({orders}: {orders: IOrder[]}) => {
     const today = new Date();
     return orderDate.toDateString() === today.toDateString();
   });
+
   const pastOrders = orders?.filter((order: IOrder) => {
     const orderDate = new Date(order.createdAt);
     const today = new Date();
@@ -29,10 +32,10 @@ const OrderHistory = ({orders}: {orders: IOrder[]}) => {
 
   const renderOrderCard = (order: IOrder, index: number) => (
     <Card 
-      className="mb-4 cursor-pointer w-full hover:bg-gray-100"
-      isPressable
       key={index} 
+      isPressable
       onPress={() => handleOrderClick(order)}
+      className="mb-4 cursor-pointer w-full hover:bg-gray-100"
     >
       <CardHeader className="flex mb-0 pb-0 justify-between items-center">
         <span className="text-sm md:text-lg font-semibold pt-2">Order #{order.id.slice(-4).toUpperCase()}</span>
@@ -138,8 +141,8 @@ const OrderHistory = ({orders}: {orders: IOrder[]}) => {
 
       <Modal 
         isOpen={isOpen}
-        placement='center'
         onOpenChange={onOpenChange}
+        placement='center'
         size="3xl"
         className="max-w-[95%] md:max-w-[90%]"
       >

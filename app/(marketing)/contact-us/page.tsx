@@ -60,28 +60,28 @@ const ContactUsPage: React.FC = () => {
           initial={{ opacity: 0, x: 20 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <Input
               label="Name"
-              onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
               required
               value={name}
+              onChange={(e) => setName(e.target.value)}
             />
             <Input
               label="Email"
-              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
               type="email"
               value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Textarea
               label="Message"
-              onChange={(e) => setMessage(e.target.value)}
               placeholder="How can we help you?"
               required
               value={message}
+              onChange={(e) => setMessage(e.target.value)}
             />
             <Button 
               className="w-full bg-lime-600 hover:bg-lime-700"
