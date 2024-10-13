@@ -15,11 +15,8 @@ export async function sendEmail(to: string, subject: string, htmlContent: string
   sendSmtpEmail.params = {"parameter":"My param value","subject":subject};
 
   try {
-    console.log("sendSmtpEmail", sendSmtpEmail)
-    console.log("apiInstance", apiInstance)
     const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log("data", data)
-    // console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+    console.log('API called successfully');
     // console.log(data)
     return data;
   } catch (error) {

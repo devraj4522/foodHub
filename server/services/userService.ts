@@ -44,7 +44,7 @@ export async function generateOTP(email: string) {
     const updated_user = await User.generateOTP(user.id);
     console.log("otp", updated_user.otpCode)
     if (user.email && updated_user.email && updated_user.email !== null) {
-      sendSignupConfirmationEmail(user.email, updated_user.otpCode as string);
+      await sendSignupConfirmationEmail(user.email, updated_user.otpCode as string);
     }else{
       throw new Error("Email not found")
     }
