@@ -21,7 +21,11 @@ export class Restaurant {
   }
 
   static async getAllRestaurants() {
-    return prisma.restaurant.findMany();
+    return prisma.restaurant.findMany({
+      orderBy: {
+        updatedAt: 'desc'
+      }
+    });
   }
 
   static async createRestaurant(data: RestaurantData) {
