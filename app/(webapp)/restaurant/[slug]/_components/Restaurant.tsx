@@ -68,7 +68,7 @@ export default function RestaurantComponent({data}: {data: RestaurantData}) {
 
       {/* Menu Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8">Menu</h2>
+        <h2 id='menu' className="text-2xl md:text-3xl font-bold mb-8">Menu</h2>
         <div className="flex flex-col md:flex-row gap-8">
           {/* Menu Widget */}
           <div className="w-full">
@@ -94,7 +94,7 @@ export default function RestaurantComponent({data}: {data: RestaurantData}) {
       <Dropdown>
         <DropdownTrigger>
           <Button
-            className="fixed text-center bottom-20 right-6 z-50 bg-black text-white rounded-full shadow-lg py-6 px-4 font-bold"
+            className="fixed text-center bottom-20 right-6 z-30 bg-black text-white rounded-full shadow-lg py-6 px-4 font-bold"
             startContent={<img  src={"/assets/menuIcon.svg"} alt="Menu" className="w-8 h-8 mt-1 text-white" />}
           >
             Menu

@@ -1,5 +1,6 @@
 import { RestaurantData } from "@/types/Restaurant";
 import { Button } from "@nextui-org/button";
+import Link from "next/link";
 import { FaMapMarkerAlt, FaShoppingCart } from "react-icons/fa";
 
 export const RestaurantHeroSection = ({restaurant}: {restaurant: RestaurantData}) => {
@@ -62,7 +63,9 @@ export const RestaurantHeroSection = ({restaurant}: {restaurant: RestaurantData}
                  }
                }}
              >
+               <Link href="#menu">
                <span>Order Online</span>
+               </Link>
              </Button>
            </div>
          </div>

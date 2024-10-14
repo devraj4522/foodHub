@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
 import { FaShoppingCart, FaArrowLeft } from 'react-icons/fa';
@@ -23,6 +23,10 @@ const Cart: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const cartItems = cart?.items || [];
   const selectedAddress = useRecoilValue(selectedAddressAtom);
+
+  useEffect(() => {
+    setStep('cart')
+  }, [isCartVisible]);
 
   const totalPrice = cartItems.reduce((total, item) => total + (item.menuItem.price * item.quantity), 0);
 
@@ -101,7 +105,7 @@ const Cart: React.FC = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[51]"
           onClick={handleOutsideClick}
         >
           <motion.div
@@ -109,7 +113,7 @@ const Cart: React.FC = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="w-full md:w-96 p-4 bg-white  min-h-[80vh] md:min-h-[100vh] h-full overflow-hidden fixed top-0 right-0 overflow-y-auto z-40"
+            className="w-full md:w-96 p-4 bg-white  min-h-[80vh] md:min-h-[100vh] h-full overflow-hidden fixed top-0 right-0 overflow-y-auto z-[51]"
             style={{
               boxShadow: '-4px 0 15px rgba(0, 0, 0, 0.1)',
               borderTopLeftRadius: '20px',
