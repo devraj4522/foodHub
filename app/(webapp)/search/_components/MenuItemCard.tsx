@@ -24,7 +24,7 @@ export function MenuItemCard({ menuItem, searchTerm }: MenuItemCardProps) {
   const handleAddToCart = async (event: React.MouseEvent<HTMLButtonElement>,  menuItem:Omit<IMenuItem, 'restaurant' | 'category' | 'rating'>) => {
     event.preventDefault();
     if (!cart || !cart.id) {
-      toast.error('Cart not found');
+      toast.error('Login to Proceed');
       return;
     }
 

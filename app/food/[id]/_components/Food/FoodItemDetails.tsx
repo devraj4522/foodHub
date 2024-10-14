@@ -159,7 +159,7 @@ export default function FoodItemPage({foodItem}: {foodItem: FoodItem}) {
     const handleAddToCart = async (event: React.MouseEvent<HTMLButtonElement>,  menuItem:Omit<IMenuItem, 'restaurant' | 'category' | 'rating'>) => {
       event.preventDefault();
       if (!cart || !cart.id) {
-        toast.error('Cart not found');
+        toast.error('Login to Contine');
         return;
       }
 

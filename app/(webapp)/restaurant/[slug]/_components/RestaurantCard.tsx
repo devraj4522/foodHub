@@ -13,7 +13,7 @@ export default function RestaurantCard({item}: {item: IMenuItem}) {
   const handleAddToCart = async (event: React.MouseEvent<HTMLButtonElement>,  menuItem:IMenuItem) => {
       event.preventDefault();
       if (!cart || !cart.id) {
-        toast.error('Cart not found');
+        toast.error('Login First!');
         return;
       }
 
