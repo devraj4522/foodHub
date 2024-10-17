@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import OrderHistory from "./_components/OrderHistory";
 import {getOrdersByUserId} from '@/actions/order'
 
@@ -6,7 +7,9 @@ const OrderHistoryPage = async ({params}: {params: {slug: string}}) => {
   const orderHistory = await getOrdersByUserId(slug);
   
   return (
-      <OrderHistory orders={orderHistory}  />
+      <Suspense fallback={<div>Loading...</div>}>
+        <OrderHistory orders={orderHistory}  />
+      </Suspense>
   );
 };
 
