@@ -126,7 +126,7 @@ const RestaurantListComponent = ({restaurants}: {restaurants: IRestaurant[]}) =>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {sortedRestaurants?.map((restaurant:IRestaurant, index: number) => (
-        <Link href={`/restaurant/${restaurant.id}`} shallow className='' key={index}>
+        <a href={`/restaurant/${restaurant.id}`} className='' key={index}>
            <Card style={{width: "100%"}} className="flex md:flex-col flex-row items-center p-0 h-full sm:w-1/3 md:w-1/4 mx-auto shadow-md hover:shadow-lg transition-shadow duration-300">
 
          {/* Image Section */}
@@ -167,7 +167,7 @@ const RestaurantListComponent = ({restaurants}: {restaurants: IRestaurant[]}) =>
 
          </div>
        </Card>
-        </Link>
+        </a>
         ))}
       </div>
     </div>
