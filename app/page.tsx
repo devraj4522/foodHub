@@ -5,6 +5,7 @@ import RestaurantList from "@/components/RestaurantCard/RestaurantCard";
 import { getAllRestaurants } from "@/actions/restaurant";
 import { notFound } from "next/navigation";
 import { getAllRestaurantsController } from "@/server/controllers/restaurantController";
+import { Suspense } from "react";
 
 export default async function Home() {
   const restaurants = await getAllRestaurantsController() || [];
@@ -12,7 +13,9 @@ export default async function Home() {
     <>
       <HeroSection />
       <TopItems />
+      <Suspense fallback={<div>Loading...</div>}>
       <RestaurantList restaurants={restaurants} />
+      </Suspense>
     </>
   );
 }
