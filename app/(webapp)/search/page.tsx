@@ -204,7 +204,7 @@ function SearchSuggestions({ suggestions, searchType, isLoading }: SearchSuggest
             ))
           ) : (
             suggestions.map((item) => (
-              <Link href={searchType === 'restaurant' ? `/restaurant/${item.id}` : `/menu-item/${item.id}`} key={item.id}>
+              <Link href={searchType === 'restaurant' ? `/restaurant/${item.id}` : `/food/${item.id}`} key={item.id}>
                 <div className="flex max-w-md mx-auto items-center p-2 hover:bg-gray-100">
                   <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded-md mr-3" />
                   <div>
