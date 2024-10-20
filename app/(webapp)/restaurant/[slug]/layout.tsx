@@ -6,8 +6,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-      <Suspense fallback={<div className="h-screen absolute w-screen items-center  justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-black"></div>
+      <Suspense fallback={<div className="h-screen w-screen items-center flex justify-center">
+        <div className="animate-spin rounded-full md:h-8 w-8 border-t-2 border-b-2 border-black block"></div>
       </div>}> 
       {children}
       </Suspense>

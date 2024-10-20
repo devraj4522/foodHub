@@ -1,14 +1,13 @@
 'use client';
 import React from 'react';
-import { FaClock, FaTrain, FaStar, FaShoppingCart, FaCheckCircle, FaCheckSquare } from 'react-icons/fa';
+import { FaClock, FaTrain, FaStar, FaShoppingCart } from 'react-icons/fa';
 import { Button } from "@nextui-org/button";
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useFetchTopItems } from '@/hooks/products/useFetchTopItems';
 import { FaMapMarkerAlt } from 'react-icons/fa';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { cartAtom } from '@/recoil/atoms/cartAtom';
-import { userAtom } from '@/recoil/atoms/userAtom';
 import { toast } from 'sonner';
 import { addItemToCart } from '@/actions/cart';
 import { IMenuItem } from '@/types/Restaurant';
