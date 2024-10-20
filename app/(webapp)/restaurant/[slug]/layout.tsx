@@ -7,7 +7,7 @@ export default function RootLayout({
 }) {
   return (
       <Suspense fallback={<div className="h-screen w-screen items-center flex justify-center">
-        <div className="animate-spin rounded-full md:h-8 w-8 border-t-2 border-b-2 border-black block"></div>
+        <div className="animate-spin rounded-full md:h-8 w-8 border border-black block"></div>
       </div>}> 
       {children}
       </Suspense>
