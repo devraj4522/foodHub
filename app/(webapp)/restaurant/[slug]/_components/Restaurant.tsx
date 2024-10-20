@@ -1,28 +1,15 @@
 'use client';
-import React, { Fragment } from 'react';
-import { FaClock, FaTrain, FaInfoCircle, FaShoppingCart, FaMapMarkerAlt, FaArrowRight, FaTag, FaArrowDown, FaStar } from 'react-icons/fa';
-import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/breadcrumbs";
+import React from 'react';
 import { Button } from "@nextui-org/button";
-import { useParams } from 'next/navigation';
-import { Link } from '@nextui-org/link';
-// import { useUpdateCart } from '@/hooks/cart/useUpdateCart';
-import { toast } from 'sonner';
-import { useRecoilState } from 'recoil';
-import { cartAtom } from '@/recoil/atoms/cartAtom';
 import { RestaurantData, IMenuItem } from '@/types/Restaurant';
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb';
 import { RestaurantHeroSection } from './RestaurantHeroSection/RestaurantHeroSection';
 import { TopInfoBar } from './TopInfoBar';
 import RestaurantCard from './RestaurantCard';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
-import { Avatar } from '@nextui-org/avatar';
 
 export default function RestaurantComponent({data}: {data: RestaurantData}) {
   const [activeCategory, setActiveCategory] = React.useState('');
-  // const { updateCartItem, isLoading: addItemToCartLoading, isSuccess: addItemToCartSuccess} = useUpdateCart();
-  // const [cartItems, setCartItems] = useRecoilState(cartItemsAtom);
-
-  
   const restaurant = data;
   const products = restaurant.menu;
  
